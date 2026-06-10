@@ -53,36 +53,38 @@ def parse_boundary_starts(case_dir: Path, original_name: str) -> list[int]:
     return sorted(starts)
 
 
-def load_rotation_truth(gt_human: Path) -> dict[str, dict[str, int]]:
-    """Parse groundTruthHuman -> {filename: {page: 90}}. tests/ rotations are all 90 deg."""
-    def expand(spec: str) -> set[int]:
-        pages = set()
-        for part in spec.replace("[", "").replace("]", "").split(","):
-            part = part.strip()
-            if not part:
-                continue
-            m = re.match(r"(\d+)\s*[-–]\s*(\d+)", part)
-            if m:
-                pages.update(range(int(m.group(1)), int(m.group(2)) + 1))
-            else:
-                m2 = re.match(r"(\d+)", part)
-                if m2:
-                    pages.add(int(m2.group(1)))
-        return pages
+def derive_rotation_truth(case_dir: Path, original_name: str) -> dict[str, int]:
+    """Rotation truth from the split PDFs' /Rotate metadata (the human's actual
+    per-page correction), mapped to original 1-indexed pages.
 
-    result: dict[str, dict[str, int]] = {}
-    for line in gt_human.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line:
+    A split page's /Rotate is a CLOCKWISE display value; this codebase's rotation
+    convention is COUNTER-CLOCKWISE to correct, so ccw = (360 - rotate) % 360.
+    Pages with /Rotate == original /Rotate (delta 0) are upright and omitted.
+    This carries the degree directly and is self-consistent (an upright page that
+    the human left at /Rotate=0 is correctly NOT marked rotated).
+    """
+    from pypdf import PdfReader
+    orig = PdfReader(str(case_dir / original_name))
+    orig_rot = {i + 1: int(p.get("/Rotate") or 0) for i, p in enumerate(orig.pages)}
+
+    stem = Path(original_name).stem
+    tag = f"_PDFsam_{stem}"
+    truth: dict[str, int] = {}
+    for f in sorted(case_dir.iterdir()):
+        if f.suffix.lower() != ".pdf" or tag not in f.stem:
             continue
-        m = re.match(r"(.+\.pdf)\s+(.*)", line, re.IGNORECASE)
+        m = re.search(r"(\d+)$", f.stem.split(tag)[0])
         if not m:
             continue
-        fname = Path(m.group(1).strip()).name
-        pages = expand(m.group(2).strip())
-        if pages:
-            result.setdefault(fname, {}).update({str(p): 90 for p in pages})
-    return result
+        start = int(m.group(1))
+        split = PdfReader(str(f))
+        for i, page in enumerate(split.pages):
+            orig_page = start + i
+            split_rot = int(page.get("/Rotate") or 0)
+            delta = (split_rot - orig_rot.get(orig_page, 0)) % 360
+            if delta != 0:
+                truth[str(orig_page)] = (360 - delta) % 360  # CW delta -> CCW-to-correct
+    return truth
 
 
 def originals_in_case(case_dir: Path) -> list[Path]:
@@ -90,8 +92,7 @@ def originals_in_case(case_dir: Path) -> list[Path]:
                   if f.suffix.lower() == ".pdf" and f.stem.upper().startswith("IMAGE_"))
 
 
-def build_split(name: str, cases: list[str], tests_dir: Path, out_root: Path,
-                rot_truth: dict[str, dict[str, int]]) -> None:
+def build_split(name: str, cases: list[str], tests_dir: Path, out_root: Path) -> None:
     out_dir = out_root / name
     out_dir.mkdir(parents=True, exist_ok=True)
     ground_truth: dict[str, list[int]] = {}
@@ -109,8 +110,9 @@ def build_split(name: str, cases: list[str], tests_dir: Path, out_root: Path,
                 print(f"  WARN: no boundary splits for {case_rel}/{orig.name} — skipping")
                 continue
             ground_truth[orig.name] = starts
-            if orig.name in rot_truth:
-                rotation_truth[orig.name] = rot_truth[orig.name]
+            rot = derive_rotation_truth(case_dir, orig.name)
+            if rot:
+                rotation_truth[orig.name] = rot
             link = out_dir / orig.name
             if link.exists() or link.is_symlink():
                 link.unlink()
@@ -135,12 +137,10 @@ def main() -> None:
 
     base = Path(args.base).resolve()
     tests_dir = base / "tests"
-    gt_human = base / "groundTruthHuman"
     out_root = Path(args.out).resolve()
 
-    rot_truth = load_rotation_truth(gt_human)
-    build_split("eval_dev", DEV_CASES, tests_dir, out_root, rot_truth)
-    build_split("eval_holdout", HOLDOUT_CASES, tests_dir, out_root, rot_truth)
+    build_split("eval_dev", DEV_CASES, tests_dir, out_root)
+    build_split("eval_holdout", HOLDOUT_CASES, tests_dir, out_root)
 
 
 if __name__ == "__main__":
