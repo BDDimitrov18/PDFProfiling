@@ -1,0 +1,25 @@
+# Local Claude config (may contain machine-specific allow-rules)
+.claude/
+
+# Large scanned-PDF test corpora (regenerate/obtain separately; not for VCS)
+tests/
+tests2/
+pdfs/
+*.pdf
+
+# Generated eval folders (broken symlinks into tests/; rebuild via build_eval_set.py)
+eval_dev/
+eval_holdout/
+eval_logs/
+rot_eval_logs/
+
+# Split output
+split/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS / editor cruft
+.DS_Store
