@@ -517,15 +517,8 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         signal_page = int(data.get("signal_on_page", current_page))
     except (TypeError, ValueError):
         signal_page = current_page
-    if signal in START_ON_NEXT_SIGNALS:
-        # These signals by definition live on the page AFTER current_page.
-        # If the model reported the current page (or anything invalid),
-        # snap to the only coherent value.
-        if signal_page not in page_nums or signal_page <= current_page:
-            signal_page = current_page + 1
-    else:
-        if signal_page not in page_nums:
-            signal_page = current_page
+    if signal_page not in page_nums:
+        signal_page = current_page
     return is_end, conf, signal, signal_page
 
 
