@@ -705,10 +705,9 @@ def _query_style_continuity(img_prev, img_curr, page_prev, page_curr, model, pro
 
 
 def _query_rotation(img, page_num: int, model, processor, config, logger: logging.Logger) -> int:
-    """Thin wrapper — logic lives in rotation.py for independent testing."""
-    return _query_rotation_impl(img, page_num, model, processor, config, logger,
-                                infer_fn=_infer, parse_fn=_parse_json,
-                                corroborate_fn=None)
+    """OSD-first rotation (no model call). Legacy VLM path kept in rotation.py."""
+    from rotation import query_rotation_osd_first
+    return query_rotation_osd_first(img, page_num, logger)
 
 
 # ---------------------------------------------------------------------------
@@ -843,13 +842,14 @@ def detect_boundaries(
             page_buffer[p] = _load_page(pdf_path, p, dpi)
 
     def detect_rotation(p: int) -> None:
-        """Query and record rotation for page p without mutating the buffer."""
+        """Detect rotation via OSD and APPLY it so Phase 1 queries see upright pages."""
         ensure(p)
         if p not in rotation_log:
             rotation = _query_rotation(page_buffer[p], p, model, processor, config, logger)
             rotation_log[p] = rotation
             if rotation != 0:
-                logger.info(f"  Page {p} needs {rotation}° CCW rotation (recorded, not applied during Phase 1)")
+                page_buffer[p] = page_buffer[p].rotate(rotation, expand=True)
+                logger.info(f"  Page {p} rotated {rotation} deg CCW for Phase 1 queries")
 
     logger.info(f"  Phase 1: end-of-document detection ({total_pages} pages)…")
     for n in range(1, total_pages):
@@ -1055,7 +1055,12 @@ def detect_boundaries(
 
     page_buffer.clear()
 
-    rotation_log.update(smooth_rotation_log(rotation_log, logger))
+    # Smoothing exists to paper over a noisy detector; with the precision-first
+    # OSD detector it must not override per-page decisions. Log-only diagnostic.
+    _smoothed = smooth_rotation_log(rotation_log, logger)
+    _diffs = {p: (rotation_log.get(p), d) for p, d in _smoothed.items() if rotation_log.get(p) != d}
+    if _diffs:
+        logger.info(f"  [ROT-SMOOTH] (log-only, not applied) would change: {_diffs}")
 
     doc_starts = sorted(set(doc_starts))
     logger.info(f"  Phase 1 done — document start pages: {doc_starts}")
