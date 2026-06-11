@@ -32,6 +32,20 @@ same-hardware anchor; 5090 rows will then be struck through (kept for history).
 | OSD arm (thr 2.0→3.0) | 2 | 0 | 13 | 0 | 100% | 13.3% | FP abstained (truth still had bogus p7). |
 | **OSD arm (truth from /Rotate)** | **2** | **0** | **12** | **0** | **100%** | **14.3%** | **GATE 1 PASS.** Rotation truth now from split /Rotate metadata (CW→CCW); p7 false positive removed. Fix R enabled. |
 
+## run8.py head-to-head (regression diagnostic)
+
+- **run8.py provenance: UNRESOLVED.** run8.py has load-bearing style modifiers (current
+  `split.py` demoted these to log-only), but that is **consistent with pristine run-8** —
+  they may have been demoted in a later run, not added. On `163444215` (6000 Ada) run8.py
+  scored F1 **83.3%** historical-style (TP=15, FP=5 `{6,10,11,13,31}`, FN=1 `{9}`) vs
+  historical run8=80% / run9=84%. The 83.3-vs-80 gap is **GPU-confounded** (historical was
+  5090, this was 6000 Ada) and possibly scorer-confounded — so this does **NOT** establish
+  run8.py as non-pristine. Clean test pending: re-run run8.py on the 5090.
+- **Hard cases:** FPs **11 and 13** on `163444215` are produced by BOTH run8.py and the
+  current pipeline, via *different mechanisms* — genuinely hard pages, expected to **survive
+  Fix 9**. (run8 unique-misses are only the `titled_id_header` cluster `{19,20,21,27}`, which
+  run8 lacks because it predates `titled_id_header` — this is what Fix 8/9 target.)
+
 ## Stage log
 
 - **Stage 0** — harness built (`eval_boundaries.py`, `eval_rotation.py`, `test_osd_mapping.py`,

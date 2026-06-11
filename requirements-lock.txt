@@ -1,0 +1,17 @@
+# Frozen inference env — RTX 5090 pod (213.173.103.167), 2026-06-11.
+# This is the anchor environment for the 5090 re-anchor (baseline + Fix 4) and
+# all Stage B deltas (Fix 8/9/11). Greedy decoding is deterministic only within
+# the same GPU arch AND software stack — re-pin these for any re-run.
+#
+# NOTE: the ORIGINAL 84.57% baseline ran on a different (now-dead) 5090 pod whose
+# versions were never locked, so parity with it CANNOT be verified. That is why
+# the baseline is being re-anchored on THIS pod rather than reusing the 84.57 row.
+torch==2.8.0+cu128
+transformers==5.11.0
+bitsandbytes==0.49.2
+accelerate==1.14.0
+qwen-vl-utils==0.0.14
+tokenizers==0.22.2
+pdf2image==1.17.0
+pypdf==6.13.2
+# system: tesseract-ocr + tesseract-ocr-osd + poppler-utils (apt)
