@@ -45,27 +45,40 @@
 > historical run-8 byte-identically on all 9 dev files; matches run-8 not run-9 on the 2 discriminating
 > files). GT regen + free re-score of all rows DONE. Truth layer CLOSED → Fix 8 (running) → 9 → 11.
 
-> ## OVERNIGHT AUTONOMOUS QUEUE (run unattended; commit+push after EVERY step; jobs detached/nohup)
-> **No human until morning. Any decision NOT covered by these rules → STOP that branch, record the
-> question in RESULTS.md "open questions", continue with the rest.** No model-attested truth overnight.
+> ## OVERNIGHT BRIEF (verbatim — the ONLY plan; verifier gates against this)
+> Overnight autonomous queue — run unattended, commit+push after EVERY step, all jobs in tmux. No human
+> available until morning: any decision not covered by these rules → stop that branch, record the question
+> in RESULTS.md, continue with the rest.
 >
-> 1. **Record Fix 8+9 combined row** (HEAD aea8297) if not already done.
-> 2. **Fix 9-only A/B:** revert `9181a66` (Fix 8) on a branch, keep `aea8297` (Fix 9). Run eval. Record row.
-> 3. **Winner rule (math):** `winner = argmax tol0_F1 over {Fix8+9, Fix9-only}`; **tie → Fix9-only** (fewer
->    model calls). Record verdict. Loser's commit reverted-on-main / kept-on-main accordingly.
-> 4. **Fix 11 on the winner** (spec above). Run eval. **Keep rule:** keep iff `tol0_F1 ≥ winner_F1 − 0.5`
->    **AND** `FN_reduced ≥ 2`; else revert. Record row + per-table-boundary [TABLE-CONFIRM] TP/FP attribution.
-> 5. **CANDIDATE = cumulative best after step 4.** `git tag round1-candidate`.
-> 6. **Derive GT for ALL `tests/` files** with the fixed coverage-based derivation. **Known gaps
->    143041245[63-65], 145428614[147-149] + any new gaps → MASK the gap range ±1 page** (no overnight
->    attestation). **List every masked range in "open questions"** for morning human inspection. Annotate
->    GT sources (pdfsam-derived / masked).
-> 7. **Run CANDIDATE on full `tests/`** (classify=False, boundary scoring only; ~3-5h — START ONLY AFTER
->    steps 1-5 COMMITTED so a pod death never costs decided results). **Report STRATIFIED, never aggregated
->    alone:** (a) dev 9 files, (b) holdout, (c) fresh never-evaluated files — P/R/F1 + per-file FP/FN each,
->    plus the aggregate. **Explicitly flag the dev-vs-unseen F1 gap as the overfitting measure.**
-> 8. **Push everything.** End with a RESULTS.md summary block: final table + open questions (masked ranges
->    to inspect, any stopped branches).
+> 1. Record Fix 8+9 combined row (if not already done).
+> 2. Run Fix 9-only A/B (revert 9181a66 on a branch, keep aea8297). Record row.
+> 3. Winner rule: higher tol=0 F1 of {Fix8+9, Fix9-only} wins; tie → Fix9-only (fewer model calls). Record
+>    verdict; the loser's commit is reverted/kept accordingly on main.
+> 4. Implement Fix 11 on the winner (spec already in RESULTS.md resume notes). Run eval. Keep/revert rule:
+>    keep if tol=0 F1 ≥ winner − 0.5 AND FN reduced by ≥2; revert otherwise. Record row + per-table-boundary
+>    [TABLE-CONFIRM] attribution.
+> 5. The cumulative best after step 4 = CANDIDATE. Tag it in git (round1-candidate).
+> 6. Derive GT for ALL tests/ files with the fixed coverage-based derivation. For the two known gap files
+>    (143041245[63-65], 145428614[147-149]) and any new gaps found: MASK the gap range ±1 page — no
+>    attestation overnight; list every masked range in RESULTS.md for morning human inspection. Annotate
+>    sources (pdfsam-derived/masked) as in dev GT.
+> 7. Run CANDIDATE on the full tests set (classify=False, boundary scoring only). Report stratified, never
+>    aggregated alone: (a) dev 9 files, (b) holdout files, (c) fresh never-evaluated files — P/R/F1 +
+>    per-file FP/FN lists each, plus the aggregate. Explicitly flag the dev-vs-unseen gap as the
+>    overfitting measure.
+> 8. Push everything; end with a RESULTS.md summary block: final table, open questions for morning (masked
+>    ranges to inspect, any stopped branches).
+>
+> Budget note: full tests is several hundred pages (~3-5+ h) — start it only after steps 1-5 are committed,
+> so a pod death never costs decided results.
+>
+> **VERIFIER GATE:** after each numbered step and BEFORE the next, an independent verifier subagent
+> (model claude-fable-5, fallback inherit) checks: (1) every RESULTS.md number matches eval_results.json /
+> saved predictions; (2) decision verdicts match the rule arithmetic (arithmetic wins on conflict);
+> (3) git show confirms each commit's diff touches exactly what's claimed (A/B branch reverts ONLY 9181a66);
+> (4) committed+pushed before next step; (5) NO improvisation — any extra edit/threshold/prompt tweak →
+> FAIL, revert it, log under "overnight deviations". Ambiguity is a morning question, never verifier-resolved.
+> Step 7 (long run): gate only the final report. Verifier output = PASS/FAIL checklist per step with evidence.
 
 Eval set: `eval_dev/` (9 files, ~181 pages, derived from `tests/` only) — unchanged across all
 boundary runs (boundary truth from PDFsam split files; identical `ground_truth.json`).
