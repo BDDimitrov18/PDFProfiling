@@ -213,6 +213,10 @@ def smooth_rotation_log(
 # Candidate corroborators — pick the winner via your separate rotation test.
 # ---------------------------------------------------------------------------
 
+# QUARANTINED: do not use on this corpus. Construction archives contain many
+# NATIVELY landscape pages (drawings, wide tables, quantity sheets); this
+# corroborator marks every one of them rotated with conf 0.9 and is a
+# false-positive machine. Kept only for reference.
 def corroborate_aspect(img) -> tuple[bool, int | None, float]:
     """
     Aspect-ratio corroborator. Never abstains.
@@ -267,10 +271,32 @@ def corroborate_tesseract(img) -> tuple[bool, int | None, float] | None:
     ccw_deg = _OSD_TO_CCW.get(raw_angle, 0)
     osd_conf = float(osd.get("orientation_conf", 0.0))
 
-    # Low OSD confidence → abstain rather than mislead.
-    if osd_conf < 2.0:
+    # Low OSD confidence → abstain rather than mislead. Raised 2.0 → 3.0 to clear a
+    # low-conf false positive (a landscape low-text page firing 180°) that kept the
+    # OSD arm's degrees-exact precision below the Gate-1 90% bar. Precision-first:
+    # an upright page wrongly rotated corrupts every Phase-1 query that sees it.
+    if osd_conf < 3.0:
         return None
 
     is_rot = ccw_deg != 0
     conf_mapped = min(0.95, osd_conf / 10.0)  # rough normalisation; tune if needed
     return (is_rot, ccw_deg, conf_mapped)
+
+
+def query_rotation_osd_first(img, page_num: int, logger: logging.Logger) -> int:
+    """Precision-first rotation for Phase 1 integration.
+
+    Tesseract OSD is authoritative on text pages; abstention (drawings, blank,
+    low-text pages) -> 0. Rationale: an upright page wrongly rotated corrupts
+    every boundary query that sees it; a rotated page left alone is merely
+    today's behaviour. No model call -> zero GPU cost.
+    """
+    corr = corroborate_tesseract(img)
+    if corr is None:
+        logger.debug(f"  [ROT] p{page_num}: OSD abstained -> 0")
+        return 0
+    is_rot, deg, conf = corr
+    if not is_rot:
+        return 0
+    logger.info(f"  [ROT] p{page_num}: OSD -> {deg} deg CCW (conf={conf:.2f})")
+    return deg
