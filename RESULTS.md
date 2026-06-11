@@ -45,6 +45,28 @@
 > historical run-8 byte-identically on all 9 dev files; matches run-8 not run-9 on the 2 discriminating
 > files). GT regen + free re-score of all rows DONE. Truth layer CLOSED → Fix 8 (running) → 9 → 11.
 
+> ## OVERNIGHT AUTONOMOUS QUEUE (run unattended; commit+push after EVERY step; jobs detached/nohup)
+> **No human until morning. Any decision NOT covered by these rules → STOP that branch, record the
+> question in RESULTS.md "open questions", continue with the rest.** No model-attested truth overnight.
+>
+> 1. **Record Fix 8+9 combined row** (HEAD aea8297) if not already done.
+> 2. **Fix 9-only A/B:** revert `9181a66` (Fix 8) on a branch, keep `aea8297` (Fix 9). Run eval. Record row.
+> 3. **Winner rule (math):** `winner = argmax tol0_F1 over {Fix8+9, Fix9-only}`; **tie → Fix9-only** (fewer
+>    model calls). Record verdict. Loser's commit reverted-on-main / kept-on-main accordingly.
+> 4. **Fix 11 on the winner** (spec above). Run eval. **Keep rule:** keep iff `tol0_F1 ≥ winner_F1 − 0.5`
+>    **AND** `FN_reduced ≥ 2`; else revert. Record row + per-table-boundary [TABLE-CONFIRM] TP/FP attribution.
+> 5. **CANDIDATE = cumulative best after step 4.** `git tag round1-candidate`.
+> 6. **Derive GT for ALL `tests/` files** with the fixed coverage-based derivation. **Known gaps
+>    143041245[63-65], 145428614[147-149] + any new gaps → MASK the gap range ±1 page** (no overnight
+>    attestation). **List every masked range in "open questions"** for morning human inspection. Annotate
+>    GT sources (pdfsam-derived / masked).
+> 7. **Run CANDIDATE on full `tests/`** (classify=False, boundary scoring only; ~3-5h — START ONLY AFTER
+>    steps 1-5 COMMITTED so a pod death never costs decided results). **Report STRATIFIED, never aggregated
+>    alone:** (a) dev 9 files, (b) holdout, (c) fresh never-evaluated files — P/R/F1 + per-file FP/FN each,
+>    plus the aggregate. **Explicitly flag the dev-vs-unseen F1 gap as the overfitting measure.**
+> 8. **Push everything.** End with a RESULTS.md summary block: final table + open questions (masked ranges
+>    to inspect, any stopped branches).
+
 Eval set: `eval_dev/` (9 files, ~181 pages, derived from `tests/` only) — unchanged across all
 boundary runs (boundary truth from PDFsam split files; identical `ground_truth.json`).
 Rotation truth from split PDFs' `/Rotate` metadata (CW→CCW); see Stage 1 log.
