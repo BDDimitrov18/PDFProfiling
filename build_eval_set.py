@@ -38,17 +38,38 @@ HOLDOUT_CASES = [
 
 
 def parse_boundary_starts(case_dir: Path, original_name: str) -> list[int]:
-    """Start pages from <page>_PDFsam_<stem>.pdf (handles PDFsam_<page>_PDFsam_ too)."""
+    """Document start pages from the PDFsam reference split files, using actual page
+    COVERAGE — not just start prefixes.
+
+    A boundary is the start of each filed piece AND the first page of each run of pages
+    covered by NO file. Uncovered ('gap') pages are real documents the human filed
+    elsewhere or isolated (e.g. a СКИЦА, or a part's cover/contents sheet).
+
+    Earlier bug: only the start prefixes were used and piece page-counts were ignored, so
+    gap pages were silently absorbed into the preceding document, dropping real boundaries
+    (e.g. 163444215 p10 = СКИЦА after the isolated p9 invoice; 084303475 p4 = electrical
+    part cover between the [2,3] and [5] pieces). Authorized correction 2026-06-11.
+    """
+    from pypdf import PdfReader
     stem = Path(original_name).stem
     tag = f"_PDFsam_{stem}"
-    starts = set()
+    total = len(PdfReader(str(case_dir / original_name)).pages)
+    starts: set[int] = set()
+    covered: set[int] = set()
     for f in case_dir.iterdir():
         if f.suffix.lower() != ".pdf" or tag not in f.stem:
             continue
-        prefix = f.stem.split(tag)[0]
-        m = re.search(r"(\d+)$", prefix)
-        if m:
-            starts.add(int(m.group(1)))
+        m = re.search(r"(\d+)$", f.stem.split(tag)[0])
+        if not m:
+            continue
+        start = int(m.group(1))
+        npages = len(PdfReader(str(f)).pages)
+        starts.add(start)
+        covered.update(range(start, start + npages))
+    # first page of every uncovered run is the start of a (separately-filed) document
+    for p in range(1, total + 1):
+        if p not in covered and (p == 1 or (p - 1) in covered):
+            starts.add(p)
     starts.add(1)
     return sorted(starts)
 
