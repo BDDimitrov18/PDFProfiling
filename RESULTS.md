@@ -28,6 +28,11 @@
 > p3 = previous document). The 'convention-mismatch' category DISSOLVES for FP 10 (human did split the
 > receipt). **084303475 p4 = canonical test case for Fix 9's page-counter exclusion** (true start with a
 > bare corner '2' from missing leading pages — must survive the exclusion).
+> **Full coverage audit (closed):** 4 of 20 `tests/` files have internal gap pages — 163444215[10,11]
+> + 084303475[4] (both in dev, corrected) and 143041245[63-65] + 145428614[147-149] (not in eval set;
+> fixed derivation covers them if added). **Historical-truth (closed):** run8.py = run-8 code (matches
+> historical run-8 byte-identically on all 9 dev files; matches run-8 not run-9 on the 2 discriminating
+> files). GT regen + free re-score of all rows DONE. Truth layer CLOSED → Fix 8 (running) → 9 → 11.
 
 Eval set: `eval_dev/` (9 files, ~181 pages, derived from `tests/` only) — unchanged across all
 boundary runs (boundary truth from PDFsam split files; identical `ground_truth.json`).
