@@ -10,10 +10,11 @@ architectures — only compare rows with the same `gpu`).
 
 | Stage | gpu | tol=0 P | tol=0 R | tol=0 F1 | tol=1 P | tol=1 R | tol=1 F1 | docs exact | notes |
 |-------|-----|---------|---------|----------|---------|---------|----------|------------|-------|
-| Baseline | RTX 5090 | 77.89% | 92.50% | 84.57% | 77.89% | 92.50% | 84.57% | 65/89 | TP=74 FP=21 FN=6. Over-splits (low P). 12 of 21 FP in file 163444215. tol=1==tol=0 → FPs not off-by-one. |
-| Fix 1 (REVERTED) | RTX 5090 | 74.00% | 92.50% | 82.22% | 75.00% | 93.75% | 83.33% | 63/89 | tol0 F1 −2.35 vs baseline (>2) → reverted. Added FPs (26 vs 21); worsened over-split on 163444215. |
-| Fix R (kept) | RTX 5090 | 77.89% | 92.50% | 84.57% | 77.89% | 92.50% | 84.57% | 65/89 | Identical to baseline; 2 rotations applied but both boundary-irrelevant interior pages. No regression → kept. |
-| Fix 4 | RTX 6000 Ada | running | | | | | | | de-anchor + cap noisy signals. NEW GPU — needs same-GPU baseline anchor before Stage B deltas are valid. |
+| ~~Baseline~~ | ~~RTX 5090~~ | ~~77.89%~~ | ~~92.50%~~ | ~~84.57%~~ | ~~77.89%~~ | ~~92.50%~~ | ~~84.57%~~ | ~~65/89~~ | SUPERSEDED by 6000 Ada anchor (different GPU). TP=74 FP=21 FN=6. |
+| ~~Fix 1 (REVERTED)~~ | ~~RTX 5090~~ | ~~74.00%~~ | ~~92.50%~~ | ~~82.22%~~ | ~~75.00%~~ | ~~93.75%~~ | ~~83.33%~~ | ~~63/89~~ | REVERTED (placement errors absent from data; Fix 1-REV also dropped per brief 2). |
+| ~~Fix R (kept)~~ | ~~RTX 5090~~ | ~~77.89%~~ | ~~92.50%~~ | ~~84.57%~~ | ~~77.89%~~ | ~~92.50%~~ | ~~84.57%~~ | ~~65/89~~ | SUPERSEDED. Neutral on 5090; rotation no-op rules it out of run-9 regression. |
+| **Baseline (anchor)** | **RTX 6000 Ada** | 76.84% | 91.25% | 83.43% | 76.84% | 91.25% | 83.43% | 64/89 | f51a810 code re-run on this GPU. TP=73 FP=22 FN=7. Conf histogram: 3×85, 131×90 (anchored prompt). **Same-GPU anchor for all deltas below.** |
+| Fix 4 | RTX 6000 Ada | 84.09% | 92.50% | 88.10% | 84.09% | 92.50% | 88.10% | 69/89 | **Δ F1 +4.67 vs 6000 Ada anchor.** TP=74 FP=14 FN=6. De-anchor + cap noisy signals. Conf histogram: 17×80, 101×90 (4b removed 100s, added 80s; recall up not down). 163444215 FP 22→9. |
 
 **GPU comparability (per brief 2 / A4):** baseline, Fix 1, Fix R were measured on **RTX 5090**;
 Fix 4 onward run on **RTX 6000 Ada** (pods cycled due to disk/OOM). Greedy decoding is
