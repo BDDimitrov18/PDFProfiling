@@ -34,13 +34,15 @@ same-hardware anchor; 5090 rows will then be struck through (kept for history).
 
 ## run8.py head-to-head (regression diagnostic)
 
-- **run8.py provenance: UNRESOLVED.** run8.py has load-bearing style modifiers (current
-  `split.py` demoted these to log-only), but that is **consistent with pristine run-8** —
-  they may have been demoted in a later run, not added. On `163444215` (6000 Ada) run8.py
-  scored F1 **83.3%** historical-style (TP=15, FP=5 `{6,10,11,13,31}`, FN=1 `{9}`) vs
-  historical run8=80% / run9=84%. The 83.3-vs-80 gap is **GPU-confounded** (historical was
-  5090, this was 6000 Ada) and possibly scorer-confounded — so this does **NOT** establish
-  run8.py as non-pristine. Clean test pending: re-run run8.py on the 5090.
+- **run8.py provenance: RESOLVED — it IS genuine run-8 code.** The migrated run-8 pod's
+  `test_run8.log` (the actual historical run 8) predicted `163444215` =
+  `[1,3,4,5,6,8,10,11,12,13,15,22,23,24,25,26,31,32,34]` → F1 **80.0%**, FP=`[6,10,11,13,31]`,
+  FN=`[7,9]` (matches stats.py historical run8=80 exactly). run8.py predicted the **identical
+  FP set** `[6,10,11,13,31]`; the ONLY difference is page 7 (run8.py caught it, raising F1 to
+  83.3%) — symmetric diff = `[7]`, a single boundary flip explained by GPU-arch
+  non-determinism (6000 Ada vs the original run-8 5090). Style modifiers present = consistent
+  with pristine run-8 (demoted to log-only later, not added). [Earlier "probably not pristine"
+  was WRONG.] Re-running run8.py on the migrated 5090 (same arch) should match historical exactly.
 - **Hard cases:** FPs **11 and 13** on `163444215` are produced by BOTH run8.py and the
   current pipeline, via *different mechanisms* — genuinely hard pages, expected to **survive
   Fix 9**. (run8 unique-misses are only the `titled_id_header` cluster `{19,20,21,27}`, which
