@@ -59,7 +59,9 @@ same-hardware anchor; 5090 rows will then be struck through (kept for history).
   83.3%) — symmetric diff = `[7]`, a single boundary flip explained by GPU-arch
   non-determinism (6000 Ada vs the original run-8 5090). Style modifiers present = consistent
   with pristine run-8 (demoted to log-only later, not added). [Earlier "probably not pristine"
-  was WRONG.] Re-running run8.py on the migrated 5090 (same arch) should match historical exactly.
+  was WRONG.] **CONFIRMED on 5090: run8.py reproduces historical run-8 byte-identically on ALL
+  9 dev files** (the 6000 Ada's page-7 diff was pure GPU non-determinism). Definitive: run8.py
+  = run-8 code, and the migrated 5090 reproduces the original run-8 env exactly.
 - **Hard cases:** FPs **11 and 13** on `163444215` are produced by BOTH run8.py and the
   current pipeline, via *different mechanisms* — genuinely hard pages, expected to **survive
   Fix 9**. (run8 unique-misses are only the `titled_id_header` cluster `{19,20,21,27}`, which
