@@ -114,6 +114,17 @@ architectures — only compare rows with the same `gpu`).
 | run8.py (reference) | RTX 5090 | 88.1% | 90.2% | **89.16%** | — | +3.28 vs baseline | ~~87.80%~~ |
 | **Fix 4** | RTX 5090 | 85.7% | 95.1% | **90.17%** | — | **+4.29 vs baseline** | ~~88.89%~~ |
 | Fix 8 (KEPT, flagged) | RTX 5090 | 87.95% | 89.02% | 88.48% | 68/91 | **−1.69 vs Fix 4** | — |
+| Fix 9 (Fix 8+9) | RTX 5090 | 89.02% | 89.02% | 89.02% | 69/91 | **+0.54 vs Fix 8; −1.15 vs Fix 4** | — |
+
+**Fix 9 (Fix 8+9 combined, commit aea8297, RTX 5090, corrected GT) — step 1 row.**
+tol0=tol1: P=89.02 R=89.02 **F1=89.02**. TP=73 FP=9 FN=9. vs Fix 8 (88.48): +0.54 (FP 10→9).
+- Per-exclusion attribution (163444215, vs Fix 8 FP=[6,13,19,20,21,31]): **drawing-block exclusion removed
+  20,21**; 27 & 11 were already gone via Fix 8 (page-counter's isolated effect measured by the A/B);
+  **19 SURVIVED** the exclusion (not recognized as a drawing title block). New FP `13`@164505881 appeared.
+- **084303475 p4 PRESERVED as a boundary** (pred=[2,4,5,6,7,12,14]) — X-of-Y exclusion spared the bare-'2'. ✓
+- 17 confirm-pass vetoes (Fix 8's titled routing); recall held at 89.0% (FN=9: 12@164505881, 3,4@165204533,
+  20@082511233, 19,20,37@142044854, 15,16@084303475). Per-veto TP/FP not cleanly attributable (page numbers
+  repeat across files); the Fix9-only A/B isolates Fix 8's net contribution. Still −1.15 below Fix 4.
 | Baseline (anchor) | RTX 6000 Ada | 78.9% | 91.5% | 84.74% | — | — | ~~83.43%~~ |
 | Fix 4 | RTX 6000 Ada | 86.4% | 92.7% | 89.36% | — | +4.62 | ~~88.10%~~ |
 
