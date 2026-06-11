@@ -29,6 +29,9 @@ architectures — only compare rows with the same `gpu`).
 | ~~Fix R (kept)~~ | ~~RTX 5090~~ | ~~77.89%~~ | ~~92.50%~~ | ~~84.57%~~ | ~~77.89%~~ | ~~92.50%~~ | ~~84.57%~~ | ~~65/89~~ | SUPERSEDED. Neutral on 5090; rotation no-op rules it out of run-9 regression. |
 | **Baseline (anchor)** | **RTX 6000 Ada** | 76.84% | 91.25% | 83.43% | 76.84% | 91.25% | 83.43% | 64/89 | f51a810 code re-run on this GPU. TP=73 FP=22 FN=7. Conf histogram: 3×85, 131×90 (anchored prompt). **Same-GPU anchor for all deltas below.** |
 | Fix 4 | RTX 6000 Ada | 84.09% | 92.50% | 88.10% | 84.09% | 92.50% | 88.10% | 69/89 | **Δ F1 +4.67 vs 6000 Ada anchor.** TP=74 FP=14 FN=6. De-anchor + cap noisy signals. Conf histogram: 17×80, 101×90 (4b removed 100s, added 80s; recall up not down). 163444215 FP 22→9. |
+| **Baseline (5090 anchor, reused)** | **RTX 5090** | 77.89% | 92.50% | 84.57% | 77.89% | 92.50% | 84.57% | 65/89 | Env-match CONFIRMED (run8.py reproduced historical run-8 exactly on this migrated pod) → original 84.57% is the valid same-GPU anchor for the 5090 deltas below. |
+| **run8.py (reference)** | **RTX 5090** | 85.71% | 90.00% | 87.80% | 85.71% | 90.00% | 87.80% | 67/89 | Genuine run-8 code. **+3.2 F1 vs current baseline (84.57%) on same arch → quantifies the run8→current regression.** TP=72 FP=12 FN=8. 163444215 matches historical run-8 exactly (FP=[6,10,11,13,31] FN=[7,9]). |
+| Fix 4 | RTX 5090 | running | | | | | | | re-run on 5090 as same-GPU diff reference for Fix 8 (6000 Ada gave 88.10%). |
 
 **GPU comparability (per brief 2 / A4):** baseline, Fix 1, Fix R were measured on **RTX 5090**;
 Fix 4 onward run on **RTX 6000 Ada** (pods cycled due to disk/OOM). Greedy decoding is
