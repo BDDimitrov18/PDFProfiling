@@ -67,11 +67,19 @@ architectures — only compare rows with the same `gpu`).
 | Baseline (anchor) | RTX 5090 | 80.0% | 92.7% | **85.88%** | — | — | ~~84.57%~~ |
 | run8.py (reference) | RTX 5090 | 88.1% | 90.2% | **89.16%** | — | +3.28 vs baseline | ~~87.80%~~ |
 | **Fix 4** | RTX 5090 | 85.7% | 95.1% | **90.17%** | — | **+4.29 vs baseline** | ~~88.89%~~ |
+| Fix 8 (KEPT, flagged) | RTX 5090 | 87.95% | 89.02% | 88.48% | 68/91 | **−1.69 vs Fix 4** | — |
 | Baseline (anchor) | RTX 6000 Ada | 78.9% | 91.5% | 84.74% | — | — | ~~83.43%~~ |
 | Fix 4 | RTX 6000 Ada | 86.4% | 92.7% | 89.36% | — | +4.62 | ~~88.10%~~ |
 
 Primary anchor = **RTX 5090** (env-matched to original run-8 pod). Fix 4 = **90.17%**, +4.29 over the 85.88%
-baseline. Fix 8/9/11 below are measured against this corrected 5090 GT.
+baseline. Fix 8/9/11 measured against this corrected 5090 GT.
+
+**Fix 8 Stage D (RTX 5090, corrected GT) — KEPT (drop 1.69 ≤ 2), FLAGGED net-negative.**
+TP=73 FP=10 FN=9; P=87.95 R=89.02 F1=88.48 (tol0=tol1). Removed FPs `11,27`@163444215, `7`@165204533;
+but generic confirm wrongly REJECTED 5 true titled_id_header starts → new FN `4`@163444215, `12`@164505881,
+`19,37`@142044854, `15`@084303475 (recall 95.1→89.0). Note titled FPs `13,19,20,21`@163444215 SURVIVED
+confirm (drawing title blocks — Fix 9 targets them at the prompt). `19`@142044854 + `15`@084303475 are Fix 11
+recovery targets. **Reconsider Fix 8 if Fix 9+11 cumulative stays < Fix 4 90.17.**
 
 **GPU comparability (per brief 2 / A4):** baseline, Fix 1, Fix R were measured on **RTX 5090**;
 Fix 4 onward run on **RTX 6000 Ada** (pods cycled due to disk/OOM). Greedy decoding is
