@@ -452,7 +452,7 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         f"Does page {current_page} END a document (i.e. does the next page start a new, "
         "separate document)?\n\n"
         "Check for these signals IN ORDER and report the first one you see:\n\n"
-        "STRONG END signals (end=true, confidence 85-100):\n"
+        "STRONG END signals (end=true):\n"
         "  signature_block — the labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' as "
         "printed text labels, AND at least one label has an actual handwritten signature or filled "
         "name/date next to it. CRITICAL: a round organizational stamp (печат / кръгъл печат) appearing "
@@ -462,7 +462,7 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         "with an actual handwritten signature or stamp next to each label. "
         "A label with a blank line or empty box is NOT a signoff.\n"
         "  table_end — totals/summary row at bottom of table, no continuation arrow\n\n"
-        "STRONG START signals on the NEXT page (end=true, confidence 85-100):\n"
+        "STRONG START signals on the NEXT page (end=true):\n"
         "  titled_id_header — the NEXT page BEGINS a document: it opens with a document "
         "title or a letterhead/issuer block at the VERY TOP, AND right next to or just "
         "below that title there is a document-level identifier — a permit number (РС №), "
@@ -482,7 +482,7 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         "  stamp_change — the official round stamp (печат) on the next page belongs to a visibly "
         "different organization or issuer than the stamp on the current page "
         "(do NOT use if stamps are absent or look the same)\n\n"
-        "WEAK signals (end=true only if strong evidence, confidence 50-70):\n"
+        "WEAK signals (end=true only if strong evidence):\n"
         "  appendix_mid_doc — 'ПРИЛОЖЕНИЕ № X' mid-document\n\n"
         "NOT an end (end=false):\n"
         "  same_letterhead — same letterhead continues\n"
@@ -496,6 +496,10 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         "IMPORTANT: 'signal_on_page' must be the exact page number from the list above "
         "where you actually see the signal. If the signature block is on page 12, write 12, "
         "not 11. Be precise — this is used to place the document boundary correctly.\n\n"
+        "Confidence must reflect how clearly YOU see the signal on THIS page — "
+        "how legible and unambiguous the evidence is — NOT the signal's category. "
+        "A barely-legible stamp or corner page number deserves LOW confidence even "
+        "if its signal type is listed as strong.\n\n"
         "Respond ONLY with JSON:\n"
         '{"end": true/false, "signal": "<signal_name>", "signal_on_page": <page_number>, '
         '"confidence": <0-100>, "reason": "<one sentence: exactly what you see that triggered this>"}'
@@ -918,7 +922,10 @@ def detect_boundaries(
 
         # Cap table_end confidence so it must pass the low-conf confirmation pass
         # below — but don't veto it: some docs legitimately end on a totals row.
-        if signal == "table_end":
+        # Cap unreliable signals so they must pass the confirmation pass below.
+        # page_number_reset and stamp_change depend on small print / stamp text
+        # that is marginal at this DPI.
+        if signal in ("table_end", "page_number_reset", "stamp_change"):
             conf = min(conf, 0.60)
 
         # Appendix chain logic
