@@ -9,16 +9,25 @@
 > 6000 Ada Fix 4 = F1 88.10%); (3) **Fix 8** (force `titled_id_header` through confirmation — edits
 > the `conf<0.75` confirm block at ~split.py:993); (4) **Fix 9 — TWO exclusions in ONE commit** in
 > the `titled_id_header` prompt (~split.py:472-474): (i) drawing-title-block (ОБЕКТ/ЧАСТ/ФАЗА/МАЩАБ/
-> ЧЕРТЕЖ №/sheet#) → targets FPs {19,20,21,27}; (ii) page-counter X>1 ('стр. 2 от 2', '2/2') =
-> continuation NOT new doc even when the agency letterhead banner repeats → targets FP {11}
-> (root-caused via page images: p11 is 'стр. 2 от 2' of p10's скица, model confabulated 'РС №' from
-> the repeated AGKK banner). Stage D row reports per-FP attribution ({19,20,21,27} vs {11});
+> ЧЕРТЕЖ №/sheet#) → targets FPs {19,20,21,27}; (ii) page-counter exclusion — **X-of-Y FORM ONLY**
+> ('стр. 2 от 2', '2/2' with X>1) = continuation NOT new doc even when the agency letterhead banner
+> repeats → targets FP {11} (p11 = 'стр. 2 от 2' of p10's скица; model confabulated 'РС №' from the
+> repeated AGKK banner). **BARE numerals (a lone corner '2') MUST NOT trigger it** — canonical
+> counter-case: **084303475 p4** is a TRUE doc start carrying a bare corner '2' because its leading
+> pages (incl. Челен лист) are absent from the scan; X-of-Y wording keeps it catchable. The exclusion
+> is a `titled_id_header` SUPPRESSOR ONLY — missing-leading-page starts remain catchable via the Fix 8
+> confirmation path. Stage D row reports per-FP attribution ({19,20,21,27} vs {11}) AND confirms p4 stays a boundary;
 > (5) **Fix 11** (table-specialized `_query_confirm_table_boundary`, route `signal=="table_end"` in
 > the confirm block; table-path None→reject; targets 5 table FNs 20@082511233 / 19,20@142044854 /
 > 15,16@084303475; success FN −3+ with ≤+2 leaked table FPs). Fix 6 cancelled; Fix 3 lowest-priority.
 > Revert any fix that drops tol=0 F1 >2 pts. pod ssh details are in the conversation, not committed.
 > **C-tracking caution:** Reason fields are POST-HOC rationalizations — never treat text cited in a
 > Reason as actually on the page without checking the image (p11's confabulated 'РС №' is the proof).
+> **C-tracking truth notes (closed):** GT boundaries 163444215:p10 and 084303475:p4 are human-attested
+> FINAL (p4: rest of ЧАСТ ЕЛЕКТРОТЕХНИЧЕСКА incl. its Челен лист is not in the combined PDF at all;
+> p3 = previous document). The 'convention-mismatch' category DISSOLVES for FP 10 (human did split the
+> receipt). **084303475 p4 = canonical test case for Fix 9's page-counter exclusion** (true start with a
+> bare corner '2' from missing leading pages — must survive the exclusion).
 
 Eval set: `eval_dev/` (9 files, ~181 pages, derived from `tests/` only) — unchanged across all
 boundary runs (boundary truth from PDFsam split files; identical `ground_truth.json`).
