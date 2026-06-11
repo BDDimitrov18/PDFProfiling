@@ -990,7 +990,14 @@ def detect_boundaries(
 
         # Low-confidence confirmation pass — skip for strong visual signals that
         # don't need corroboration (fresh letterhead and header resets are visually unambiguous)
-        if is_end and conf < 0.75 and signal not in ("fresh_letterhead", "header_block_reset", "titled_id_header"):
+        # Fix 8: titled_id_header is NOT visually unambiguous (measured ~45% precision on
+        # drawing-heavy files), so it must ALWAYS pass the confirmation pass — not only when
+        # conf < 0.75 (its FPs carry conf 80-90 and would otherwise skip confirmation entirely).
+        needs_confirm = is_end and (
+            (conf < 0.75 and signal not in ("fresh_letterhead", "header_block_reset"))
+            or signal == "titled_id_header"
+        )
+        if needs_confirm:
             confirmed, confirm_conf = _query_confirm_boundary(
                 page_buffer[n], page_buffer[n + 1], n, n + 1,
                 model, processor, config, logger,
