@@ -7,12 +7,18 @@
 > **Queue (one commit + eval + Stage D row each):** (1) run8.py head-to-head on 5090 — RUNNING
 > (`run8_5090.log`); (2) re-run **Fix 4** on 5090 (diff ref for Fix 8; sanity-compare per-file to
 > 6000 Ada Fix 4 = F1 88.10%); (3) **Fix 8** (force `titled_id_header` through confirmation — edits
-> the `conf<0.75` confirm block at ~split.py:993); (4) **Fix 9** (drawing-title-block exclusion in
-> the `titled_id_header` prompt, splice before "a page " at ~split.py:472-474); (5) **Fix 11**
-> (table-specialized `_query_confirm_table_boundary`, route `signal=="table_end"` in the confirm
-> block; table-path None→reject; targets 5 table FNs 20@082511233 / 19,20@142044854 / 15,16@084303475;
-> success FN −3+ with ≤+2 leaked table FPs). Fix 6 cancelled; Fix 3 lowest-priority after Fix 9.
+> the `conf<0.75` confirm block at ~split.py:993); (4) **Fix 9 — TWO exclusions in ONE commit** in
+> the `titled_id_header` prompt (~split.py:472-474): (i) drawing-title-block (ОБЕКТ/ЧАСТ/ФАЗА/МАЩАБ/
+> ЧЕРТЕЖ №/sheet#) → targets FPs {19,20,21,27}; (ii) page-counter X>1 ('стр. 2 от 2', '2/2') =
+> continuation NOT new doc even when the agency letterhead banner repeats → targets FP {11}
+> (root-caused via page images: p11 is 'стр. 2 от 2' of p10's скица, model confabulated 'РС №' from
+> the repeated AGKK banner). Stage D row reports per-FP attribution ({19,20,21,27} vs {11});
+> (5) **Fix 11** (table-specialized `_query_confirm_table_boundary`, route `signal=="table_end"` in
+> the confirm block; table-path None→reject; targets 5 table FNs 20@082511233 / 19,20@142044854 /
+> 15,16@084303475; success FN −3+ with ≤+2 leaked table FPs). Fix 6 cancelled; Fix 3 lowest-priority.
 > Revert any fix that drops tol=0 F1 >2 pts. pod ssh details are in the conversation, not committed.
+> **C-tracking caution:** Reason fields are POST-HOC rationalizations — never treat text cited in a
+> Reason as actually on the page without checking the image (p11's confabulated 'РС №' is the proof).
 
 Eval set: `eval_dev/` (9 files, ~181 pages, derived from `tests/` only) — unchanged across all
 boundary runs (boundary truth from PDFsam split files; identical `ground_truth.json`).
