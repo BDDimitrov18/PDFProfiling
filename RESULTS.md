@@ -1,5 +1,19 @@
 # Boundary / Rotation Eval Results
 
+> **RESUME POINT (2026-06-11):** Working on a migrated **RTX 5090** pod (the original run-8 pod;
+> env reproduces run-8 exactly, so the **84.57% baseline is reused as the 5090 anchor**, no
+> baseline re-run). Model cached at `/hf_cache`; deps per `requirements-lock.txt`; `HF_HOME=/hf_cache`,
+> `HF_HUB_DISABLE_XET=1`. Speed ~16.5 s/page.
+> **Queue (one commit + eval + Stage D row each):** (1) run8.py head-to-head on 5090 — RUNNING
+> (`run8_5090.log`); (2) re-run **Fix 4** on 5090 (diff ref for Fix 8; sanity-compare per-file to
+> 6000 Ada Fix 4 = F1 88.10%); (3) **Fix 8** (force `titled_id_header` through confirmation — edits
+> the `conf<0.75` confirm block at ~split.py:993); (4) **Fix 9** (drawing-title-block exclusion in
+> the `titled_id_header` prompt, splice before "a page " at ~split.py:472-474); (5) **Fix 11**
+> (table-specialized `_query_confirm_table_boundary`, route `signal=="table_end"` in the confirm
+> block; table-path None→reject; targets 5 table FNs 20@082511233 / 19,20@142044854 / 15,16@084303475;
+> success FN −3+ with ≤+2 leaked table FPs). Fix 6 cancelled; Fix 3 lowest-priority after Fix 9.
+> Revert any fix that drops tol=0 F1 >2 pts. pod ssh details are in the conversation, not committed.
+
 Eval set: `eval_dev/` (9 files, ~181 pages, derived from `tests/` only) — unchanged across all
 boundary runs (boundary truth from PDFsam split files; identical `ground_truth.json`).
 Rotation truth from split PDFs' `/Rotate` metadata (CW→CCW); see Stage 1 log.
