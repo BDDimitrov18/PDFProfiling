@@ -20,9 +20,20 @@
 > (5) **Fix 11** (table-specialized `_query_confirm_table_boundary`, route `signal=="table_end"` in
 > the confirm block; table-path None→reject; targets 5 table FNs 20@082511233 / 19,20@142044854 /
 > 15,16@084303475; success FN −3+ with ≤+2 leaked table FPs). Fix 6 cancelled; Fix 3 lowest-priority.
+> **Queue update (post-Fix-9):** after Fix 9 row records (Fix 8+9 combined = HEAD aea8297), run ONE extra
+> eval: **Fix 9 WITHOUT Fix 8** (revert 9181a66 on a branch, keep aea8297). Keep whichever of {Fix8+9,
+> Fix9-only} scores higher (predicted: Fix9-only — Fix 9 prompt-excludes most of what Fix 8 routing
+> caught, Fix 8's FN cost remains). Fix 9 Stage D row: per-exclusion attribution + list every
+> confirm-pass veto with TP/FP. Verify 084303475 p4 stays a detected boundary. Fix 11 on the winner.
 > Revert any fix that drops tol=0 F1 >2 pts. pod ssh details are in the conversation, not committed.
 > **C-tracking caution:** Reason fields are POST-HOC rationalizations — never treat text cited in a
 > Reason as actually on the page without checking the image (p11's confabulated 'РС №' is the proof).
+> **C-tracking — `_query_confirm_boundary` has TWO confirmed weaknesses:** (1) 0-for-5 on consecutive
+> table-documents (rejects real table boundaries → Fix 11 replaces it for table_end). (2) **INVERTED
+> bias for titled signals** (Fix 8 evidence): it kills real same-issuer titled_id_header transitions
+> (lost 5 true starts) while passing fresh-looking drawing sheets — so routing titled_id_header through
+> it (Fix 8) costs recall without removing the drawing-sheet FPs. Implication: prompt-level exclusion
+> (Fix 9) is the right tool for titled FPs; the generic confirm is the wrong tool to *validate* titled starts.
 > **C-tracking truth notes (closed):** GT boundaries 163444215:p10 and 084303475:p4 are human-attested
 > FINAL (p4: rest of ЧАСТ ЕЛЕКТРОТЕХНИЧЕСКА incl. its Челен лист is not in the combined PDF at all;
 > p3 = previous document). The 'convention-mismatch' category DISSOLVES for FP 10 (human did split the
