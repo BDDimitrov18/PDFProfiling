@@ -203,6 +203,23 @@ unreliable claimed page) AND it is not BOTH-grounded, run the relocation search 
 separates FN3 (requeried→relocate→p3) from p4 (in-window→trust capped accept). KEPT the upgrade (net-neutral,
 strictly more robust, no regression); FN3 fork surfaced to user before the stacked dev eval.
 
+**#1-lite (skip n+1 one-page-check for signature_block/table_end) — PROBED, REVERTED per byte-gate (commit
+6015f0b → revert ba9aab1).** Re-probe (`probe_1lite2.log`, md5 7985f70) byte-level vs Amendment-1 expected sets:
+| File | Expected (tol0) | Got | Verdict |
+|---|---|---|---|
+| 163444215 | FP=[6,13] FN=[] | FP=[6,13] FN=[] | ✓ **FP31 DEAD** |
+| 164505881 | FP=[9,13] FN=[12] | FP=[9,13] FN=[12] | ✓ |
+| 165204533 | FP=[] FN=[3,4] | FP=[] FN=[3,4] | ✓ |
+| 082511233 | FP=[] FN=[20] | **FP=[21]** FN=[20] | ✗ NEW FP21 |
+tol0 F1 86.96 (TP30/FP5/FN4, unchanged — traded FP31 for FP21); tol1 F1 92.75. **FP31-death claim EVIDENCED:**
+probe log `End at page 31 → doc starts at page 32 (conf=92%, signal=signature_block)` (p31 own window) — the
+override is pure noise. **But** 082511233 gained FP21 (deviation beyond FP31's death) → Amendment-1 byte-gate →
+**reverted immediately**, chain continues on #2+#4 (logic md5 == 63da033). ROOT CAUSE: there are TWO one-page-check
+call sites — the n+1 site (gated by #1-lite) AND the OOB-projection site (NOT gated); skipping the n+1 site
+rerouted p20's signature_block (signal_on_page=21, new_start=22 OOB) through the OOB-projection one-page-check,
+which fired self_contained on p21 ('НАКЛОНЕН ПОКРИВ') → boundary at 21. **A correct #1-lite must gate BOTH sites
+together** — deferred to its own probe cycle (backlog). FP31 stays a STRICT FP on #2+#4 for now.
+
 ### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
 From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
 classified by the full set of signals that resolved to it (per-event `End at page X → doc
