@@ -284,6 +284,31 @@ macOS stdin-pipe artifact); the authoritative check is `git checkout 9fee964 -- 
 (matches the pod + Fable's probe5 reference). split.py restored to exactly 63da033; Stage 1 relaunched on it
 (`dev_stage1.log`) after a transient working-tree state (`fab0d5a`, a duplicated-comment block, logic-identical).
 
+#### ✅✅ STAGE 2 — FULL-TESTS STRATIFIED (#2+#4 on 63da033) — STRONG GENERALIZATION
+`logs/fulltests_stage2.log` + `logs/fulltests_stage2_results.json` (250/336 docs exact). Masked excluded:
+143041245[62-66], 145428614[146-150].
+| stratum | TP/FP/FN | P | R | **F1** | round-1 candidate |
+|---|---|---|---|---|---|
+| dev (9) | 75/7/7 | 91.46 | 91.46 | **91.46** | 89.94 |
+| holdout (3) | 11/1/4 | 91.67 | 73.33 | **81.48** | — |
+| fresh (8) | 197/33/18 | **85.65** | 91.63 | **88.54** | 84.63 (P 77.31) |
+| **AGGREGATE (20)** | 283/41/29 | 87.35 | 90.71 | **88.99** | **85.84** |
+**Headline:** aggregate **85.84 → 88.99 (+3.15)**; **fresh precision 77.31 → 85.65 (+8.34)** = #4 killing the
+invented-РС№ FP class exactly as designed. **Overfitting gap dev−fresh NARROWED +5.31 → +2.92** (fresh +3.91 vs
+dev +1.52) — #4 transfers to unseen data BETTER than the dev-tuned baseline; it is a real generalization win, not
+overfitting. Holdout R low (73%) on tiny n=15 (3 files: 4 FN, mostly missed table/signature starts — not titled).
+**Per-stratum gate-event table** (`stage2_event_counts.py`, masked excluded):
+| stratum | suppressed | capped | reloc | reloc_dup | requery | onelite_would_fire |
+|---|--:|--:|--:|--:|--:|--:|
+| dev | 6 | 6 | 2 | 1 | 1 | 9 |
+| holdout | 1 | 0 | 0 | 0 | 0 | 1 |
+| fresh | 17 | 29 | 15 | **8** | 0 | 19 |
+| ALL | 24 | 35 | 17 | 9 | 1 | 29 |
+**FRESH `titled_reloc_dup`=8** (of 18 fresh FN) → relocate-to-duplicate is MATERIAL on unseen data → the
+requery-aware relocation-trigger fix is worth implementing (decided by this count, per the C-tracking note).
+`onelite_would_fire`=29 = end-events a correct (both-sites) #1-lite v2 would gate. Next: nomenclature experiment
+on this log, then Stage 3 run8 referee.
+
 #### ✅ STAGE 1 — DEV EVAL (#2+#4 on authoritative 63da033) — KEEP (+1.52 vs baseline)
 `logs/dev_stage1.log` + `logs/dev_stage1_results.json`. Dev tol=0 **F1 91.46%** (TP=75 FP=7 FN=7, P=R=91.46%),
 tol=1 F1 92.68%, 74/91 docs exact. Baseline round-1 candidate dev tol=0 **89.94** → **+1.52 → KEEP** (≥89.94 rule).
