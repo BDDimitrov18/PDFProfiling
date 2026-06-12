@@ -1,0 +1,91 @@
+==========================================================================================
+NOMENCLATURE EXPERIMENT — RUN8 REFEREE LOG (cross-architecture) — DATA REPORT ONLY
+run8.py is byte-frozen; any motivated mechanism is a forward-port into split.py, never a run8 edit.
+log=logs/run8_stage3.log  nomenclature=382 entries
+==========================================================================================
+
+############################ STRATUM: dev (92 heading/start events) ############################
+
+[dev/TP] (heading-bearing) trigram n=45 mean=0.391 median=0.296 min=0.043 max=1.000
+[dev/TP] (heading-bearing) token_set n=45 mean=0.597 median=0.581 min=0.146 max=1.000
+[dev/TP] bands {'NONE': 29, 'MATCH': 15, 'AMBIGUOUS': 1}
+[dev/TP] signal mix (all events incl. headingless) {'signature_block': 39, 'table_end': 5, 'fresh_letterhead': 11, 'project_signoff': 20, 'stamp_change': 1, 'header_block_reset': 1, 'appendix_heading': 1}
+
+[dev/FP] (heading-bearing) trigram n=6 mean=0.195 median=0.202 min=0.097 max=0.300
+[dev/FP] (heading-bearing) token_set n=6 mean=0.421 median=0.423 min=0.343 max=0.513
+[dev/FP] bands {'NONE': 6}
+[dev/FP] signal mix (all events incl. headingless) {'signature_block': 12, 'fresh_letterhead': 1, 'project_signoff': 1}
+
+[dev] SHEET-TYPE entry hits (TP/FP):
+    (none)
+[dev] ADMIN-document entry hits (TP/FP):
+    Обяснителна записка                        TP=4 FP=0
+    Доклад                                     TP=3 FP=0
+    Разписен лист                              TP=2 FP=0
+    Удостоверение за търпимост                 TP=2 FP=0
+    Количествена сметка                        TP=1 FP=0
+    Оценка за съответствие по чл. 142, ал. 6 от ЗУT TP=1 FP=0
+    Молба (Заявление, Искане)                  TP=1 FP=0
+    Пълномощно                                 TP=1 FP=0
+    Удостоверение за наследници/ако има починал собственик/ TP=1 FP=0
+
+[dev] run8-FN pages carrying a logged heading (rescue-analog):
+    (none)
+
+############################ STRATUM: holdout (11 heading/start events) ############################
+
+[holdout/TP] (heading-bearing) trigram n=8 mean=0.495 median=0.419 min=0.125 max=1.000
+[holdout/TP] (heading-bearing) token_set n=8 mean=0.686 median=0.667 min=0.353 max=1.000
+[holdout/TP] bands {'MATCH': 4, 'NONE': 4}
+[holdout/TP] signal mix (all events incl. headingless) {'project_signoff': 8, 'fresh_letterhead': 1}
+
+[holdout/FP] (heading-bearing) trigram n=0
+[holdout/FP] (heading-bearing) token_set n=0
+[holdout/FP] bands {}
+[holdout/FP] signal mix (all events incl. headingless) {'signature_block': 1, 'project_signoff': 1}
+
+[holdout] SHEET-TYPE entry hits (TP/FP):
+    (none)
+[holdout] ADMIN-document entry hits (TP/FP):
+    Удостоверение за търпимост                 TP=2 FP=0
+    Обяснителна записка                        TP=2 FP=0
+
+[holdout] run8-FN pages carrying a logged heading (rescue-analog):
+    (none)
+
+############################ STRATUM: fresh (255 heading/start events) ############################
+
+[fresh/TP] (heading-bearing) trigram n=141 mean=0.359 median=0.296 min=0.000 max=1.000
+[fresh/TP] (heading-bearing) token_set n=141 mean=0.565 median=0.545 min=0.000 max=1.000
+[fresh/TP] bands {'NONE': 93, 'MATCH': 47, 'AMBIGUOUS': 1}
+[fresh/TP] signal mix (all events incl. headingless) {'signature_block': 118, 'project_signoff': 48, 'table_end': 8, 'fresh_letterhead': 31, 'stamp_change': 4, 'header_block_reset': 1}
+
+[fresh/FP] (heading-bearing) trigram n=22 mean=0.193 median=0.146 min=0.074 max=1.000
+[fresh/FP] (heading-bearing) token_set n=22 mean=0.473 median=0.475 min=0.280 max=1.000
+[fresh/FP] bands {'NONE': 21, 'MATCH': 1}
+[fresh/FP] signal mix (all events incl. headingless) {'signature_block': 30, 'project_signoff': 5, 'fresh_letterhead': 5, 'appendix_heading': 4, 'stamp_change': 1}
+
+[fresh] SHEET-TYPE entry hits (TP/FP):
+    (none)
+[fresh] ADMIN-document entry hits (TP/FP):
+    Удостоверение за търпимост                 TP=17 FP=0
+    Количествена сметка                        TP=5 FP=0
+    Разрешение за строеж (РС)                  TP=5 FP=0
+    Разписен лист                              TP=4 FP=0
+    Водоснабдяване и канализация               TP=3 FP=0
+    Обяснителна записка                        TP=2 FP=0
+    Заповед за отказ                           TP=2 FP=0
+    Застраховка                                TP=1 FP=0
+    Оценка за съответствие на инвестиционен проект по чл. 166, ал. 1, т. 1 от ЗУТ TP=1 FP=0
+    Изчисления                                 TP=1 FP=0
+    Молба (Заявление, Искане)                  TP=1 FP=0
+    Технически паспорт                         TP=1 FP=0
+    Трасировъчен план                          TP=1 FP=0
+    Пълномощно                                 TP=0 FP=1
+    Доклад                                     TP=1 FP=0
+    Предварителен договор за присъединяване    TP=1 FP=0
+    Геодезическо заснемане                     TP=1 FP=0
+    Координатен регистър                       TP=1 FP=0
+
+[fresh] run8-FN pages carrying a logged heading (rescue-analog):
+    (none)
