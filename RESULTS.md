@@ -109,6 +109,13 @@ one-page-check claimed "clear title at top of p21" (conf 95) on 082511233; human
 is not just a framing fallacy (4th-instance) but the model *inventing* page content to justify a verdict — the
 strongest argument yet that confirm-style queries must TRANSCRIBE before judging (the #4 pattern), never free-judge.
 
+### 🖥 ROUND 3 REDEPLOY (new RTX 5090 pod, 2026-06-13)
+New pod `213.173.103.193:19724` (data migrated; pip env + `/hf_cache` did NOT migrate — reinstalled pinned
+`requirements-lock.txt` via `--break-system-packages`, re-downloaded model 64G). Pod split.py = round-3 A–D
+(`5866b4ea`), GT v3 in eval_full/eval_probe/eval_dev, masks lifted. **FINGERPRINT PASS:** run8 on 163444215 →
+`pred=[3,4,5,6,8,10,11,12,13,15,22,23,24,25,26,31,32,34]` == historical (byte-identical) ⇒ **env reproduces run-8,
+anchors valid, no re-anchor needed.** Proceeding to the stacked A+B+C+D probe → dev → full-tests chain.
+
 ### 🧪 ROUND 3 — PRE-REGISTERED PROBE EXPECTATIONS (falsifiable, derived from tonight's logs)
 Probe set = 163444215, 164505881, 165204533, 082511233. Redeploy order: fingerprint → probe A → dev A → probe B →
 dev → probe C → dev → probe D → dev → round-3 stratified full-tests (STRICT+WAIVED). Same revert discipline as round 2.
