@@ -577,6 +577,32 @@ def _requery_signal_page(images: list, page_nums: list, current_page: int, signa
     return picked
 
 
+def _query_transcribe_title(img, page_num: int, model, processor, config, logger: logging.Logger) -> tuple:
+    """Tier2-#4: anti-hallucination gate for titled_id_header. Asks the model to READ
+    (transcribe) rather than JUDGE — the 32B confabulates a РС№/title when concluding a
+    boundary, far less when transcribing. The shared end-detection prompt is untouched
+    (no detection bleed). Returns (title, identifier); each is 'none' when absent."""
+    prompt = (
+        f"This is page {page_num} of a scanned Bulgarian construction-archive document.\n"
+        "Look ONLY at the TOP QUARTER of the page. Transcribe VERBATIM, exactly as printed "
+        "(do NOT paraphrase, infer, translate, or complete a number you cannot fully read):\n"
+        "  1. Any document TITLE shown as a heading at the very top (e.g. РАЗРЕШЕНИЕ ЗА СТРОЕЖ, "
+        "СКИЦА, УДОСТОВЕРЕНИЕ, ПРОТОКОЛ, ЗАПОВЕД, СТАНОВИЩЕ).\n"
+        "  2. Any document-level IDENTIFIER next to or just under that title — a permit number "
+        "(РС №), an outgoing/incoming number (изх. № / вх. №), a contract or case number: a № "
+        "followed by digits or a date.\n"
+        "If a title heading is NOT present in the top quarter, answer title \"none\". "
+        "If an identifier is NOT present, answer identifier \"none\". A section/article number "
+        "(чл. 5), a figure/sheet number, or a bare page-corner numeral is NOT a document identifier.\n\n"
+        'Respond ONLY with JSON: {"title": "<verbatim or none>", "identifier": "<verbatim or none>"}'
+    )
+    raw = _infer(prompt, [img], model, processor, config, logger, max_tokens=120)
+    data = _parse_json(raw or "", logger)
+    title = str(data.get("title", "none")).strip()
+    ident = str(data.get("identifier", "none")).strip()
+    return title, ident
+
+
 # ---------------------------------------------------------------------------
 # Phase 1b — appendix standalone check
 # ---------------------------------------------------------------------------
@@ -945,6 +971,29 @@ def detect_boundaries(
                 f"  Signal '{signal}' is on p{signal_page}, not p{n} — "
                 f"adjusting boundary: doc ends at p{effective_end}, next doc starts at p{effective_end + 1}"
             )
+
+        # Tier2-#4: transcribe-then-judge gate for titled_id_header (anti-hallucination).
+        # The shared end-detection prompt is left untouched (no bleed); we add ONE dedicated
+        # READ on the signal page and keep the boundary only if BOTH a title AND a document-
+        # level identifier are actually grounded there. Kills the invented-РС№ FP class
+        # (FP11/19/27); a true titled start (e.g. p10 СКИЦА № 15-158202) transcribes both and
+        # survives. Every gate decision is logged for both-directions auditing.
+        if is_end and signal == "titled_id_header" and signal_page in page_buffer:
+            t_title, t_ident = _query_transcribe_title(
+                page_buffer[signal_page], signal_page, model, processor, config, logger
+            )
+            grounded = (t_title.lower() not in ("", "none")) and (t_ident.lower() not in ("", "none"))
+            logger.info(
+                f"  [TITLE-GATE] p{signal_page}: title={t_title!r} identifier={t_ident!r} "
+                f"-> {'KEEP' if grounded else 'SUPPRESS'}"
+            )
+            if not grounded:
+                is_end = False
+                effective_end = n
+                logger.info(
+                    f"  [TITLE-GATE] titled_id_header at p{signal_page} SUPPRESSED "
+                    f"— title/identifier not grounded on the page"
+                )
 
         # One-page-check: when an END-on-page signal was projected forward to n+1,
         # disambiguate whether n+1 is self-contained (boundary at n) or a closing
