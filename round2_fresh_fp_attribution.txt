@@ -1,0 +1,85 @@
+FRESH-FP ATTRIBUTION TABLE (round-1 candidate Fix9-only) — 59 FP across 8 fresh files
+
+BY SIGNAL CLASS:
+  titled_id_header    34 (58%)
+  signature_block     21 (36%)
+  ?                    2 (3%)
+  project_signoff      2 (3%)
+
+  titled_id_header in consecutive form-stack runs: 22/34
+  ALL FPs in consecutive runs: 31/59
+
+PER-FILE (page: signal [STACK?] — reason):
+
+tests/РС-31-2017/1/Image_00112022025162710373.pdf
+  p2: signature_block [stack] — 
+  p4: signature_block [stack] — 
+
+tests/РС-31-2017/3/Image_00112022025164052657.pdf
+  p14: signature_block — 
+  p35: signature_block — 
+
+tests/РС-33-2017/1/Image_00112032025083553577.pdf
+  p7: titled_id_header [stack] — 
+  p9: signature_block [stack] — 
+  p19: signature_block — 
+  p26: titled_id_header — 
+  p33: signature_block [stack] — 
+  p35: titled_id_header [stack] — 
+  p38: titled_id_header — 
+  p43: titled_id_header — 
+
+tests/РС-33-2017/2/Image_00112032025084031203.pdf
+  p6: ? — 
+  p20: titled_id_header — 
+  p28: titled_id_header — 
+  p39: signature_block — 
+  p46: signature_block — 
+
+tests/РС-34-2017/1/Image_00112022025142438096.pdf
+  p6: titled_id_header [stack] — 
+  p7: titled_id_header [stack] — 
+  p11: titled_id_header — 
+  p25: titled_id_header — 
+  p37: titled_id_header [stack] — 
+  p39: titled_id_header [stack] — 
+  p48: signature_block — 
+  p53: signature_block — 
+  p67: titled_id_header [stack] — 
+  p69: signature_block [stack] — 
+  p88: signature_block — 
+
+tests/РС-35-2017/1/Image_00112022025143041245.pdf
+  p7: titled_id_header [stack] — 
+  p8: titled_id_header [stack] — 
+  p36: titled_id_header [stack] — 
+  p37: signature_block [stack] — 
+  p43: signature_block — 
+  p51: signature_block — 
+  p56: titled_id_header — 
+
+tests/РС-36-2017/1/Image_00112022025145428614.pdf
+  p2: signature_block — 
+  p6: titled_id_header [stack] — 
+  p7: ? [stack] — 
+  p26: titled_id_header — 
+  p30: signature_block — 
+  p34: titled_id_header [stack] — 
+  p35: titled_id_header [stack] — 
+  p37: titled_id_header [stack] — 
+  p46: titled_id_header [stack] — 
+  p47: titled_id_header [stack] — 
+  p48: titled_id_header [stack] — 
+  p65: signature_block [stack] — 
+  p66: signature_block [stack] — 
+  p71: project_signoff — 
+  p74: titled_id_header [stack] — 
+  p76: titled_id_header [stack] — 
+  p78: titled_id_header [stack] — 
+  p81: titled_id_header — 
+  p84: titled_id_header [stack] — 
+  p86: titled_id_header [stack] — 
+  p97: titled_id_header — 
+  p102: signature_block — 
+  p151: project_signoff — 
+  p163: titled_id_header — 
