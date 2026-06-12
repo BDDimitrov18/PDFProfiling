@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "table", "layout_type_curr": "table", "strongest_difference": "The second page ends the quantity table with totals, a note, and signature/stamp blocks, while the first page is a full continuous table.", "confidence": 95}

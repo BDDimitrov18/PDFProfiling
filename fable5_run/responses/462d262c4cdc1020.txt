@@ -1,0 +1,1 @@
+{"end": false, "signal": "none", "signal_on_page": 33, "confidence": 90, "reason": "Page 33 continues the same обяснителна записка started on page 32, with running body text and numbered sections (III. ДОПЪЛНИТЕЛНИ РАБОТИ, VI. ТЕХНИЧЕСКИ ПОКАЗАТЕЛИ) and no new title or letterhead at its top."}

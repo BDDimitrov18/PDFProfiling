@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "The first page bears a municipal stamp/letterhead and title block while the second is a continuation of the same numbered checklist with signatures and no header, consistent with page 2 of the same application form.", "confidence": 88}

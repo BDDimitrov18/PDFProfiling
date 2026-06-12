@@ -1,0 +1,1 @@
+{"end": false, "signal": "table_continuation", "signal_on_page": 35, "confidence": 88, "reason": "Page 35 repeats the same КОЛИЧЕСТВЕНА СМЕТКА header for the identical ОБЕКТ and its table item numbering (5, 7, 8 НАСТИЛКИ/ОБРАБОТКА ТАВАНИ/ФАСАДИ) continues directly from page 34's items, so it is a continuation page of the same bill of quantities."}

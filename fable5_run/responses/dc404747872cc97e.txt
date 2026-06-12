@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 5, "confidence": 90, "reason": "Page 5 opens with the Община Пловдив Район \"Западен\" letterhead at the very top followed immediately by an outgoing number line 'Изх. № 2-9400-304(1)…03.2017 г.', marking the start of a new document after the handwritten serving-list table on page 4."}

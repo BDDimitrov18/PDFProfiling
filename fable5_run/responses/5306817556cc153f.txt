@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 4, "confidence": 65, "reason": "Page 3 is a complete СЪОБЩЕНИЕ ending with signed Съобщил/Изготвил fields, and page 4 opens with a new form title (РАЗНОСЕН ЛИСТ) at the very top referencing a '№' identifier, starting a separate tabular delivery-list document."}

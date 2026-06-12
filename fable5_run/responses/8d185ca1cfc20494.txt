@@ -1,0 +1,1 @@
+{"starts_new": false, "confidence": 95, "reason": "Page 31 is the signature/stamp closing block (СЪДЕЛИТЕЛИ signatures and НОТАРИУС seal) of the notarial deed text running on page 30, with no new letterhead or title."}

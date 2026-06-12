@@ -1,0 +1,1 @@
+{"starts_new": true, "confidence": 92, "reason": "Page 6 is a postal delivery receipt form (известие за доставяне) with stamps and handwritten fields, a completely different document type from the municipal notice letter on page 5.", "next_page_heading": "ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ"}

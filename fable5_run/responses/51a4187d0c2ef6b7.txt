@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 13, "confidence": 88, "reason": "Page 12 is a self-contained ПРОТОКОЛ № 5 ending with certification signatures, and page 13 opens a new document — a ЗАЯВЛЕНИЕ to the chief architect with an incoming registration stamp (вх. № with 2017 date) at the very top."}

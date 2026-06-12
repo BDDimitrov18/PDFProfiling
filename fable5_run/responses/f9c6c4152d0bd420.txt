@@ -1,0 +1,1 @@
+{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The first page is a typed municipal letter on Община Пловдив letterhead with prose paragraphs, while the second is a handwritten postal delivery-notice form with barcode, boxes, and rubber stamps.", "confidence": 95}

@@ -1,0 +1,1 @@
+{"end": false, "signal": "table_continuation", "signal_on_page": 36, "confidence": 92, "reason": "Page 36 carries the identical 'КОЛИЧЕСТВЕНА СМЕТКА' header for the same ОБЕКТ (УПИ 265.657) and its table simply continues the numbered sections (9, 10) following sections 5-8 on page 35, so the bill of quantities runs on."}

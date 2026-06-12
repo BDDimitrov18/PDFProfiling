@@ -1,0 +1,1 @@
+{"end": true, "signal": "header_block_reset", "signal_on_page": 17, "confidence": 70, "reason": "Page 17 opens a fresh self-contained review slip repeating the dated 'с доклад / ЕСУТ' header with its own Обект and Част fields (Част changes from ПГ on page 16 to a different discipline), so it starts a new card rather than continuing page 16."}

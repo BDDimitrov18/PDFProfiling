@@ -1,0 +1,1 @@
+{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The first page is a portrait municipal order with a coat-of-arms letterhead and dense prose, while the second is a landscape invoice/form with table fields, a fiscal receipt block, and no matching letterhead.", "confidence": 95}

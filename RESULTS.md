@@ -248,3 +248,32 @@ same-hardware anchor; 5090 rows will then be struck through (kept for history).
   1b: `query_rotation_osd_first` added. 1c: `corroborate_aspect` quarantined (no call sites).
   Found+fixed a ground-truth bug (PDF /Rotate CW vs codebase CCW → 90 should be 270;
   visually confirmed). Raised abstention 2.0→3.0. **GATE 1 PASS (OSD precision 100%).**
+
+## EXPERIMENTAL — Fable 5 single-file boundary benchmark (NOT comparable to GPU rows)
+
+> **⚠ NOT a fix-chain row.** Different model (claude-fable-5 via Agent-tool subagents, no
+> greedy-decoding determinism guarantee), n=1 file, single run. Informs the cascade decision only.
+> Full report: `fable5_run/diff_report.md`; raw responses: `fable5_run/163444215_raw.log`.
+
+| Stage | model | file | P | R | F1 (tol0=tol1) | TP/FP/FN | notes |
+|-------|-------|------|---|---|----------------|----------|-------|
+| Fable 5 replay (EXPERIMENTAL) | claude-fable-5 | 163444215 (37p) | 66.67% | **100%** | **80.00** | 16 / 8 / 0 | FP=[6,13,16,17,18,19,20,21]. Same file, candidate 32B: P=72.73 R=100 F1=84.21 (FP=[6,11,13,19,27,31]). |
+
+- **Strict parity replay** of `split.py` @ `round1-candidate` (Fix9-only): pipeline's own 150-DPI
+  rendering + OSD rotation (all 37 pages → 0°), verbatim prompts, same window/routing/threshold logic
+  executed by the candidate's own code; only `_infer` redirected to fable subagents (81 queries:
+  72 base + 9 corrective). No GT leakage to subagents.
+- **Confabulated-identifier FPs 11, 27, 31 all FIXED** — Fable 5 returns grounded `end=false` citing
+  text that actually exists (p11 `стр. 2 от 2` + Скица № 15-158202; p27 deed body mid-list; p31
+  СЪДЕЛИТЕЛИ/НОТАРИУС signature page of the deed). p10 and p4-class boundaries HOLD; FN=0 (recall 100%).
+- **New failure mode: form-instance over-split** — the ЕСУТ review-slip stack (GT: one doc, 15–21)
+  splits at every slip (FPs 16,17,18,20,21 + shared FP 19) via `header_block_reset`, which Fix9-only
+  exempts from the confirmation pass at any confidence. Shared GT-convention FPs 6 and 13 reproduce
+  in both models. Without the slip cluster Fable 5 would be FP=[6,13] → F1 94.1 on this file.
+- **Cost/latency (subagent path):** 981k subagent tokens ≈ $10–16 total ≈ **$0.30–0.45/page**;
+  avg 21.4 s/query, 47 s summed query time/page (base queries parallelizable). 1/81 responses
+  malformed JSON (absorbed by the pipeline's parse-failure path, but no determinism across runs).
+- **Cascade implication:** Fable 5 as arbiter looks strongest exactly where the 32B hallucinates
+  (identifier-grounding seams), not as a wholesale replacement — its slip-stack granularity would
+  need either a GT-convention decision or a repeated-form suppression rule before any cascade gains
+  show up in F1.

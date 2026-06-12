@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": true, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Both pages are the same pre-printed Bulgarian review form (с доклад/ЕСУТ, Обект, Част, становище) filled in by hand, but each is a separate form instance with different handwritten dates, object descriptions, and signatures.", "confidence": 92}

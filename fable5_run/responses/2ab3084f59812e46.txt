@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "The second page begins a new invoice header (ФАКТУРА № 0021177 vs № 0021174) with a different number and attached fiscal receipt, though the template, fonts, and scan quality are identical.", "confidence": 88}

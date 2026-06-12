@@ -1,0 +1,1 @@
+{"style_match": false, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The second page begins a new document with a large centered title 'СЪОБЩЕНИЕ' and bold labeled fields in much larger type, whereas the first page is dense small-print numbered legal conditions ending with signature lines.", "confidence": 92}

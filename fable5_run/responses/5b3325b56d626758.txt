@@ -1,0 +1,1 @@
+{"starts_new": true, "confidence": 75, "reason": "Page 16 restarts the same review-slip form from the top with its own Обект/Част header block (Част: ПГ vs Арх on page 15) and a different reviewer's opinion and signature, so it is a new self-contained slip rather than a continuation."}

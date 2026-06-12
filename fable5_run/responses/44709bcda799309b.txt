@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": true, "layout_type_prev": "table", "layout_type_curr": "table", "strongest_difference": null, "confidence": 95}

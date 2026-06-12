@@ -1,0 +1,1 @@
+{"starts_new": false, "confidence": 95, "reason": "Page 27 continues the numbered list of ПОЗЕМЛЕН ИМОТ entries (items 2-7 with the same cadastral identifiers 56784.265.x and gr. Plovdiv 'ТЕРЗИИТЕ' locality) begun in the notarial act on page 26, with no new letterhead or document title."}

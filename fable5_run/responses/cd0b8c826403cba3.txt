@@ -1,0 +1,1 @@
+{"end": false, "signal": "same_letterhead", "signal_on_page": 11, "confidence": 90, "reason": "Page 11 carries the same Служба по геодезия letterhead with a 'стр. 2 от 2' counter and its footer repeats the same Скица № 15-158202-06.04.2017 as page 10, so it continues the same cadastral sketch document."}

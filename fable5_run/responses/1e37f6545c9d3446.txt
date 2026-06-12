@@ -1,0 +1,1 @@
+{"end": false, "signal": "none", "signal_on_page": 30, "confidence": 80, "reason": "Page 30 ends mid-notarial-text and page 31 carries the handwritten signatures of the СЪДЕЛИТЕЛИ and НОТАРИУС with stamp, which is the signature page concluding the same notarial deed, not a new document start."}

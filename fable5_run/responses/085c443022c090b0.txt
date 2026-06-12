@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "Page 1 carries the municipal letterhead and a structured permit form while page 2 is a plain numbered list of conditions with signature lines and no header, consistent with a continuation/back side of the same permit.", "confidence": 88}

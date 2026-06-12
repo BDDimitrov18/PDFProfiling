@@ -1,0 +1,1 @@
+{"end": false, "signal": "none", "signal_on_page": 2, "confidence": 85, "reason": "Page 1 (building permit РС № 31/23.03.2017) explicitly refers to obligations 'на обратната страна', and page 2 has no letterhead or title — it is the numbered list of owner obligations continuing the same permit, ending with the recipient's signature line."}

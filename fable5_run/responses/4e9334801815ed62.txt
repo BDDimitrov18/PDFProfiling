@@ -1,0 +1,1 @@
+{"style_match": false, "letterhead_match": false, "layout_type_prev": "table", "layout_type_curr": "narrative", "strongest_difference": "The first page is a dark-toned ruled registry form with handwritten entries and no letterhead, while the second page starts a new typed official letter with the Municipality of Plovdiv letterhead, logo, and title block.", "confidence": 96}

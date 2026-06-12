@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "narrative", "strongest_difference": "The second page ends with official stamps and signature blocks, indicating the conclusion of the same document rather than a new one.", "confidence": 88}

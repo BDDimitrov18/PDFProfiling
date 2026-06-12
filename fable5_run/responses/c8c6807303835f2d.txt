@@ -1,0 +1,1 @@
+{"end": true, "signal": "fresh_letterhead", "signal_on_page": 22, "confidence": 90, "reason": "Page 22 opens with a completely different letterhead — the 'АТРИЯ-АРХ-ЕООД-КОМПЛЕКСНО ПРОЕКТИРАНЕ' company logo and address banner with a self-contained ОБЕКТ/ЧАСТ/ФАЗА/ВЪЗЛОЖИТЕЛ title block — unlike the handwritten review slips on pages 20-21."}

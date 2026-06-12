@@ -1,0 +1,1 @@
+{"end": false, "signal": "none", "signal_on_page": 29, "confidence": 90, "reason": "Page 29 ends mid-enumeration (section V) of a notarial deed and page 30 continues the same dense numbered text with section VI and the same parcel descriptions, with no signature block, new title, or letterhead."}

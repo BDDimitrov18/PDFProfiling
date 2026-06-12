@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 7, "confidence": 90, "reason": "Page 7 opens with the ОБЩИНА ПЛОВДИВ coat-of-arms letterhead and a centered 'ЗАПОВЕД' title with a '№' and handwritten number/date directly beneath it, starting a new order document, while page 6 is a filled postal delivery receipt closing the previous notification."}

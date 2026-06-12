@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Page 16 is a fresh instance of the same pre-printed review form (header fields restart), filled in for a different section with different handwriting.", "confidence": 92}

@@ -1,0 +1,1 @@
+{"starts_new": true, "confidence": 97, "reason": "Page 7 is a municipal order (ЗАПОВЕД) from Община Пловдив ending in signatures, while page 8 is an invoice/payment form with sender/recipient fields and a fiscal receipt — a completely different document type and layout.", "next_page_heading": "ФАКТУРА N: 0052117792/23.03.2017"}

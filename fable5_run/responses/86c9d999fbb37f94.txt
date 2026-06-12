@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 34, "confidence": 85, "reason": "Page 33 closes the explanatory note with a 'Съставил:' signature and an official stamp, and page 34 opens with a new standalone title 'КОЛИЧЕСТВЕНА СМЕТКА' at the very top followed by an ОБЕКТ line carrying the cadastral identifier 56784.265.657."}

@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "mixed", "strongest_difference": "The first page is dense typed notarial prose while the second page contains almost only handwritten signatures of the co-owners with a notary stamp, consistent with the closing signature page of the same deed.", "confidence": 82}

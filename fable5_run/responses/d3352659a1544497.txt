@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 25, "confidence": 92, "reason": "Page 25 opens with a fresh cadastre-agency letterhead and the standalone title 'СКИЦА НА ПОЗЕМЛЕН ИМОТ' with a document number '№ 15-525676-27.10.2016 г.' directly beneath it, marking a new document distinct from the insurance policy on page 24."}

@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "The first page carries a notarial registration block, stamps, and the centered title 'НОТАРИАЛЕН АКТ' while the second page is uninterrupted continuation prose with no new header, consistent with the same document.", "confidence": 92}

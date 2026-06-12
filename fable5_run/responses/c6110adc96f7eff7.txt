@@ -1,0 +1,1 @@
+{"end": false, "signal": "none", "signal_on_page": 28, "confidence": 92, "reason": "Page 28 continues mid-sentence the numbered list of поземлени имоти and дял sections of the same notarial act (НОТАРИАЛЕН АКТ за доброволна делба) that began on page 26, with no title, letterhead, or identifier block at its top."}

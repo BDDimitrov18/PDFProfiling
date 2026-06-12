@@ -1,0 +1,1 @@
+{"end": false, "signal": "none", "signal_on_page": 27, "confidence": 90, "reason": "Page 27 continues the notarial act's body text mid-list (numbered ПОЗЕМЛЕН ИМОТ items with cadastral identifiers) with no new title, letterhead, or signature block, so page 26 does not end the document."}

@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 9, "confidence": 80, "reason": "Page 8 is a complete one-page invoice (ФАКТУРА № 005211792/23.03.2017 with fiscal receipt and signature fields), and page 9 begins a fresh, separate invoice with its own document number ФАКТУРА № 002117745/22.03.2017 and new recipient/supplier header blocks."}

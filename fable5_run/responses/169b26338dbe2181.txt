@@ -1,0 +1,1 @@
+{"starts_new": false, "confidence": 95, "reason": "Page 33 continues the same explanatory note (ОБЯСНИТЕЛНА ЗАПИСКА) with internal numbered sections (III. ДОПЪЛНИТЕЛНИ РАБОТИ, VI. ТЕХНИЧЕСКИ ПОКАЗАТЕЛИ) and its closing signature/stamp block, with no new letterhead or document title."}

@@ -1,0 +1,1 @@
+{"end": true, "signal": "header_block_reset", "signal_on_page": 21, "confidence": 75, "reason": "Page 21 starts over as a fresh self-contained ЕСУТ opinion card with its own date, Обект and Част fields filled anew (Част: СК vs ЕЛ on page 20), repeating the same form header from the top rather than continuing page 20's text."}

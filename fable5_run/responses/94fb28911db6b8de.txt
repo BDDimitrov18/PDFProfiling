@@ -1,0 +1,1 @@
+{"end": true, "signal": "header_block_reset", "signal_on_page": 18, "confidence": 70, "reason": "Page 18 restarts the same pre-printed ЕСУТ review-slip form from the top (date, 'с доклад/ЕСУТ', Обект, Част, становище fields) filled in with a different обект and част, so page 17's completed slip ends and a new self-contained slip begins."}

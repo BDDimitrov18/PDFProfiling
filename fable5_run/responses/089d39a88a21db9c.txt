@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Both pages are the same pre-printed review form (с доклад / ЕСУТ) but filled out separately with different handwritten dates and entries, so the second page is a new instance of the form rather than a continuation.", "confidence": 92}

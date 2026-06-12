@@ -1,0 +1,1 @@
+{"starts_new": false, "confidence": 95, "reason": "Page 2 is the obligations/conditions list and signature block printed on the reverse of the same building permit (Разрешение за строеж) from page 1, with no new letterhead or document title."}

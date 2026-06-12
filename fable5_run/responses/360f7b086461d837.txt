@@ -1,0 +1,1 @@
+{"end": true, "signal": "header_block_reset", "signal_on_page": 19, "confidence": 75, "reason": "Page 19 is a fresh self-contained ЕСУТ review slip repeating the Обект / Част / становище header block with its own date (13.07.2017) and different handwritten content, making page 18 a complete single-page slip."}

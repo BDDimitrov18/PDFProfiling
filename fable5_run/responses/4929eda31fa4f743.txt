@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 3, "confidence": 90, "reason": "Page 3 opens with the standalone bold title 'СЪОБЩЕНИЕ' followed immediately by a document-level identifier line 'НА РАЗРЕШЕНИЕ ЗА СТРОЕЖ № 31/23.03.2017 г.', marking a new document after page 2's signed completion of the permit conditions."}

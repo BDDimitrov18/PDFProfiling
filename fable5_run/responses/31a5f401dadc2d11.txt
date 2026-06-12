@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 10, "confidence": 92, "reason": "Page 10 opens with the geodesy/cadastre agency letterhead and the title 'СКИЦА НА ПОЗЕМЛЕН ИМОТ № 15-158202-06.04.2017 г.' at the very top, a fresh document title with its own document-level number, while page 9 is an invoice (ФАКТУРА) unrelated to the cadastral sketch."}

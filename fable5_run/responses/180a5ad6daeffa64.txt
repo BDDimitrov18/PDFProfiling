@@ -1,0 +1,1 @@
+{"starts_new": false, "confidence": 95, "reason": "Page 14 continues the same заявление form from page 13, carrying on its numbered attachment checklist (5.x–9) and ending with the date/signature block, with no new letterhead or title."}

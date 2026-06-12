@@ -1,0 +1,1 @@
+{"style_match": false, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "table", "strongest_difference": "The first page is narrative prose ending with signatures and approval stamps, while the second page starts a new document titled 'КОЛИЧЕСТВЕНА СМЕТКА' with a centered title block and a structured quantities table.", "confidence": 92}

@@ -1,0 +1,1 @@
+{"end": true, "signal": "signature_block", "signal_on_page": 5, "confidence": 85, "reason": "Page 5 is a signed Община Пловдив letter ending with 'С уважение', АРХ. СТ. ПЕТРОВА with handwritten signature and round stamp plus a filled 'Изготвил:' label (инж. М. Златева) with signature, and page 6 is a separate postal delivery-receipt form (известие за доставяне)."}

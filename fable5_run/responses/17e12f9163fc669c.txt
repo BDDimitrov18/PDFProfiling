@@ -1,0 +1,1 @@
+{"end": true, "signal": "header_block_reset", "signal_on_page": 20, "confidence": 72, "reason": "Page 20 restarts the same standalone ЕСУТ review form with its own freshly filled Обект / Част header, new date (27.02.2017) and signature, so it is a new self-contained slip rather than a continuation of page 19."}

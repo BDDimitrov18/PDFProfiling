@@ -1,0 +1,1 @@
+{"end": true, "signal": "signature_block", "signal_on_page": 7, "confidence": 85, "reason": "Page 7 is a Община Пловдив ЗАПОВЕД ending with a labeled approval block (Кмет ИНЖ. ИВАН ТОТЕВ, Съгласували: with named officials) bearing actual handwritten signatures, and page 8 starts a new document (ФАКТУРА № 005211770 with its own header)."}

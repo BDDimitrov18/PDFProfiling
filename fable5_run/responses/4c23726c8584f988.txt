@@ -1,0 +1,1 @@
+{"starts_new": false, "confidence": 97, "reason": "Page 11 carries the same cadastre-agency letterhead and is marked стр. 2 от 2 of the same Скица № 15-158202-06.04.2017, listing the owners section of that sketch rather than starting a new document."}

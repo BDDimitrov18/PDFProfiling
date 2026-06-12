@@ -1,0 +1,1 @@
+{"end": true, "signal": "header_block_reset", "signal_on_page": 15, "confidence": 80, "reason": "Page 15 is a new self-contained landscape review card opening with its own filled-in Обект and Част header fields (plus 'обект №' and 'становище/забележки'), distinct from the заявление form that concludes on page 14 with dates and signatures."}

@@ -1,0 +1,1 @@
+{"end": true, "signal": "titled_id_header", "signal_on_page": 24, "confidence": 88, "reason": "Page 24 opens with an Armeec insurance company letterhead and the title 'ЗАСТРАХОВАТЕЛНА ПОЛИЦА № ...' carrying a policy number at the very top, starting a new document after the КАБ certificate on page 23."}

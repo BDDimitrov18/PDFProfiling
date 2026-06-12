@@ -1,0 +1,1 @@
+{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "narrative", "strongest_difference": "The first page bears the green Geodesy/Cartography and Cadastre agency letterhead while the second page starts a new document with a Regional Expert Council header and a centered 'ПРОТОКОЛ № 5' title block.", "confidence": 92}

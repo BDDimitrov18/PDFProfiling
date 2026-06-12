@@ -1,0 +1,1 @@
+{"style_match": true, "letterhead_match": true, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "The first page centers on a cadastral parcel drawing while the second page is purely textual owner listings, though both share the same agency letterhead, stamp, and document number indicating a continuation.", "confidence": 92}

@@ -1,0 +1,1 @@
+{"end": false, "signal": "table_continuation", "signal_on_page": 14, "confidence": 88, "reason": "Page 13 is a filled ЗАЯВЛЕНИЕ whose numbered 'Приложение' checklist (5.x items) clearly continues onto page 14, which carries the rest of the list plus the date and signature lines of the same application."}

@@ -1,0 +1,245 @@
+09:59:28 [INFO] [driver mode=strict] Image_00112022025163444215.pdf: 37 pages @ 150 DPI
+09:59:28 [INFO]   Phase 1: end-of-document detection (37 pages)…
+09:59:28 [DEBUG]   Style continuity p1→2: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "Page 1 carries the municipal letterhead and a structured permit form while page 2 is a plain numbered list of conditions with signature lines and no header, consiste'
+09:59:28 [INFO]   Checking page 1 (context: [1, 2])
+09:59:28 [DEBUG]   End-of-doc response p1: '{"end": false, "signal": "none", "signal_on_page": 2, "confidence": 85, "reason": "Page 1 (building permit РС № 31/23.03.2017) explicitly refers to obligations \'на обратната страна\', and page 2 has no letterhead or title — it is the numbered list of owner obligations continuing the same permit, endi'
+09:59:28 [INFO]   Reason: Page 1 (building permit РС № 31/23.03.2017) explicitly refers to obligations 'на обратната страна', and page 2 has no letterhead or title — it is the numbered list of owner obligations continuing the same permit, ending with the recipient's signature line.
+09:59:28 [INFO]   p1: end=False, signal=none, signal_on_page=2, conf=85%
+09:59:28 [DEBUG]   Style continuity p2→3: '{"style_match": false, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The second page begins a new document with a large centered title \'СЪОБЩЕНИЕ\' and bold labeled fields in much larger type, whereas the first page is dense small-prin'
+09:59:28 [INFO]   Checking page 2 (context: [1, 2, 3])
+09:59:28 [DEBUG]   End-of-doc response p2: '{"end": true, "signal": "titled_id_header", "signal_on_page": 3, "confidence": 90, "reason": "Page 3 opens with the standalone bold title \'СЪОБЩЕНИЕ\' followed immediately by a document-level identifier line \'НА РАЗРЕШЕНИЕ ЗА СТРОЕЖ № 31/23.03.2017 г.\', marking a new document after page 2\'s signed co'
+09:59:28 [INFO]   Reason: Page 3 opens with the standalone bold title 'СЪОБЩЕНИЕ' followed immediately by a document-level identifier line 'НА РАЗРЕШЕНИЕ ЗА СТРОЕЖ № 31/23.03.2017 г.', marking a new document after page 2's signed completion of the permit conditions.
+09:59:28 [INFO]   p2: end=True, signal=titled_id_header, signal_on_page=3, conf=90%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p3, not p2 — adjusting boundary: doc ends at p2, next doc starts at p3
+09:59:28 [INFO]   End at page 2 → doc starts at page 3 (conf=90%, signal=titled_id_header)
+09:59:28 [DEBUG]   Start-detect p1→2: '{"starts_new": false, "confidence": 95, "reason": "Page 2 is the obligations/conditions list and signature block printed on the reverse of the same building permit (Разрешение за строеж) from page 1, with no new letterhead or document title."}'
+09:59:28 [DEBUG]   Style continuity p3→4: '{"style_match": false, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "table", "strongest_difference": "The first page is a cleanly typed narrative notice on bright white paper, while the second is a darker-toned pre-printed table/form grid filled in by hand, with its'
+09:59:28 [INFO]   Checking page 3 (context: [2, 3, 4])
+09:59:28 [DEBUG]   End-of-doc response p3: '{"end": true, "signal": "titled_id_header", "signal_on_page": 4, "confidence": 65, "reason": "Page 3 is a complete СЪОБЩЕНИЕ ending with signed Съобщил/Изготвил fields, and page 4 opens with a new form title (РАЗНОСЕН ЛИСТ) at the very top referencing a \'№\' identifier, starting a separate tabular de'
+09:59:28 [INFO]   Reason: Page 3 is a complete СЪОБЩЕНИЕ ending with signed Съобщил/Изготвил fields, and page 4 opens with a new form title (РАЗНОСЕН ЛИСТ) at the very top referencing a '№' identifier, starting a separate tabular delivery-list document.
+09:59:28 [INFO]   p3: end=True, signal=titled_id_header, signal_on_page=4, conf=65%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p4, not p3 — adjusting boundary: doc ends at p3, next doc starts at p4
+09:59:28 [INFO]   End at page 3 → doc starts at page 4 (conf=65%, signal=titled_id_header)
+09:59:28 [DEBUG]   Style continuity p4→5: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "table", "layout_type_curr": "narrative", "strongest_difference": "The first page is a dark-toned ruled registry form with handwritten entries and no letterhead, while the second page starts a new typed official letter with the Mu'
+09:59:28 [INFO]   Checking page 4 (context: [3, 4, 5])
+09:59:28 [DEBUG]   End-of-doc response p4: '{"end": true, "signal": "titled_id_header", "signal_on_page": 5, "confidence": 90, "reason": "Page 5 opens with the Община Пловдив Район \\"Западен\\" letterhead at the very top followed immediately by an outgoing number line \'Изх. № 2-9400-304(1)…03.2017 г.\', marking the start of a new document after'
+09:59:28 [INFO]   Reason: Page 5 opens with the Община Пловдив Район "Западен" letterhead at the very top followed immediately by an outgoing number line 'Изх. № 2-9400-304(1)…03.2017 г.', marking the start of a new document after the handwritten serving-list table on page 4.
+09:59:28 [INFO]   p4: end=True, signal=titled_id_header, signal_on_page=5, conf=90%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p5, not p4 — adjusting boundary: doc ends at p4, next doc starts at p5
+09:59:28 [INFO]   End at page 4 → doc starts at page 5 (conf=90%, signal=titled_id_header)
+09:59:28 [DEBUG]   Style continuity p5→6: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The first page is a typed municipal letter on Община Пловдив letterhead with prose paragraphs, while the second is a handwritten postal delivery-notice form with ba'
+09:59:28 [INFO]   Checking page 5 (context: [4, 5, 6])
+09:59:28 [DEBUG]   End-of-doc response p5: '{"end": true, "signal": "signature_block", "signal_on_page": 5, "confidence": 85, "reason": "Page 5 is a signed Община Пловдив letter ending with \'С уважение\', АРХ. СТ. ПЕТРОВА with handwritten signature and round stamp plus a filled \'Изготвил:\' label (инж. М. Златева) with signature, and page 6 is '
+09:59:28 [INFO]   Reason: Page 5 is a signed Община Пловдив letter ending with 'С уважение', АРХ. СТ. ПЕТРОВА with handwritten signature and round stamp plus a filled 'Изготвил:' label (инж. М. Златева) with signature, and page 6 is a separate postal delivery-receipt form (известие за доставяне).
+09:59:28 [INFO]   p5: end=True, signal=signature_block, signal_on_page=5, conf=85%
+09:59:28 [DEBUG]   Next-page-start p6: '{"starts_new": true, "confidence": 92, "reason": "Page 6 is a postal delivery receipt form (известие за доставяне) with stamps and handwritten fields, a completely different document type from the municipal notice letter on page 5.", "next_page_heading": "ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ"}'
+09:59:28 [INFO]   Next-page-start reason: Page 6 is a postal delivery receipt form (известие за доставяне) with stamps and handwritten fields, a completely different document type from the municipal notice letter on page 5.
+09:59:28 [INFO]   Signature on p5 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ']
+09:59:28 [INFO]   End at page 5 → doc starts at page 6 (conf=88%, signal=signature_block)
+09:59:28 [DEBUG]   Style continuity p6→7: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "form", "layout_type_curr": "narrative", "strongest_difference": "The first page is a handwritten postal delivery receipt form with boxes and stamps, while the second page is a typed official municipal order (Община Пловдив) begin'
+09:59:28 [INFO]   Checking page 6 (context: [5, 6, 7])
+09:59:28 [DEBUG]   End-of-doc response p6: '{"end": true, "signal": "titled_id_header", "signal_on_page": 7, "confidence": 90, "reason": "Page 7 opens with the ОБЩИНА ПЛОВДИВ coat-of-arms letterhead and a centered \'ЗАПОВЕД\' title with a \'№\' and handwritten number/date directly beneath it, starting a new order document, while page 6 is a fille'
+09:59:28 [INFO]   Reason: Page 7 opens with the ОБЩИНА ПЛОВДИВ coat-of-arms letterhead and a centered 'ЗАПОВЕД' title with a '№' and handwritten number/date directly beneath it, starting a new order document, while page 6 is a filled postal delivery receipt closing the previous notification.
+09:59:28 [INFO]   p6: end=True, signal=titled_id_header, signal_on_page=7, conf=90%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p7, not p6 — adjusting boundary: doc ends at p6, next doc starts at p7
+09:59:28 [INFO]   End at page 6 → doc starts at page 7 (conf=90%, signal=titled_id_header)
+09:59:28 [DEBUG]   Style continuity p7→8: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The first page is a portrait municipal order with a coat-of-arms letterhead and dense prose, while the second is a landscape invoice/form with table fields, a fisca'
+09:59:28 [INFO]   Checking page 7 (context: [6, 7, 8])
+09:59:28 [DEBUG]   End-of-doc response p7: '{"end": true, "signal": "signature_block", "signal_on_page": 7, "confidence": 85, "reason": "Page 7 is a Община Пловдив ЗАПОВЕД ending with a labeled approval block (Кмет ИНЖ. ИВАН ТОТЕВ, Съгласували: with named officials) bearing actual handwritten signatures, and page 8 starts a new document (ФАКТ'
+09:59:28 [INFO]   Reason: Page 7 is a Община Пловдив ЗАПОВЕД ending with a labeled approval block (Кмет ИНЖ. ИВАН ТОТЕВ, Съгласували: with named officials) bearing actual handwritten signatures, and page 8 starts a new document (ФАКТУРА № 005211770 with its own header).
+09:59:28 [INFO]   p7: end=True, signal=signature_block, signal_on_page=7, conf=85%
+09:59:28 [DEBUG]   Next-page-start p8: '{"starts_new": true, "confidence": 97, "reason": "Page 7 is a municipal order (ЗАПОВЕД) from Община Пловдив ending in signatures, while page 8 is an invoice/payment form with sender/recipient fields and a fiscal receipt — a completely different document type and layout.", "next_page_heading": "ФАКТУ'
+09:59:28 [INFO]   Next-page-start reason: Page 7 is a municipal order (ЗАПОВЕД) from Община Пловдив ending in signatures, while page 8 is an invoice/payment form with sender/recipient fields and a fiscal receipt — a completely different document type and layout.
+09:59:28 [INFO]   Signature on p7 confirmed as end — next page starts new doc (conf=91%) [next_page_heading='ФАКТУРА N: 0052117792/23.03.2017']
+09:59:28 [INFO]   End at page 7 → doc starts at page 8 (conf=91%, signal=signature_block)
+09:59:28 [DEBUG]   Style continuity p8→9: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "The second page begins a new invoice header (ФАКТУРА № 0021177 vs № 0021174) with a different number and attached fiscal receipt, though the template, fonts, and scan qual'
+09:59:28 [INFO]   Checking page 8 (context: [7, 8, 9])
+09:59:28 [DEBUG]   End-of-doc response p8: '{"end": true, "signal": "titled_id_header", "signal_on_page": 9, "confidence": 80, "reason": "Page 8 is a complete one-page invoice (ФАКТУРА № 005211792/23.03.2017 with fiscal receipt and signature fields), and page 9 begins a fresh, separate invoice with its own document number ФАКТУРА № 002117745/'
+09:59:28 [INFO]   Reason: Page 8 is a complete one-page invoice (ФАКТУРА № 005211792/23.03.2017 with fiscal receipt and signature fields), and page 9 begins a fresh, separate invoice with its own document number ФАКТУРА № 002117745/22.03.2017 and new recipient/supplier header blocks.
+09:59:28 [INFO]   p8: end=True, signal=titled_id_header, signal_on_page=9, conf=80%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p9, not p8 — adjusting boundary: doc ends at p8, next doc starts at p9
+09:59:28 [INFO]   End at page 8 → doc starts at page 9 (conf=80%, signal=titled_id_header)
+09:59:28 [DEBUG]   Style continuity p9→10: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "form", "layout_type_curr": "mixed", "strongest_difference": "The first page is an invoice (фактура) in a form/table layout with no agency letterhead, while the second page is a cadastral sketch from the Geodesy, Cartography and C'
+09:59:28 [INFO]   Checking page 9 (context: [8, 9, 10])
+09:59:28 [DEBUG]   End-of-doc response p9: '{"end": true, "signal": "titled_id_header", "signal_on_page": 10, "confidence": 92, "reason": "Page 10 opens with the geodesy/cadastre agency letterhead and the title \'СКИЦА НА ПОЗЕМЛЕН ИМОТ № 15-158202-06.04.2017 г.\' at the very top, a fresh document title with its own document-level number, while '
+09:59:28 [INFO]   Reason: Page 10 opens with the geodesy/cadastre agency letterhead and the title 'СКИЦА НА ПОЗЕМЛЕН ИМОТ № 15-158202-06.04.2017 г.' at the very top, a fresh document title with its own document-level number, while page 9 is an invoice (ФАКТУРА) unrelated to the cadastral sketch.
+09:59:28 [INFO]   p9: end=True, signal=titled_id_header, signal_on_page=10, conf=92%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p10, not p9 — adjusting boundary: doc ends at p9, next doc starts at p10
+09:59:28 [INFO]   End at page 9 → doc starts at page 10 (conf=92%, signal=titled_id_header)
+09:59:28 [DEBUG]   Style continuity p10→11: '{"style_match": true, "letterhead_match": true, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "The first page centers on a cadastral parcel drawing while the second page is purely textual owner listings, though both share the same agency letterhead, stamp, and'
+09:59:28 [INFO]   Checking page 10 (context: [9, 10, 11])
+09:59:28 [DEBUG]   End-of-doc response p10: '{"end": false, "signal": "same_letterhead", "signal_on_page": 11, "confidence": 90, "reason": "Page 11 carries the same Служба по геодезия letterhead with a \'стр. 2 от 2\' counter and its footer repeats the same Скица № 15-158202-06.04.2017 as page 10, so it continues the same cadastral sketch docume'
+09:59:28 [INFO]   Reason: Page 11 carries the same Служба по геодезия letterhead with a 'стр. 2 от 2' counter and its footer repeats the same Скица № 15-158202-06.04.2017 as page 10, so it continues the same cadastral sketch document.
+09:59:28 [INFO]   p10: end=False, signal=same_letterhead, signal_on_page=11, conf=90%
+09:59:28 [DEBUG]   Style continuity p11→12: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "narrative", "strongest_difference": "The first page bears the green Geodesy/Cartography and Cadastre agency letterhead while the second page starts a new document with a Regional Expert Council he'
+09:59:28 [INFO]   Checking page 11 (context: [10, 11, 12])
+09:59:28 [DEBUG]   End-of-doc response p11: '{"end": true, "signal": "titled_id_header", "signal_on_page": 12, "confidence": 90, "reason": "Page 12 opens with a centered issuer header \'РАЙОНЕН ЕКСПЕРТЕН СЪВЕТ ПО УСТРОЙСТВО НА ТЕРИТОРИЯТА... ОБЩИНА ПЛОВДИВ\' and the standalone title \'ПРОТОКОЛ № 5\' with a date, a fresh document title plus identif'
+09:59:28 [INFO]   Reason: Page 12 opens with a centered issuer header 'РАЙОНЕН ЕКСПЕРТЕН СЪВЕТ ПО УСТРОЙСТВО НА ТЕРИТОРИЯТА... ОБЩИНА ПЛОВДИВ' and the standalone title 'ПРОТОКОЛ № 5' with a date, a fresh document title plus identifier, while page 11 is the closing 'стр. 2 от 2' continuation of the cadastral sketch (Скица № 15-158202) from page 10.
+09:59:28 [INFO]   p11: end=True, signal=titled_id_header, signal_on_page=12, conf=90%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p12, not p11 — adjusting boundary: doc ends at p11, next doc starts at p12
+09:59:28 [INFO]   End at page 11 → doc starts at page 12 (conf=90%, signal=titled_id_header)
+09:59:28 [DEBUG]   Start-detect p10→11: '{"starts_new": false, "confidence": 97, "reason": "Page 11 carries the same cadastre-agency letterhead and is marked стр. 2 от 2 of the same Скица № 15-158202-06.04.2017, listing the owners section of that sketch rather than starting a new document."}'
+09:59:28 [DEBUG]   Style continuity p12→13: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The first page is a typed narrative protocol (Протокол No 5) of an expert council decision, while the second page is a pre-printed application form (Заявление) with'
+09:59:28 [INFO]   Checking page 12 (context: [11, 12, 13])
+09:59:28 [DEBUG]   End-of-doc response p12: '{"end": true, "signal": "titled_id_header", "signal_on_page": 13, "confidence": 88, "reason": "Page 12 is a self-contained ПРОТОКОЛ № 5 ending with certification signatures, and page 13 opens a new document — a ЗАЯВЛЕНИЕ to the chief architect with an incoming registration stamp (вх. № with 2017 dat'
+09:59:28 [INFO]   Reason: Page 12 is a self-contained ПРОТОКОЛ № 5 ending with certification signatures, and page 13 opens a new document — a ЗАЯВЛЕНИЕ to the chief architect with an incoming registration stamp (вх. № with 2017 date) at the very top.
+09:59:28 [INFO]   p12: end=True, signal=titled_id_header, signal_on_page=13, conf=88%
+09:59:28 [INFO]   Signal 'titled_id_header' is on p13, not p12 — adjusting boundary: doc ends at p12, next doc starts at p13
+09:59:28 [INFO]   End at page 12 → doc starts at page 13 (conf=88%, signal=titled_id_header)
+09:59:28 [DEBUG]   Style continuity p13→14: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "The first page bears a municipal stamp/letterhead and title block while the second is a continuation of the same numbered checklist with signatures and no header, consiste'
+09:59:28 [INFO]   Checking page 13 (context: [12, 13, 14])
+09:59:28 [DEBUG]   End-of-doc response p13: '{"end": false, "signal": "table_continuation", "signal_on_page": 14, "confidence": 88, "reason": "Page 13 is a filled ЗАЯВЛЕНИЕ whose numbered \'Приложение\' checklist (5.x items) clearly continues onto page 14, which carries the rest of the list plus the date and signature lines of the same applicati'
+09:59:28 [INFO]   Reason: Page 13 is a filled ЗАЯВЛЕНИЕ whose numbered 'Приложение' checklist (5.x items) clearly continues onto page 14, which carries the rest of the list plus the date and signature lines of the same application.
+09:59:28 [INFO]   p13: end=False, signal=table_continuation, signal_on_page=14, conf=88%
+09:59:28 [DEBUG]   Style continuity p14→15: '{"style_match": false, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "The first page is a dense portrait-oriented printed checklist form with many numbered items and small text, while the second page is a landscape-oriented sparse routing/o'
+09:59:28 [INFO]   Checking page 14 (context: [13, 14, 15])
+09:59:28 [DEBUG]   End-of-doc response p14: '{"end": true, "signal": "header_block_reset", "signal_on_page": 15, "confidence": 80, "reason": "Page 15 is a new self-contained landscape review card opening with its own filled-in Обект and Част header fields (plus \'обект №\' and \'становище/забележки\'), distinct from the заявление form that conclud'
+09:59:28 [INFO]   Reason: Page 15 is a new self-contained landscape review card opening with its own filled-in Обект and Част header fields (plus 'обект №' and 'становище/забележки'), distinct from the заявление form that concludes on page 14 with dates and signatures.
+09:59:28 [INFO]   p14: end=True, signal=header_block_reset, signal_on_page=15, conf=80%
+09:59:28 [INFO]   Signal 'header_block_reset' is on p15, not p14 — adjusting boundary: doc ends at p14, next doc starts at p15
+09:59:28 [INFO]   End at page 14 → doc starts at page 15 (conf=80%, signal=header_block_reset)
+09:59:28 [DEBUG]   Start-detect p13→14: '{"starts_new": false, "confidence": 95, "reason": "Page 14 continues the same заявление form from page 13, carrying on its numbered attachment checklist (5.x–9) and ending with the date/signature block, with no new letterhead or title."}'
+09:59:28 [DEBUG]   Style continuity p15→16: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Page 16 is a fresh instance of the same pre-printed review form (header fields restart), filled in for a different section with different handwriting.", "confidence": 92}'
+09:59:28 [INFO]   Checking page 15 (context: [14, 15, 16])
+09:59:28 [DEBUG]   End-of-doc response p15: '{"end": true, "signal": "header_block_reset", "signal_on_page": 16, "confidence": 80, "reason": "Page 15 is a complete filled review slip (Обект, Част: Арх, становище \'без забележки\', дата за връщане with signature), and page 16 restarts the same self-contained form header — date, \'с доклад / ЕСУТ\','
+09:59:28 [WARNING]   No JSON: {"end": true, "signal": "header_block_reset", "signal_on_page": 16, "confidence": 80, "reason": "Page 15 is a complete filled review slip (Обект, Част: Арх, становище 'без забележки', дата за връщане 
+09:59:28 [INFO]   p15: end=False, signal=none, signal_on_page=15, conf=50%
+09:59:29 [DEBUG]   Style continuity p16→17: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Both pages are identical pre-printed review/routing form cards differing only in handwritten content (different object numbers, signatures, and a filled return date on the'
+09:59:29 [INFO]   Checking page 16 (context: [15, 16, 17])
+09:59:29 [DEBUG]   End-of-doc response p16: '{"end": true, "signal": "header_block_reset", "signal_on_page": 17, "confidence": 70, "reason": "Page 17 opens a fresh self-contained review slip repeating the dated \'с доклад / ЕСУТ\' header with its own Обект and Част fields (Част changes from ПГ on page 16 to a different discipline), so it starts '
+09:59:29 [INFO]   Reason: Page 17 opens a fresh self-contained review slip repeating the dated 'с доклад / ЕСУТ' header with its own Обект and Част fields (Част changes from ПГ on page 16 to a different discipline), so it starts a new card rather than continuing page 16.
+09:59:29 [INFO]   p16: end=True, signal=header_block_reset, signal_on_page=17, conf=70%
+09:59:29 [INFO]   Signal 'header_block_reset' is on p17, not p16 — adjusting boundary: doc ends at p16, next doc starts at p17
+09:59:29 [INFO]   End at page 16 → doc starts at page 17 (conf=70%, signal=header_block_reset)
+09:59:29 [DEBUG]   Start-detect p15→16: '{"starts_new": true, "confidence": 75, "reason": "Page 16 restarts the same review-slip form from the top with its own Обект/Част header block (Част: ПГ vs Арх on page 15) and a different reviewer\'s opinion and signature, so it is a new self-contained slip rather than a continuation."}'
+09:59:29 [INFO]   [START-DETECT] p16 starts a new doc (conf=75%): Page 16 restarts the same review-slip form from the top with its own Обект/Част header block (Част: ПГ vs Арх on page 15) and a different reviewer's opinion and signature, so it is a new self-contained slip rather than a continuation.
+09:59:29 [DEBUG]   Style continuity p17→18: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Both pages are the same pre-printed routing-slip form template with identical layout and scan quality, differing only in the handwritten entries, so page 18 begins a new f'
+09:59:29 [INFO]   Checking page 17 (context: [16, 17, 18])
+09:59:29 [DEBUG]   End-of-doc response p17: '{"end": true, "signal": "header_block_reset", "signal_on_page": 18, "confidence": 70, "reason": "Page 18 restarts the same pre-printed ЕСУТ review-slip form from the top (date, \'с доклад/ЕСУТ\', Обект, Част, становище fields) filled in with a different обект and част, so page 17\'s completed slip ends'
+09:59:29 [INFO]   Reason: Page 18 restarts the same pre-printed ЕСУТ review-slip form from the top (date, 'с доклад/ЕСУТ', Обект, Част, становище fields) filled in with a different обект and част, so page 17's completed slip ends and a new self-contained slip begins.
+09:59:29 [INFO]   p17: end=True, signal=header_block_reset, signal_on_page=18, conf=70%
+09:59:29 [INFO]   Signal 'header_block_reset' is on p18, not p17 — adjusting boundary: doc ends at p17, next doc starts at p18
+09:59:29 [INFO]   End at page 17 → doc starts at page 18 (conf=70%, signal=header_block_reset)
+09:59:29 [DEBUG]   Style continuity p18→19: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Both pages are the same pre-printed review form (с доклад / ЕСУТ) but filled out separately with different handwritten dates and entries, so the second page is a new insta'
+09:59:29 [INFO]   Checking page 18 (context: [17, 18, 19])
+09:59:29 [DEBUG]   End-of-doc response p18: '{"end": true, "signal": "header_block_reset", "signal_on_page": 19, "confidence": 75, "reason": "Page 19 is a fresh self-contained ЕСУТ review slip repeating the Обект / Част / становище header block with its own date (13.07.2017) and different handwritten content, making page 18 a complete single-p'
+09:59:29 [INFO]   Reason: Page 19 is a fresh self-contained ЕСУТ review slip repeating the Обект / Част / становище header block with its own date (13.07.2017) and different handwritten content, making page 18 a complete single-page slip.
+09:59:29 [INFO]   p18: end=True, signal=header_block_reset, signal_on_page=19, conf=75%
+09:59:29 [INFO]   Signal 'header_block_reset' is on p19, not p18 — adjusting boundary: doc ends at p18, next doc starts at p19
+09:59:29 [INFO]   End at page 18 → doc starts at page 19 (conf=75%, signal=header_block_reset)
+09:59:29 [DEBUG]   Style continuity p19→20: '{"style_match": true, "letterhead_match": true, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Both pages are the same pre-printed Bulgarian review form (с доклад/ЕСУТ, Обект, Част, становище) filled in by hand, but each is a separate form instance with different ha'
+09:59:29 [INFO]   Checking page 19 (context: [18, 19, 20])
+09:59:29 [DEBUG]   End-of-doc response p19: '{"end": true, "signal": "header_block_reset", "signal_on_page": 20, "confidence": 72, "reason": "Page 20 restarts the same standalone ЕСУТ review form with its own freshly filled Обект / Част header, new date (27.02.2017) and signature, so it is a new self-contained slip rather than a continuation o'
+09:59:29 [INFO]   Reason: Page 20 restarts the same standalone ЕСУТ review form with its own freshly filled Обект / Част header, new date (27.02.2017) and signature, so it is a new self-contained slip rather than a continuation of page 19.
+09:59:29 [INFO]   p19: end=True, signal=header_block_reset, signal_on_page=20, conf=72%
+09:59:29 [INFO]   Signal 'header_block_reset' is on p20, not p19 — adjusting boundary: doc ends at p19, next doc starts at p20
+09:59:29 [INFO]   End at page 19 → doc starts at page 20 (conf=72%, signal=header_block_reset)
+09:59:29 [DEBUG]   Style continuity p20→21: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "form", "layout_type_curr": "form", "strongest_difference": "Both pages are the same pre-printed routing/comment form (с доклад/ЕСУТ, Обект, Част, становище), but page 21 is a fresh copy of the form filled in with different handwrit'
+09:59:29 [INFO]   Checking page 20 (context: [19, 20, 21])
+09:59:29 [DEBUG]   End-of-doc response p20: '{"end": true, "signal": "header_block_reset", "signal_on_page": 21, "confidence": 75, "reason": "Page 21 starts over as a fresh self-contained ЕСУТ opinion card with its own date, Обект and Част fields filled anew (Част: СК vs ЕЛ on page 20), repeating the same form header from the top rather than c'
+09:59:29 [INFO]   Reason: Page 21 starts over as a fresh self-contained ЕСУТ opinion card with its own date, Обект and Част fields filled anew (Част: СК vs ЕЛ on page 20), repeating the same form header from the top rather than continuing page 20's text.
+09:59:29 [INFO]   p20: end=True, signal=header_block_reset, signal_on_page=21, conf=75%
+09:59:29 [INFO]   Signal 'header_block_reset' is on p21, not p20 — adjusting boundary: doc ends at p20, next doc starts at p21
+09:59:29 [INFO]   End at page 20 → doc starts at page 21 (conf=75%, signal=header_block_reset)
+09:59:29 [DEBUG]   Style continuity p21→22: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "form", "layout_type_curr": "mixed", "strongest_difference": "The first page is a small landscape pre-printed form slip filled in by hand with no letterhead, while the second page is a portrait decorative title/cover sheet with th'
+09:59:29 [INFO]   Checking page 21 (context: [20, 21, 22])
+09:59:29 [DEBUG]   End-of-doc response p21: '{"end": true, "signal": "fresh_letterhead", "signal_on_page": 22, "confidence": 90, "reason": "Page 22 opens with a completely different letterhead — the \'АТРИЯ-АРХ-ЕООД-КОМПЛЕКСНО ПРОЕКТИРАНЕ\' company logo and address banner with a self-contained ОБЕКТ/ЧАСТ/ФАЗА/ВЪЗЛОЖИТЕЛ title block — unlike the '
+09:59:29 [INFO]   Reason: Page 22 opens with a completely different letterhead — the 'АТРИЯ-АРХ-ЕООД-КОМПЛЕКСНО ПРОЕКТИРАНЕ' company logo and address banner with a self-contained ОБЕКТ/ЧАСТ/ФАЗА/ВЪЗЛОЖИТЕЛ title block — unlike the handwritten review slips on pages 20-21.
+09:59:29 [INFO]   p21: end=True, signal=fresh_letterhead, signal_on_page=22, conf=90%
+09:59:29 [INFO]   Signal 'fresh_letterhead' is on p22, not p21 — adjusting boundary: doc ends at p21, next doc starts at p22
+09:59:29 [INFO]   End at page 21 → doc starts at page 22 (conf=90%, signal=fresh_letterhead)
+09:59:29 [DEBUG]   Style continuity p22→23: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "The first page is an architectural firm\'s project cover sheet with the ATRIA-ARH letterhead and stamped approval fields, while the second page is a completely diff'
+09:59:29 [INFO]   Checking page 22 (context: [21, 22, 23])
+09:59:29 [DEBUG]   End-of-doc response p22: '{"end": true, "signal": "titled_id_header", "signal_on_page": 23, "confidence": 90, "reason": "Page 23 opens with a fresh letterhead \'КАМАРА НА АРХИТЕКТИТЕ В БЪЛГАРИЯ\' and the standalone title \'УДОСТОВЕРЕНИЕ\' followed directly by a document-level identifier \'регистрационен номер 01465\' with validity'
+09:59:29 [INFO]   Reason: Page 23 opens with a fresh letterhead 'КАМАРА НА АРХИТЕКТИТЕ В БЪЛГАРИЯ' and the standalone title 'УДОСТОВЕРЕНИЕ' followed directly by a document-level identifier 'регистрационен номер 01465' with validity dates, marking a new separate document after the fully signed/stamped project cover sheet on page 22.
+09:59:29 [INFO]   p22: end=True, signal=titled_id_header, signal_on_page=23, conf=90%
+09:59:29 [INFO]   Signal 'titled_id_header' is on p23, not p22 — adjusting boundary: doc ends at p22, next doc starts at p23
+09:59:29 [INFO]   End at page 22 → doc starts at page 23 (conf=90%, signal=titled_id_header)
+09:59:29 [DEBUG]   Style continuity p23→24: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "narrative", "layout_type_curr": "form", "strongest_difference": "The first page is a Chamber of Architects certificate with a large centered title and decorative side band, while the second page is an insurance policy form with t'
+09:59:29 [INFO]   Checking page 23 (context: [22, 23, 24])
+09:59:29 [DEBUG]   End-of-doc response p23: '{"end": true, "signal": "titled_id_header", "signal_on_page": 24, "confidence": 88, "reason": "Page 24 opens with an Armeec insurance company letterhead and the title \'ЗАСТРАХОВАТЕЛНА ПОЛИЦА № ...\' carrying a policy number at the very top, starting a new document after the КАБ certificate on page 23'
+09:59:29 [INFO]   Reason: Page 24 opens with an Armeec insurance company letterhead and the title 'ЗАСТРАХОВАТЕЛНА ПОЛИЦА № ...' carrying a policy number at the very top, starting a new document after the КАБ certificate on page 23.
+09:59:29 [INFO]   p23: end=True, signal=titled_id_header, signal_on_page=24, conf=88%
+09:59:29 [INFO]   Signal 'titled_id_header' is on p24, not p23 — adjusting boundary: doc ends at p23, next doc starts at p24
+09:59:29 [INFO]   End at page 23 → doc starts at page 24 (conf=88%, signal=titled_id_header)
+09:59:29 [DEBUG]   Style continuity p24→25: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "form", "layout_type_curr": "drawing", "strongest_difference": "The first page is an insurance policy form with the \'Armeec\' insurer letterhead, while the second page starts a new document — a cadastral property sketch from the Ge'
+09:59:29 [INFO]   Checking page 24 (context: [23, 24, 25])
+09:59:29 [DEBUG]   End-of-doc response p24: '{"end": true, "signal": "titled_id_header", "signal_on_page": 25, "confidence": 92, "reason": "Page 25 opens with a fresh cadastre-agency letterhead and the standalone title \'СКИЦА НА ПОЗЕМЛЕН ИМОТ\' with a document number \'№ 15-525676-27.10.2016 г.\' directly beneath it, marking a new document distin'
+09:59:29 [INFO]   Reason: Page 25 opens with a fresh cadastre-agency letterhead and the standalone title 'СКИЦА НА ПОЗЕМЛЕН ИМОТ' with a document number '№ 15-525676-27.10.2016 г.' directly beneath it, marking a new document distinct from the insurance policy on page 24.
+09:59:29 [INFO]   p24: end=True, signal=titled_id_header, signal_on_page=25, conf=92%
+09:59:29 [INFO]   Signal 'titled_id_header' is on p25, not p24 — adjusting boundary: doc ends at p24, next doc starts at p25
+09:59:29 [INFO]   End at page 24 → doc starts at page 25 (conf=92%, signal=titled_id_header)
+09:59:29 [DEBUG]   Style continuity p25→26: '{"style_match": false, "letterhead_match": false, "layout_type_prev": "drawing", "layout_type_curr": "narrative", "strongest_difference": "The first page is a cadastral sketch (СКИЦА НА ПОЗЕМЛЕН ИМОТ) from the geodesy/cadastre agency with its logo letterhead and a technical parcel drawing, while the'
+09:59:29 [INFO]   Checking page 25 (context: [24, 25, 26])
+09:59:29 [DEBUG]   End-of-doc response p25: '{"end": true, "signal": "titled_id_header", "signal_on_page": 26, "confidence": 90, "reason": "Page 26 opens a new document — the bold title \'НОТАРИАЛЕН АКТ за доброволна делба на недвижими имоти\' with its register numbers (№ 35, том..., рег. № 3716, дело № 417 от 30.09.2016) and notary fee/registra'
+09:59:29 [INFO]   Reason: Page 26 opens a new document — the bold title 'НОТАРИАЛЕН АКТ за доброволна делба на недвижими имоти' with its register numbers (№ 35, том..., рег. № 3716, дело № 417 от 30.09.2016) and notary fee/registration header blocks at the very top — while page 25 is a self-contained cadastral sketch (СКИЦА НА ПОЗЕМЛЕН ИМОТ № 15-525676) ending with stamp and signature.
+09:59:29 [INFO]   p25: end=True, signal=titled_id_header, signal_on_page=26, conf=90%
+09:59:29 [INFO]   Signal 'titled_id_header' is on p26, not p25 — adjusting boundary: doc ends at p25, next doc starts at p26
+09:59:29 [INFO]   End at page 25 → doc starts at page 26 (conf=90%, signal=titled_id_header)
+09:59:29 [DEBUG]   Style continuity p26→27: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "The first page carries a notarial registration block, stamps, and the centered title \'НОТАРИАЛЕН АКТ\' while the second page is uninterrupted continuation prose with '
+09:59:29 [INFO]   Checking page 26 (context: [25, 26, 27])
+09:59:29 [DEBUG]   End-of-doc response p26: '{"end": false, "signal": "none", "signal_on_page": 27, "confidence": 90, "reason": "Page 27 continues the notarial act\'s body text mid-list (numbered ПОЗЕМЛЕН ИМОТ items with cadastral identifiers) with no new title, letterhead, or signature block, so page 26 does not end the document."}'
+09:59:29 [INFO]   Reason: Page 27 continues the notarial act's body text mid-list (numbered ПОЗЕМЛЕН ИМОТ items with cadastral identifiers) with no new title, letterhead, or signature block, so page 26 does not end the document.
+09:59:29 [INFO]   p26: end=False, signal=none, signal_on_page=27, conf=90%
+09:59:29 [DEBUG]   Style continuity p27→28: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "narrative", "strongest_difference": null, "confidence": 92}'
+09:59:29 [INFO]   Checking page 27 (context: [26, 27, 28])
+09:59:29 [DEBUG]   End-of-doc response p27: '{"end": false, "signal": "none", "signal_on_page": 28, "confidence": 92, "reason": "Page 28 continues mid-sentence the numbered list of поземлени имоти and дял sections of the same notarial act (НОТАРИАЛЕН АКТ за доброволна делба) that began on page 26, with no title, letterhead, or identifier block'
+09:59:29 [INFO]   Reason: Page 28 continues mid-sentence the numbered list of поземлени имоти and дял sections of the same notarial act (НОТАРИАЛЕН АКТ за доброволна делба) that began on page 26, with no title, letterhead, or identifier block at its top.
+09:59:29 [INFO]   p27: end=False, signal=none, signal_on_page=28, conf=92%
+09:59:29 [DEBUG]   Start-detect p26→27: '{"starts_new": false, "confidence": 95, "reason": "Page 27 continues the numbered list of ПОЗЕМЛЕН ИМОТ entries (items 2-7 with the same cadastral identifiers 56784.265.x and gr. Plovdiv \'ТЕРЗИИТЕ\' locality) begun in the notarial act on page 26, with no new letterhead or document title."}'
+09:59:29 [DEBUG]   Style continuity p28→29: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "narrative", "strongest_difference": null, "confidence": 92}'
+09:59:29 [INFO]   Checking page 28 (context: [27, 28, 29])
+09:59:29 [DEBUG]   End-of-doc response p28: '{"end": false, "signal": "none", "signal_on_page": 28, "confidence": 90, "reason": "Page 28 ends mid-enumeration of property shares (дялове) and page 29 continues the same numbered list (IV., V. В ОБЩ ДЯЛ...) in identical dense body text with no title, letterhead, or signature block."}'
+09:59:29 [INFO]   Reason: Page 28 ends mid-enumeration of property shares (дялове) and page 29 continues the same numbered list (IV., V. В ОБЩ ДЯЛ...) in identical dense body text with no title, letterhead, or signature block.
+09:59:29 [INFO]   p28: end=False, signal=none, signal_on_page=28, conf=90%
+09:59:29 [DEBUG]   Style continuity p29→30: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "narrative", "strongest_difference": null, "confidence": 92}'
+09:59:29 [INFO]   Checking page 29 (context: [28, 29, 30])
+09:59:29 [DEBUG]   End-of-doc response p29: '{"end": false, "signal": "none", "signal_on_page": 29, "confidence": 90, "reason": "Page 29 ends mid-enumeration (section V) of a notarial deed and page 30 continues the same dense numbered text with section VI and the same parcel descriptions, with no signature block, new title, or letterhead."}'
+09:59:29 [INFO]   Reason: Page 29 ends mid-enumeration (section V) of a notarial deed and page 30 continues the same dense numbered text with section VI and the same parcel descriptions, with no signature block, new title, or letterhead.
+09:59:29 [INFO]   p29: end=False, signal=none, signal_on_page=29, conf=90%
+09:59:29 [DEBUG]   Style continuity p30→31: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "mixed", "strongest_difference": "The first page is dense typed notarial prose while the second page contains almost only handwritten signatures of the co-owners with a notary stamp, consistent with '
+09:59:29 [INFO]   Checking page 30 (context: [29, 30, 31])
+09:59:29 [DEBUG]   End-of-doc response p30: '{"end": false, "signal": "none", "signal_on_page": 30, "confidence": 80, "reason": "Page 30 ends mid-notarial-text and page 31 carries the handwritten signatures of the СЪДЕЛИТЕЛИ and НОТАРИУС with stamp, which is the signature page concluding the same notarial deed, not a new document start."}'
+09:59:29 [INFO]   Reason: Page 30 ends mid-notarial-text and page 31 carries the handwritten signatures of the СЪДЕЛИТЕЛИ and НОТАРИУС with stamp, which is the signature page concluding the same notarial deed, not a new document start.
+09:59:29 [INFO]   p30: end=False, signal=none, signal_on_page=30, conf=80%
+09:59:29 [DEBUG]   Style continuity p31→32: '{"style_match": false, "letterhead_match": null, "layout_type_prev": "mixed", "layout_type_curr": "narrative", "strongest_difference": "The first page is the handwritten signature/notary-stamp closing page of a notarial document, while the second page starts a new typed document with a centered titl'
+09:59:29 [INFO]   Checking page 31 (context: [30, 31, 32])
+09:59:29 [DEBUG]   End-of-doc response p31: '{"end": true, "signal": "titled_id_header", "signal_on_page": 32, "confidence": 90, "reason": "Page 32 opens with the standalone title \'ОБЯСНИТЕЛНА ЗАПИСКА\' followed immediately by an ОБЕКТ line carrying a document-level identifier (УПИ 265-657, идентификатор 56784.265.657 по КК) plus ЧАСТ/ФАЗА head'
+09:59:29 [INFO]   Reason: Page 32 opens with the standalone title 'ОБЯСНИТЕЛНА ЗАПИСКА' followed immediately by an ОБЕКТ line carrying a document-level identifier (УПИ 265-657, идентификатор 56784.265.657 по КК) plus ЧАСТ/ФАЗА header fields, while page 31 finishes the previous notarial document with handwritten co-owner signatures, the НОТАРИУС signature and round stamp.
+09:59:29 [INFO]   p31: end=True, signal=titled_id_header, signal_on_page=32, conf=90%
+09:59:29 [INFO]   Signal 'titled_id_header' is on p32, not p31 — adjusting boundary: doc ends at p31, next doc starts at p32
+09:59:29 [INFO]   End at page 31 → doc starts at page 32 (conf=90%, signal=titled_id_header)
+09:59:29 [DEBUG]   Start-detect p30→31: '{"starts_new": false, "confidence": 95, "reason": "Page 31 is the signature/stamp closing block (СЪДЕЛИТЕЛИ signatures and НОТАРИУС seal) of the notarial deed text running on page 30, with no new letterhead or title."}'
+09:59:29 [DEBUG]   Style continuity p32→33: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "narrative", "strongest_difference": "The second page ends with official stamps and signature blocks, indicating the conclusion of the same document rather than a new one.", "confidence": 88}'
+09:59:29 [INFO]   Checking page 32 (context: [31, 32, 33])
+09:59:29 [DEBUG]   End-of-doc response p32: '{"end": false, "signal": "none", "signal_on_page": 33, "confidence": 90, "reason": "Page 33 continues the same обяснителна записка started on page 32, with running body text and numbered sections (III. ДОПЪЛНИТЕЛНИ РАБОТИ, VI. ТЕХНИЧЕСКИ ПОКАЗАТЕЛИ) and no new title or letterhead at its top."}'
+09:59:29 [INFO]   Reason: Page 33 continues the same обяснителна записка started on page 32, with running body text and numbered sections (III. ДОПЪЛНИТЕЛНИ РАБОТИ, VI. ТЕХНИЧЕСКИ ПОКАЗАТЕЛИ) and no new title or letterhead at its top.
+09:59:29 [INFO]   p32: end=False, signal=none, signal_on_page=33, conf=90%
+09:59:29 [DEBUG]   Style continuity p33→34: '{"style_match": false, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "table", "strongest_difference": "The first page is narrative prose ending with signatures and approval stamps, while the second page starts a new document titled \'КОЛИЧЕСТВЕНА СМЕТКА\' with a center'
+09:59:29 [INFO]   Checking page 33 (context: [32, 33, 34])
+09:59:29 [DEBUG]   End-of-doc response p33: '{"end": true, "signal": "titled_id_header", "signal_on_page": 34, "confidence": 85, "reason": "Page 33 closes the explanatory note with a \'Съставил:\' signature and an official stamp, and page 34 opens with a new standalone title \'КОЛИЧЕСТВЕНА СМЕТКА\' at the very top followed by an ОБЕКТ line carryin'
+09:59:29 [INFO]   Reason: Page 33 closes the explanatory note with a 'Съставил:' signature and an official stamp, and page 34 opens with a new standalone title 'КОЛИЧЕСТВЕНА СМЕТКА' at the very top followed by an ОБЕКТ line carrying the cadastral identifier 56784.265.657.
+09:59:29 [INFO]   p33: end=True, signal=titled_id_header, signal_on_page=34, conf=85%
+09:59:29 [INFO]   Signal 'titled_id_header' is on p34, not p33 — adjusting boundary: doc ends at p33, next doc starts at p34
+09:59:29 [INFO]   End at page 33 → doc starts at page 34 (conf=85%, signal=titled_id_header)
+09:59:29 [DEBUG]   Start-detect p32→33: '{"starts_new": false, "confidence": 95, "reason": "Page 33 continues the same explanatory note (ОБЯСНИТЕЛНА ЗАПИСКА) with internal numbered sections (III. ДОПЪЛНИТЕЛНИ РАБОТИ, VI. ТЕХНИЧЕСКИ ПОКАЗАТЕЛИ) and its closing signature/stamp block, with no new letterhead or document title."}'
+09:59:29 [DEBUG]   Style continuity p34→35: '{"style_match": true, "letterhead_match": true, "layout_type_prev": "table", "layout_type_curr": "table", "strongest_difference": null, "confidence": 95}'
+09:59:29 [INFO]   Checking page 34 (context: [33, 34, 35])
+09:59:29 [DEBUG]   End-of-doc response p34: '{"end": false, "signal": "table_continuation", "signal_on_page": 35, "confidence": 88, "reason": "Page 35 repeats the same КОЛИЧЕСТВЕНА СМЕТКА header for the identical ОБЕКТ and its table item numbering (5, 7, 8 НАСТИЛКИ/ОБРАБОТКА ТАВАНИ/ФАСАДИ) continues directly from page 34\'s items, so it is a co'
+09:59:29 [INFO]   Reason: Page 35 repeats the same КОЛИЧЕСТВЕНА СМЕТКА header for the identical ОБЕКТ and its table item numbering (5, 7, 8 НАСТИЛКИ/ОБРАБОТКА ТАВАНИ/ФАСАДИ) continues directly from page 34's items, so it is a continuation page of the same bill of quantities.
+09:59:29 [INFO]   p34: end=False, signal=table_continuation, signal_on_page=35, conf=88%
+09:59:29 [DEBUG]   Style continuity p35→36: '{"style_match": true, "letterhead_match": true, "layout_type_prev": "table", "layout_type_curr": "table", "strongest_difference": null, "confidence": 95}'
+09:59:29 [INFO]   Checking page 35 (context: [34, 35, 36])
+09:59:29 [DEBUG]   End-of-doc response p35: '{"end": false, "signal": "table_continuation", "signal_on_page": 36, "confidence": 92, "reason": "Page 36 carries the identical \'КОЛИЧЕСТВЕНА СМЕТКА\' header for the same ОБЕКТ (УПИ 265.657) and its table simply continues the numbered sections (9, 10) following sections 5-8 on page 35, so the bill of'
+09:59:29 [INFO]   Reason: Page 36 carries the identical 'КОЛИЧЕСТВЕНА СМЕТКА' header for the same ОБЕКТ (УПИ 265.657) and its table simply continues the numbered sections (9, 10) following sections 5-8 on page 35, so the bill of quantities runs on.
+09:59:29 [INFO]   p35: end=False, signal=table_continuation, signal_on_page=36, conf=92%
+09:59:29 [DEBUG]   Style continuity p36→37: '{"style_match": true, "letterhead_match": null, "layout_type_prev": "table", "layout_type_curr": "table", "strongest_difference": "The second page ends the quantity table with totals, a note, and signature/stamp blocks, while the first page is a full continuous table.", "confidence": 95}'
+09:59:29 [INFO]   Checking page 36 (context: [35, 36, 37])
+09:59:29 [DEBUG]   End-of-doc response p36: '{"end": false, "signal": "table_continuation", "signal_on_page": 37, "confidence": 90, "reason": "Page 37 carries the identical \'КОЛИЧЕСТВЕНА СМЕТКА\' header for the same ОБЕКТ as pages 35-36 and its table rows continue to the grand total (ОБЩО) and \'Изготвил\' line, so page 36 is mid-document."}'
+09:59:29 [INFO]   Reason: Page 37 carries the identical 'КОЛИЧЕСТВЕНА СМЕТКА' header for the same ОБЕКТ as pages 35-36 and its table rows continue to the grand total (ОБЩО) and 'Изготвил' line, so page 36 is mid-document.
+09:59:29 [INFO]   p36: end=False, signal=table_continuation, signal_on_page=37, conf=90%
+09:59:29 [INFO]   Phase 1 done — document start pages: [1, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 32, 34]
+09:59:29 [INFO]   Skipping Phase 2 classification (classify=False)
+09:59:29 [INFO]   Boundaries: [(1, 0, ''), (3, 0, ''), (4, 0, ''), (5, 0, ''), (6, 0, ''), (7, 0, ''), (8, 0, ''), (9, 0, ''), (10, 0, ''), (12, 0, ''), (13, 0, ''), (15, 0, ''), (16, 0, ''), (17, 0, ''), (18, 0, ''), (19, 0, ''), (20, 0, ''), (21, 0, ''), (22, 0, ''), (23, 0, ''), (24, 0, ''), (25, 0, ''), (26, 0, ''), (32, 0, ''), (34, 0, '')]
+09:59:29 [INFO] [driver] COMPLETE — predicted starts: [1, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 32, 34]
+09:59:29 [INFO] [driver] rotated pages: {}

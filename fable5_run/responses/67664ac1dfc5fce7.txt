@@ -1,0 +1,1 @@
+{"end": false, "signal": "none", "signal_on_page": 28, "confidence": 90, "reason": "Page 28 ends mid-enumeration of property shares (дялове) and page 29 continues the same numbered list (IV., V. В ОБЩ ДЯЛ...) in identical dense body text with no title, letterhead, or signature block."}

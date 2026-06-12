@@ -1,0 +1,1 @@
+{"style_match": false, "letterhead_match": null, "layout_type_prev": "narrative", "layout_type_curr": "table", "strongest_difference": "The first page is a cleanly typed narrative notice on bright white paper, while the second is a darker-toned pre-printed table/form grid filled in by hand, with its own header strip starting at the top.", "confidence": 88}
