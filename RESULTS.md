@@ -290,8 +290,14 @@ tol=1 F1 92.68%, 74/91 docs exact. Baseline round-1 candidate dev tol=0 **89.94*
 Mechanism: #4 killed FP11/19/27@163444215 (FP 6→3) + FP13@142044854 → precision 87.36→91.46; cost one new
 FN19@142044854 → recall 92.68→91.46; net +1.52. FP31 retained (#1-lite reverted). Per-file: 163444215 FP[6,13,31]
 FN[]; 164505881 FP[9,13] FN[12]; 165204533 FN[3,4]; 082511233 FN[20]; 142044854 FP[6,17] FN[19,20]; 084303475
-FN[16]; (084552444/085108460/082544031 clean). Dev event counts: SUPPRESSED=6, one-of-two-capped=6,
-TITLE-GATE-RELOC=2, WINDOW-REQUERY=1. → Stage 2 full-tests launched.
+FN[16]; (084552444/085108460/082544031 clean).
+**Full per-file DELTA vs round-1 candidate (composition, not just aggregate):**
+`−FP{11,19,27}@163444215` (titled invented-РС№, killed by #4 gate) ; `−FP13@142044854` (**first #4 transfer
+evidence OUTSIDE the probe set** — the gate generalises) ; `+FN19@142044854` (new, from a duplicate-relocation:
+the n=18 titled relocated backward onto p18 — already opened at n=17 — abandoning true start p19) ; ALL other
+dev per-file sets UNCHANGED. Net: −4 FP, +1 FN.
+Dev event counts: SUPPRESSED=6, one-of-two-capped=6, TITLE-GATE-RELOC=2 (**of which duplicate-reloc=1** = p18@142044854,
+the FN19 cause), WINDOW-REQUERY=1. → Stage 2 full-tests launched. (Counts via `stage2_event_counts.py`.)
 
 ### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
 From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
@@ -377,6 +383,15 @@ backlog predicted; cost-conscious — confirm whether to spend pod-hours on Tier
 > is a sheet, not a doc start) → cannot discriminate boundary from non-boundary → moved truth-20 boundary to 21
 > (FP21). Same root family as the n+1 site; #1-lite v2 must gate BOTH. One-page-check v2 (post-#5) reframe applies
 > to BOTH call sites.
+> **C-tracking — #4 "relocate-to-duplicate" sub-case (dev Stage 1, FN19@142044854):** when the claimed page is
+> NEITHER-grounded and the UNIQUE grounded window page is ALREADY consumed by an existing boundary (opened by the
+> immediately preceding iteration), the relocation moves the boundary backward onto that existing start and SILENTLY
+> DROPS the claim → the forward true start is lost (p19 here). First #4 cost outside its targets. Candidate behaviours
+> (suppress-with-flag vs keep-original-capped vs no-op-and-keep-forward) are DEFERRED to the requery-aware
+> relocation-trigger spec, to be decided on the FRESH-stratum duplicate-reloc count (Stage 2 `stage2_event_counts.py`
+> column `titled_reloc_dup`). Operational def of duplicate-reloc (verifier-checkable): reloc target first opened as a
+> doc-start by iteration `reloc_iter − 1`. Counterpart positive: `−FP13@142044854` = first #4 FP-kill transferring
+> beyond the probe set.
 > **C-tracking truth notes (closed):** GT boundaries 163444215:p10 and 084303475:p4 are human-attested
 > FINAL (p4: rest of ЧАСТ ЕЛЕКТРОТЕХНИЧЕСКА incl. its Челен лист is not in the combined PDF at all;
 > p3 = previous document). The 'convention-mismatch' category DISSOLVES for FP 10 (human did split the
