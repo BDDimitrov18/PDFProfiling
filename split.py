@@ -443,7 +443,7 @@ def _parse_json(text: str, logger: logging.Logger) -> dict:
 def _query_document_end(images: list, page_nums: list, current_page: int, model, processor, config, logger: logging.Logger) -> tuple:
     """
     Given 2-3 consecutive pages, ask whether current_page ends a document.
-    Returns (is_end: bool, confidence: float 0-1, signal: str, signal_on_page: int, signal_position: str).
+    Returns (is_end: bool, confidence: float 0-1, signal: str, signal_on_page: int).
     """
     pages_label = ", ".join(str(p) for p in page_nums)
     prompt = (
@@ -506,20 +506,12 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         "IMPORTANT: 'signal_on_page' must be the exact page number from the list above "
         "where you actually see the signal. If the signature block is on page 12, write 12, "
         "not 11. Be precise — this is used to place the document boundary correctly.\n\n"
-        "For an END signal (signature_block / project_signoff / table_end), also report "
-        "'signal_position': where the block sits on signal_on_page. Use 'bottom' if it is a "
-        "CLOSING signature/totals at the lower part of the page that ENDS the document on that "
-        "page (the document's last page). Use 'top' if it is a countersignature or approval "
-        "block at the TOP of the page, above fresh body content — i.e. the page is actually the "
-        "TITLE/first page of the NEXT document. For START signals or none, use 'none'. This "
-        "decides whether the boundary falls after this page (bottom) or before it (top).\n\n"
         "Confidence must reflect how clearly YOU see the signal on THIS page — "
         "how legible and unambiguous the evidence is — NOT the signal's category. "
         "A barely-legible stamp or corner page number deserves LOW confidence even "
         "if its signal type is listed as strong.\n\n"
         "Respond ONLY with JSON:\n"
         '{"end": true/false, "signal": "<signal_name>", "signal_on_page": <page_number>, '
-        '"signal_position": "<bottom|top|none>", '
         '"confidence": <0-100>, "reason": "<one sentence: exactly what you see that triggered this>"}'
     )
     raw = _infer(prompt, images, model, processor, config, logger, max_tokens=150)
@@ -541,10 +533,7 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         signal_page = current_page
     if signal_page not in page_nums:
         signal_page = current_page
-    signal_position = str(data.get("signal_position", "none")).lower().strip()
-    if signal_position not in ("bottom", "top", "none"):
-        signal_position = "none"
-    return is_end, conf, signal, signal_page, signal_position
+    return is_end, conf, signal, signal_page
 
 
 # ---------------------------------------------------------------------------
@@ -897,19 +886,14 @@ def detect_boundaries(
         style_results[n] = style_result
 
         logger.info(f"  Checking page {n} (context: {context_pages})")
-        is_end, conf, signal, signal_page, signal_position = _query_document_end(context_images, context_pages, n, model, processor, config, logger)
-        logger.info(f"  p{n}: end={is_end}, signal={signal}, signal_on_page={signal_page}, position={signal_position}, conf={conf:.0%}")
+        is_end, conf, signal, signal_page = _query_document_end(context_images, context_pages, n, model, processor, config, logger)
+        logger.info(f"  p{n}: end={is_end}, signal={signal}, signal_on_page={signal_page}, conf={conf:.0%}")
 
-        # Tier1-#1: direction-aware + position-aware boundary placement.
-        #  - START_ON_NEXT signals (titled_id_header etc.): header lives on signal_page → cut before it.
-        #  - END_ON_PAGE signals (signature_block/project_signoff/table_end): the closing block lives on
-        #    signal_page. position='top' means it's a countersignature/approval at the TOP of a NEW
-        #    document's title page → signal_page is a START, so cut before it (effective_end=signal_page-1).
-        #    position='bottom'/'none' means it's a closing on signal_page → the doc ends there (cut after).
+        # Place boundary at signal_page for end-on-page signals; at signal_page-1
+        # for start-on-next signals (the new doc begins at signal_page, so the old
+        # doc ends one page before it).
         if is_end:
             if signal in START_ON_NEXT_SIGNALS:
-                effective_end = signal_page - 1
-            elif signal in END_ON_PAGE_SIGNALS and signal_position == "top":
                 effective_end = signal_page - 1
             else:
                 effective_end = signal_page
@@ -926,11 +910,7 @@ def detect_boundaries(
         # page of the current doc (keep projection at n+1). Only fires for
         # signal in END_ON_PAGE_SIGNALS — START signals are correctly placed by -1
         # and must not also trigger this.
-        # Tier1-#1: skip when signal_position is known — a 'bottom' closing on n+1 means n+1 is the
-        # document's LAST page (NOT a self-contained new doc; this is the severed-deed FP31 case), and
-        # 'top' was already placed before n+1. Only the ambiguous 'none' case needs the disambiguation.
         if (is_end and signal in END_ON_PAGE_SIGNALS
-                and signal_position == "none"
                 and signal_page == n + 1
                 and n + 1 <= total_pages
                 and n + 1 in page_buffer):

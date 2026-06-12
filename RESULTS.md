@@ -85,6 +85,32 @@ Sorted by certainty-of-gain ÷ risk. **Probe set = 163444215, 164505881, 1652045
 probe → full dev eval. Stratified full-tests run only after both tiers settle. Expected: Tier 1+2 ≈ +2–4 dev F1
 toward low-90s AND should transfer to fresh (none is dev-tuned prompt wording); Tier 3 attacks fresh 77% precision.
 
+### ROUND 2 LOG
+
+**Tier 1 #1 — direction+position-aware `signal_on_page` — REVERTED (commit 3b06dff → revert 6917329).**
+Added a `signal_position` field (bottom=closing / top=countersignature) to `_query_document_end`, position-aware
+`effective_end`, and gated the n+1 one-page-check to `position=='none'`. Probe (5090, Tier1#1 md5 37340f8,
+`probe_t1_1.log`) vs round-1 Fix9-only on the 4 probe files, scored against corrected GT:
+
+| File | Round-1 (Fix9-only) tol0 | Tier1#1 tol0 | Δ |
+|---|---|---|---|
+| 163444215 | FP[6,11,13,19,27,**31**] FN[] | FP[**2**,6,11,13,19,27,**33**] FN[**4**,**34**] | FP31 fixed; **+FP2, 34→33 displ., +FN4** |
+| 164505881 | FP[9,**13**] FN[**12**] | FP[9,13] FN[] | **FN12 fixed**; FP13 persists |
+| 165204533 | FP[] FN[3,4] | FP[**7**] FN[3,4] | **+FP7** |
+| 082511233 | FP[] FN[**20**] | FP[**21**] FN[20] | 20→21 displ., still misses 20 |
+| **total** | **8 FP / 4 FN (12 err)** | **11 FP / 5 FN (16 err)** | **net −4 tol0** |
+
+Both named targets fixed (**FP31 gone, FN12 recovered**) but net-negative: −4 errors tol=0. **Root cause:** Edit 1
+added the position instruction to the `_query_document_end` *prompt itself* — a global perturbation, not a surgical
+placement change. For the front pages (p2/p3/p4 of 163444215) the placement logic is byte-identical to round-1, yet
+boundaries still shifted **3,4→2,3** — only the changed prompt text can move the model's own end-detection on
+unrelated pages. The feature cannot be isolated from collateral detection drift. Per the brief's "no new regressions"
+bar + established revert discipline (Fix 8 flagged, Fix 11 reverted) → reverted; `split.py` restored to Fix9-only
+(md5 ca8aea3). **Finding for Tier 3 redesign:** the severed-deed / countersignature geometry needs a mechanism that
+does NOT alter the shared end-detection prompt (e.g. a dedicated post-hoc position query only on the candidate page,
+or fold into #5/#6). Proceeding to **Tier 1 #2** (window-range validation — touches substitution logic, not the
+end-detection prompt → no bleed risk).
+
 ---
 
 > **RESUME POINT (2026-06-11):** Working on a migrated **RTX 5090** pod (the original run-8 pod;
