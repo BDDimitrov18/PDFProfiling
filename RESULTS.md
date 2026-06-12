@@ -146,6 +146,27 @@ FN20 not recovered, OR a new table FP, OR any signature/titled boundary changes 
   `signal=="table_end"` in the low-conf confirm pass. Targets FN20@082511233 + FN19/20@142044854 + FN12@084837699.
   Tests `test_table_confirm.py` (6, pass).
 
+#### 🩺 HOLDOUT-FN MECHANISM DIAGNOSIS (human attest 2026-06-13 + Stage-2 log forensics) — backlog item 3 CLOSED
+All 5 holdout FNs confirmed REAL model misses (holdout GT fully confirmed, NO GT change): 082646183 p4 (heading not in
+nomenclature, no signature on p4); 084837699 p11 (p10 carries the signature), p12 (p11 carries it, different style);
+085002901 p9. **p13@084837699 = AMBIGUOUS** (different inventory tables, usually printed separately — human could not
+decide) → **convention-seam list** alongside FP13@163444215, **GT untouched** (a lean does not move GT here).
+**Mechanism map (verbatim Stage-2 lines):** two classes —
+- **Fix 11 v2 class (1):** FN12@084837699 — `p11: end=True, signal=table_end, conf=90%` → capped 0.60 → `rejected by
+  confirmation pass`. Same veto that ate FN20@082511233 + the 142044854 pair → **flips with Commit C** (pre-registered).
+- **QUIET-SEAM class (3), never-named:** FN4@082646183 (`p3/p4: end=False, signal=none`), FN9@085002901 (`p8: end=False,
+  signal=none, conf=100%`), FN11@084837699 (`p10: end=False, signal=none, conf=100%` — model reported NONE despite a
+  human-attested signature = flat missed read; possible verso/rotation/unusual-grid — note for the dossier). Nothing
+  fired, nothing was vetoed, no gate ever saw the seam. **NOT a judgment failure** (unlike everything round 2 fixed) —
+  a detection gap. Cross-architecture: run8 holdout R=66.67 → structurally hard for BOTH architectures. **None of
+  Commits A–D touches these.** Backlog item 3 → **CLOSED as DIAGNOSED** (1× Fix11v2 + 3× quiet-seam + GT confirmed).
+
+#### 🔭 ROUND 4 SPEC STUB (direction only — no design, gated on round-3 results)
+- **Quiet-seam start detection.** A start-SIDE mechanism (round 2/3 are all end-side gates): a dedicated post-hoc
+  style/letterhead-change READ at seams where NO end-signal fired AND the following page opens a candidate fresh block.
+  TRANSCRIBE-first per the C-tracking law (never free-judge). Gated on round-3 results + a quiet-seam dossier count
+  derived from the round-3 full-tests log. Targets the 3 quiet-seam holdout FNs + any same-class fresh misses.
+
 **ROUND 2 BOOKS CLOSED.** Corrected GT (committed) is the round-3 baseline; #2+#4 (md5 63da033) is the candidate.
 
 ---
