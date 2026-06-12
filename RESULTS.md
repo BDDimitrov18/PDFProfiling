@@ -111,6 +111,16 @@ does NOT alter the shared end-detection prompt (e.g. a dedicated post-hoc positi
 or fold into #5/#6). Proceeding to **Tier 1 #2** (window-range validation — touches substitution logic, not the
 end-detection prompt → no bleed risk).
 
+**Tier 1 #2 — window-range validation (no silent substitution) — KEPT (commit cf9f88a).** `_requery_signal_page`
+replaces the silent `signal_page = current_page` substitution. Probe (Tier1#2 md5 21945c2, `probe_t1_2.log`):
+**predictions byte-identical to round-1 on all 4 files** — tol=0 unchanged (FP[6,11,13,19,27,31]/FN[]; FP[9,13]/FN[12];
+FN[3,4]; FN[20]). The re-query fired once (165204533 p2: `signal_on_page=4` outside [1,2,3] → re-placed on page 1) but
+**FN3 NOT recovered** — when forced in-window the model picks page 1, i.e. it mislocalizes the boundary in this rapid
+single-page-stack; silent substitution was never the cause. **No bleed, no regressions** (validates the isolated-change
+thesis vs #1's prompt-level perturbation). Kept as a real correctness fix (kills the silent-misplacement FP class that
+the probe's 4 files just don't exercise); the full dev eval is its real test — A/B-revert if it regresses there. FN3
+reclassified as a model-localization failure for #5/#6 (single-page-doc stacks), not a substitution bug. → **Tier 1 #3**.
+
 ---
 
 > **RESUME POINT (2026-06-11):** Working on a migrated **RTX 5090** pod (the original run-8 pod;
