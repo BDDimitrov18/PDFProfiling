@@ -116,6 +116,19 @@ New pod `213.173.103.193:19724` (data migrated; pip env + `/hf_cache` did NOT mi
 `pred=[3,4,5,6,8,10,11,12,13,15,22,23,24,25,26,31,32,34]` == historical (byte-identical) ⇒ **env reproduces run-8,
 anchors valid, no re-anchor needed.** Proceeding to the stacked A+B+C+D probe → dev → full-tests chain.
 
+### 📍 ROUND 3 STACKED PROBE RESULT (A+B+C+D, new pod, GT v3) — C's falsifier TRIGGERED → C REVERTED
+`logs/round3_probe.log` + `logs/round3_probe_results.json`. tol0 TP32/FP6/FN3 (F1 87.67) vs #2+#4 GT-v3 probe
+~88.57 = slight regression, **isolated to C**. Per-file: 163444215 FP=[6,**35,37**] FN=[] (FP31 DEAD ✓ via D, 13 is
+TP ✓ GT v3); 082511233 FP=[**19**] FN=[] (**FN20→TP ✓** via C); 164505881 FP=[9,13] FN=[12]; 165204533 FN=[3,4].
+Gate events: DUP-GUARD-KEEP 0 (targets off-probe), TITLE-GATE-RELOC 0, NEXT-PAGE-GATE 23 (all TPs preserved, FP6 not
+vetoed), TABLE-CONFIRM 5. **C (Fix 11 v2) failed its pre-registered falsifier ("any new table FP"):** TABLE-CONFIRM
+verdicts `p34→35 (8→5) stands`=FP35, `p36→37 (10→1) stands`=FP37, `p18→19 (31→2) stands`=FP19 — vs `p19→20 (6→1)
+stands`=TP20. **Root flaw:** a table reset-to-1/jump occurs at BOTH real boundaries AND intra-document section breaks
+(FP37 `10→1` and TP20 `6→1` are BOTH resets) → numbering ALONE cannot discriminate; the mechanical rule is too
+permissive (inverse of v1's too-strict). **DECISION: revert C** (per its falsifier), keep A+B+D. C → backlog with a
+refined spec: table-numbering discontinuity must be CORROBORATED (heading/issuer/letterhead change on n+1) to stand —
+it cannot be a standalone confirm. A+B+D re-probe follows.
+
 ### 🧪 ROUND 3 — PRE-REGISTERED PROBE EXPECTATIONS (falsifiable, derived from tonight's logs)
 Probe set = 163444215, 164505881, 165204533, 082511233. Redeploy order: fingerprint → probe A → dev A → probe B →
 dev → probe C → dev → probe D → dev → round-3 stratified full-tests (STRICT+WAIVED). Same revert discipline as round 2.
