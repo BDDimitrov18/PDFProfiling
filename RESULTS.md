@@ -139,14 +139,20 @@ MODEL's transcription (inherent to build 63da033, not a logging defect) → nome
 - **FP13@163444215 seam** (pending human attestation).
 - **Masked ranges** to inspect/attest: 143041245[62-66], 145428614[146-150] (+ exported to `attestations/`).
 
-#### 📋 BACKLOG
-- **#1-lite v2:** gate BOTH one-page-check call sites (normal n+1 branch AND OOB-PROJECTION branch) for
-  signature_block/table_end; one commit + full 4-file probe with exact expected sets. NOT tonight.
-- **Requery-aware relocation** (FN3-class): relocation trigger = not-BOTH-grounded + suspect provenance (via
-  #2-requery OR reason-title/page mismatch); search = match reason-cited title against window transcriptions.
-  Pod-less dev batch, gated on tonight's fresh-stratum event counts.
-- **Tier 3 #5 repeated-form suppression:** pod-less, CPU structural similarity on binarized page skeletons.
-- **FN3 / FN4 / FN20:** known STRICT FNs, mislocalization-class, deferred here. NOT waivers (no waivers.json).
+#### 📋 BACKLOG (re-prioritised post Stage-2, per pre-registered decision rule)
+- **★ TOP — Relocation/duplicate fix** (PROMOTED: fresh `titled_reloc_dup`=8 of 18 fresh FN = material, meets the
+  pre-registered "fresh dup-reloc is non-trivial → promote" rule). Two coupled parts: (i) requery-aware relocation
+  trigger = not-BOTH-grounded + suspect provenance (#2-requery OR reason-title/page mismatch), search = match
+  reason-cited title against window transcriptions; (ii) relocate-to-duplicate guard = when the unique grounded
+  window page is already opened by the immediately-preceding iteration, do NOT silently drop the claim (suppress-
+  with-flag vs keep-original-capped — design choice in the spec). Targets FN3@165204533 + the 8 fresh dup-reloc FNs.
+- **★ TOP — Tier 3 #5 repeated-form suppression:** pod-less, CPU structural similarity on binarized page skeletons.
+- **SHELVED — nomenclature integration:** experiment shows NO current score-moving hook — capped one-of-two accepts
+  already admit the matched admin-type starts, and there are ZERO rescue candidates (no suppressed-was-true that a
+  MATCH would recover). Re-evaluate ONLY after the relocation fix changes which events exist. (Module + tests kept.)
+- **#1-lite v2:** gate BOTH one-page-check call sites (n+1 AND OOB-PROJECTION) for signature_block/table_end; one
+  commit + full 4-file probe with exact expected sets.
+- **FN3 / FN4 / FN20:** known STRICT FNs, mislocalization-class. NOT waivers (no waivers.json).
 
 #### 🔤 ITEM 5 — NOMENCLATURE MATCHER (`nomenclature_match.py` + `test_nomenclature_match.py`, pod-less CPU)
 STANDALONE module (zero split.py integration) matching VLM-transcribed titles against
@@ -293,6 +299,12 @@ macOS stdin-pipe artifact); the authoritative check is `git checkout 9fee964 -- 
 | holdout (3) | 11/1/4 | 91.67 | 73.33 | **81.48** | — |
 | fresh (8) | 197/33/18 | **85.65** | 91.63 | **88.54** | 84.63 (P 77.31) |
 | **AGGREGATE (20)** | 283/41/29 | 87.35 | 90.71 | **88.99** | **85.84** |
+**MASKING RECONCILIATION (Fable flagged round-1 row as possibly unmasked — evidence says it is ALREADY masked):**
+Both rows scored through the SAME masked `score_full.py` (masks 143041245[62-66], 145428614[146-150]). Round-1
+candidate (`logs/round1_candidate.log`) recomputed directly: fresh UNMASKED TP204/FP60/**P77.27**/F1 84.47 →
+fresh MASKED TP201/FP59/**P77.31**/F1 84.63. The table's `77.31` IS the masked value (masking removes 3 masked TP +
+1 masked FP, nudging fresh P slightly UP, not down to ~77.04). Table is apples-to-apples; deltas stand. #2+#4 fresh
+(TP197/FP33/85.65) likewise masked. Aggregate round-1 masked = 85.84 (TP288/FP71, P80.22) — matches the baseline row.
 **Headline:** aggregate **85.84 → 88.99 (+3.15)**; **fresh precision 77.31 → 85.65 (+8.34)** = #4 killing the
 invented-РС№ FP class exactly as designed. **Overfitting gap dev−fresh NARROWED +5.31 → +2.92** (fresh +3.91 vs
 dev +1.52) — #4 transfers to unseen data BETTER than the dev-tuned baseline; it is a real generalization win, not
