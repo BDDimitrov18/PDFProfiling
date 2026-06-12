@@ -1,5 +1,52 @@
 # Boundary / Rotation Eval Results
 
+## ☀☀ ROUND 2 MORNING SUMMARY (overnight #2+#4 chain complete, 2026-06-13)
+
+**NEW CANDIDATE = #2 (window-range validation) + #4 (transcribe-then-judge titled gate, localizer + one-of-two).**
+split.py md5 **63da033** (HEAD has it). Boundary detection, RTX 5090, 150 DPI, corrected+masked GT.
+
+**Final stratified tables (all masked-excluded; 143041245[62-66], 145428614[146-150]):**
+| build | dev F1 | holdout F1 | fresh F1 | fresh P | **aggregate F1** | dev−fresh gap |
+|---|--:|--:|--:|--:|--:|--:|
+| round-1 candidate (Fix9-only) | 89.94 | 81.48 | 84.63 | 77.31 | 85.84 | +5.31 |
+| run8 referee (run-8 code) | 89.16 | 76.92 | 87.42 | 83.19 | 87.44 | +1.74 |
+| **#2+#4 (CANDIDATE)** | **91.46** | 81.48 | **88.54** | **85.65** | **88.99** | **+2.92** |
+
+**Headline:** #2+#4 is best on every aggregate metric — **+3.15 aggregate / +8.34 fresh-precision vs round-1**, and
+**+1.55 / +2.46 vs the genuine run-8 baseline**. #4's anti-hallucination gate kills the invented-РС№ FP class and
+**generalises better than it fits** (overfitting gap halved; fresh gained more than dev). Dev Stage-1 delta:
+−FP{11,19,27}@163444215, −FP13@142044854 (first transfer outside probe), +FN19@142044854 (dup-reloc).
+
+**Gate-event counts (Stage-2 full-tests, fresh stratum):** suppressed 17, one-of-two capped 29, reloc 15
+(**dup-reloc 8** of 18 fresh FN), window-requery 0, #1-lite-would-fire 19.
+
+**Nomenclature experiment (data only, integration SHELVED):** sheet-type hypothesis REFUTED (0 hits any stratum);
+a table MATCH strongly co-occurs with TP (split fresh MATCH=40 admin-types; run8 cross-arch identical: MATCH=TP,
+FP=NONE); zero rescue candidates → no current score-moving hook (capped accepts already admit matched starts).
+
+**Top backlog (pod-less):** ★ relocation/duplicate fix (fresh dup-reloc=8 justifies it — requery-aware trigger +
+relocate-to-duplicate guard; targets FN3 + 8 fresh dup FNs); ★ Tier 3 #5 repeated-form suppression (CPU structural
+similarity). Then #1-lite v2 (gate BOTH one-page-check sites — n+1 AND OOB-PROJECTION, needs a pod probe).
+
+**OPEN QUESTIONS — HUMAN ATTESTATION ONLY (never self-attested, GT untouched):**
+- 082511233 **p20 vs p21** — true `НАКЛОНЕН ПОКРИВ` boundary (PNGs `attestations/082511233_p19-21.png`).
+- **FP13@163444215** seam.
+- Masked ranges 143041245[62-66], 145428614[146-150] (PNGs in `attestations/`).
+- Signature-FP triage: 6 dossiers in `attestations/sig_triage/` + 29-event table (Fable's "22" delta flagged).
+- run8 "22 vs 29" signature-FP count criterion (committed-signal vs verdict-line).
+
+**REDEPLOY PROTOCOL (for any future 5090 pod):** the current pod's env reproduces run-8 (run8 referee 87.44 row is
+the live anchor). On a NEW pod, BEFORE recording any eval row: run `eval_run8.py` on 163444215 only and diff its FP
+set against the run-8 fingerprint (163444215 run8 FP=[6,11,13,31], FN=[7,9] — `logs/run8_stage3.log`). Byte-identical
+FP set ⇒ anchors valid, proceed. Mismatch ⇒ the env differs: re-run ONE #2+#4 dev eval on the new pod, make THAT the
+same-GPU anchor, update the gpu column, and measure all subsequent deltas against it. Model `/hf_cache`,
+`HF_HOME=/hf_cache HF_HUB_DISABLE_XET=1`, deps per `requirements-lock.txt`.
+
+**POD:** all GPU work complete; the RunPod 5090 is now IDLE and billing. I cannot stop RunPod billing from the CLI —
+**terminate the pod in the RunPod console.** All artifacts (logs/, attestations/, results) are committed + pushed.
+
+---
+
 ## ☀ MORNING SUMMARY (overnight round 1 complete, 2026-06-12)
 
 **CANDIDATE = Fix9-only, `git tag round1-candidate` (88f58dc).** Boundary detection, RTX 5090, corrected GT.
