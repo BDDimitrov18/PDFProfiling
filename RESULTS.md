@@ -115,6 +115,13 @@ architectures — only compare rows with the same `gpu`).
 | **Fix 4** | RTX 5090 | 85.7% | 95.1% | **90.17%** | — | **+4.29 vs baseline** | ~~88.89%~~ |
 | Fix 8 (KEPT, flagged) | RTX 5090 | 87.95% | 89.02% | 88.48% | 68/91 | **−1.69 vs Fix 4** | — |
 | Fix 9 (Fix 8+9) | RTX 5090 | 89.02% | 89.02% | 89.02% | 69/91 | **+0.54 vs Fix 8; −1.15 vs Fix 4** | — |
+| **Fix9-only (A/B WINNER)** | RTX 5090 | 87.36% | 92.68% | **89.94%** | 72/91 | **+0.92 vs Fix8+9; −0.23 vs Fix 4** | — |
+
+**A/B verdict (step 3): WINNER = Fix9-only.** Rule `argmax tol0_F1 {Fix8+9=89.02, Fix9-only=89.94}` → Fix9-only
+(89.94 > 89.02, not a tie). Recall 92.68% vs Fix8+9 89.02% confirms Fix 8's confirmation routing was costing
+recall (inverted titled bias). Reconcile: 9181a66 (Fix 8) reverted on main → main = Fix9-only. Fix9-only
+163444215 FP=[6,11,13,19,27,31] (drawing-block removed 20,21; 11,19,27 survived exclusions); p4 preserved.
+Fix9-only still −0.23 vs Fix 4 — cumulative-best (step 5) decided after Fix 11.
 
 **Fix 9 (Fix 8+9 combined, commit aea8297, RTX 5090, corrected GT) — step 1 row.**
 tol0=tol1: P=89.02 R=89.02 **F1=89.02**. TP=73 FP=9 FN=9. vs Fix 8 (88.48): +0.54 (FP 10→9).
