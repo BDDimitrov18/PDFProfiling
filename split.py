@@ -603,6 +603,36 @@ def _query_transcribe_title(img, page_num: int, model, processor, config, logger
     return title, ident
 
 
+def _titled_gate_decision(gcnt, signal_page, effective_end, conf, n, reloc, doc_starts):
+    """PURE decision for the TITLE-GATE (one-of-two + relocation + Round-3 dup-guard). Separated
+    from the model I/O so it is unit-testable without a GPU.
+
+    gcnt        : grounded count on the claimed page (0/1/2).
+    reloc       : list of (wp, title, ident, idg) — window pages (excl. claimed) with a grounded
+                  title; idg = 1 if that page's identifier is also grounded else 0.
+    doc_starts  : committed boundary start pages from PRIOR iterations.
+
+    Returns (signal_page, effective_end, conf, is_end, action) where action[0] is a log tag.
+
+    Round-3 Commit A — DUPLICATE-GUARD (keep-original-capped): when the UNIQUE grounded target is
+    a page ALREADY opened by a prior boundary (the immediately-preceding doc's start), relocating
+    there is a no-op that silently drops the claim and abandons the true forward start (the FN19@
+    142044854 class). Instead KEEP the ORIGINAL claimed page, conf capped 0.60 — never silently drop.
+    """
+    if gcnt == 2:
+        return signal_page, effective_end, conf, True, ("KEEP-BOTH",)
+    if gcnt == 1:
+        return signal_page, effective_end, min(conf, 0.60), True, ("KEEP-ONE-OF-TWO",)
+    # gcnt == 0 — NEITHER grounded on the claimed page.
+    if len(reloc) == 1:
+        wp, _t, _i, idg = reloc[0]
+        if wp in doc_starts:
+            return signal_page, effective_end, min(conf, 0.60), True, ("DUP-GUARD-KEEP", signal_page, wp)
+        cap = (idg == 0)
+        return wp, wp - 1, (min(conf, 0.60) if cap else conf), True, ("RELOC", wp, idg, cap)
+    return signal_page, n, conf, False, ("SUPPRESS", len(reloc))
+
+
 # ---------------------------------------------------------------------------
 # Phase 1b — appendix standalone check
 # ---------------------------------------------------------------------------
@@ -994,14 +1024,9 @@ def detect_boundaries(
             logger.info(
                 f"  [TITLE-GATE] p{signal_page}: title={t_title!r} identifier={t_ident!r} -> grounded={gcnt}/2"
             )
-            if gcnt == 2:
-                pass  # BOTH grounded — accept, boundary stays at signal_page, full confidence
-            elif gcnt == 1:
-                conf = min(conf, 0.60)
-                logger.info(f"  [TITLE-GATE] p{signal_page} one-of-two (title XOR identifier) — accepted, conf capped to 0.60")
-            else:
-                # NEITHER on the claimed page — try to relocate within the window.
-                reloc = []
+            # Build the relocation candidate list (model READs) only when NEITHER grounded.
+            reloc = []
+            if gcnt == 0:
                 for wp in context_pages:
                     if wp == signal_page or wp not in page_buffer:
                         continue
@@ -1010,26 +1035,31 @@ def detect_boundaries(
                     )
                     if _grounded(w_title):
                         reloc.append((wp, w_title, w_ident, int(_grounded(w_ident))))
-                if len(reloc) == 1:
-                    wp, w_title, w_ident, w_idg = reloc[0]
-                    signal_page = wp
-                    effective_end = wp - 1
-                    capped = (w_idg == 0)
-                    if capped:
-                        conf = min(conf, 0.60)
-                    logger.info(
-                        f"  [TITLE-GATE-RELOC] grounded title on p{wp} (title={w_title!r} id={w_ident!r}, "
-                        f"grounded={1 + w_idg}/2) — boundary relocated, new doc starts at p{wp}"
-                        + ("; conf capped to 0.60" if capped else "")
-                    )
-                else:
-                    is_end = False
-                    effective_end = n
-                    why = "no grounded-title page" if not reloc else f"{len(reloc)} grounded-title pages (ambiguous)"
-                    logger.info(
-                        f"  [TITLE-GATE] titled_id_header at p{signal_page} SUPPRESSED "
-                        f"— neither grounded on claimed page and {why} in window {context_pages}"
-                    )
+            # PURE decision (incl. Round-3 dup-guard); see _titled_gate_decision.
+            signal_page, effective_end, conf, is_end, action = _titled_gate_decision(
+                gcnt, signal_page, effective_end, conf, n, reloc, doc_starts
+            )
+            tag = action[0]
+            if tag == "KEEP-ONE-OF-TWO":
+                logger.info(f"  [TITLE-GATE] p{signal_page} one-of-two (title XOR identifier) — accepted, conf capped to 0.60")
+            elif tag == "DUP-GUARD-KEEP":
+                logger.info(
+                    f"  [DUP-GUARD-KEEP] original p{action[1]} kept (grounded target p{action[2]} already a "
+                    f"boundary), conf capped to 0.60"
+                )
+            elif tag == "RELOC":
+                wp, w_title, w_ident, w_idg = reloc[0]
+                logger.info(
+                    f"  [TITLE-GATE-RELOC] grounded title on p{wp} (title={w_title!r} id={w_ident!r}, "
+                    f"grounded={1 + w_idg}/2) — boundary relocated, new doc starts at p{wp}"
+                    + ("; conf capped to 0.60" if action[3] else "")
+                )
+            elif tag == "SUPPRESS":
+                why = "no grounded-title page" if action[1] == 0 else f"{action[1]} grounded-title pages (ambiguous)"
+                logger.info(
+                    f"  [TITLE-GATE] titled_id_header at p{signal_page} SUPPRESSED "
+                    f"— neither grounded on claimed page and {why} in window {context_pages}"
+                )
 
         # One-page-check: when an END-on-page signal was projected forward to n+1,
         # disambiguate whether n+1 is self-contained (boundary at n) or a closing

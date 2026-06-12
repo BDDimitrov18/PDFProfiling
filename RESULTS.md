@@ -98,9 +98,22 @@ one-page-check claimed "clear title at top of p21" (conf 95) on 082511233; human
 is not just a framing fallacy (4th-instance) but the model *inventing* page content to justify a verdict — the
 strongest argument yet that confirm-style queries must TRANSCRIBE before judging (the #4 pattern), never free-judge.
 
+### 🧪 ROUND 3 — PRE-REGISTERED PROBE EXPECTATIONS (falsifiable, derived from tonight's logs)
+Probe set = 163444215, 164505881, 165204533, 082511233. Redeploy order: fingerprint → probe A → dev A → probe B →
+dev → probe C → dev → probe D → dev → round-3 stratified full-tests (STRICT+WAIVED). Same revert discipline as round 2.
+
+**Commit A — duplicate-guard (keep-original-capped).** PROBE expectation = **BYTE-IDENTICAL on all 4 probe files**
+(its targets — FN19@142044854 + the 8 fresh dup FNs — live OUTSIDE the probe set): 163444215 FP=[6,13,31] FN=[];
+164505881 FP=[9,13] FN=[12]; 165204533 FP=[] FN=[3,4]; 082511233 FP=[] FN=[20]. **Real gate = DEV EVAL**: expect
+FN19@142044854 → TP (142044854 FN=[19,20] → [20]) IF the kept p19 boundary (capped 0.60) survives the low-conf
+confirmation pass; dev tol0 F1 **≥ 91.46** (→ ~92.1 if FN19 recovers; ≥91.46 / neutral-safe if the capped boundary is
+rejected — dup-guard never silently drops, so it cannot regress). Falsifier: any probe-file delta, or dev < 91.46.
+
 ### 🔭 ROUND 3 SPEC STUBS (spec only — no code this round)
-- **(a) Duplicate-guard** (relocate-to-duplicate, fresh dup-reloc=8): FORK **NOTED OPEN** — *suppress-with-flag* vs
-  *keep-original-capped*. **Human decision pending.**
+- **(a) Duplicate-guard** (relocate-to-duplicate, fresh dup-reloc=8): FORK **CLOSED 2026-06-13 → keep-original-capped**
+  (human decision). Implemented Commit A (`_titled_gate_decision`): when the unique grounded relocation target is a page
+  already opened by a prior boundary, KEEP the original claimed page as the boundary, conf capped 0.60, log
+  `[DUP-GUARD-KEEP]` — never silently drop. Tests `test_dup_guard.py` (10, pass; fixtures = real traces).
 - **(b) Next-page-gate REBUILD (transcribe-then-judge shape).** Replace the free-judge signature/OOB gates: a dedicated
   READ of the TOP of page n+1 → an **evidence JSON** {transcribed_heading, nomenclature_band, continuation_cues,
   verso_cues (rotation mismatch + identical contour/frame to n)} produced BEFORE any verdict. **Nomenclature hook:** a
