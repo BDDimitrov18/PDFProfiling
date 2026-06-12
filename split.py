@@ -1036,13 +1036,6 @@ def detect_boundaries(
         # page of the current doc (keep projection at n+1). Only fires for
         # signal in END_ON_PAGE_SIGNALS — START signals are correctly placed by -1
         # and must not also trigger this.
-        # NOTE (#1-lite REVERTED 2026-06-12 per Fable-5 byte-gate): a 'skip n+1 one-page-check
-        # for signature_block/table_end' clause was tried here to kill FP31, but it REROUTED
-        # 082511233 p20's signature_block through the OOB-projection one-page-check (a second,
-        # ungated call site) which fired self_contained on p21 → new FP21. Net-zero tol=0,
-        # new failure mode → reverted. A correct #1-lite must gate BOTH one-page-check sites
-        # (n+1 here AND OOB-projection) together; retry as its own probe cycle. C-tracking note
-        # on the structural-symmetry fallacy retained in RESULTS.md.
         if (is_end and signal in END_ON_PAGE_SIGNALS
                 and signal_page == n + 1
                 and n + 1 <= total_pages

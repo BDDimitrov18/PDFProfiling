@@ -119,6 +119,30 @@ branch → morning question; never self-attest GT):
    ranges + the FP13@163444215 seam. Push + verifier-gate after EVERY stage (numbers match artifacts, git show
    matches claims, no improvisation).
 
+#### 📎 LOG-ARTIFACTS AMENDMENT (human, 2026-06-12) — tracked `logs/` for independent audit
+Raw run logs are repo-tracked, append-only evidence. After each stage, copy its log to `logs/` BEFORE the gate
+and push immediately: `logs/probe_1lite2.log` (done), `logs/dev_stage1.log`, `logs/fulltests_stage2.log`,
+`logs/run8_stage3.log`, plus each eval's `eval_results.json` → `logs/<stage>_results.json` (these embed per-file
+`pred`/`true`/`fp`/`fn` arrays = the primary predictions artifact; audit recomputes FP/FN independently). NEVER
+edit/trim/regenerate a committed log; a re-run commits under a NEW name (e.g. `dev_stage1_ab_revert4.log`), old
+kept. Gzip (`.log.gz`) if >50 MB, never truncate. `eval_dev/ eval_holdout/ eval_full/ eval_probe/` stay gitignored
+(symlink dirs) — this tracks logs + predictions only.
+
+#### 🌅 MORNING QUESTIONS (human attestation only — never self-attest, never touch GT)
+- **082511233 p20 vs p21:** is the true `НАКЛОНЕН ПОКРИВ` boundary on p20 or p21? (GT currently p20; #1-lite's FP21
+  and the OOB self-contained verdict both touched this seam — human call, GT untouched.)
+- **FP13@163444215 seam** (pending human attestation).
+- **Masked ranges** to inspect/attest: 143041245[62-66], 145428614[146-150] (+ exported to `attestations/`).
+
+#### 📋 BACKLOG
+- **#1-lite v2:** gate BOTH one-page-check call sites (normal n+1 branch AND OOB-PROJECTION branch) for
+  signature_block/table_end; one commit + full 4-file probe with exact expected sets. NOT tonight.
+- **Requery-aware relocation** (FN3-class): relocation trigger = not-BOTH-grounded + suspect provenance (via
+  #2-requery OR reason-title/page mismatch); search = match reason-cited title against window transcriptions.
+  Pod-less dev batch, gated on tonight's fresh-stratum event counts.
+- **Tier 3 #5 repeated-form suppression:** pod-less, CPU structural similarity on binarized page skeletons.
+- **FN3 / FN4 / FN20:** known STRICT FNs, mislocalization-class, deferred here. NOT waivers (no waivers.json).
+
 
 **Tier 1 #1 — direction+position-aware `signal_on_page` — REVERTED (commit 3b06dff → revert 6917329).**
 Added a `signal_position` field (bottom=closing / top=countersignature) to `_query_document_end`, position-aware
@@ -218,7 +242,19 @@ override is pure noise. **But** 082511233 gained FP21 (deviation beyond FP31's d
 call sites — the n+1 site (gated by #1-lite) AND the OOB-projection site (NOT gated); skipping the n+1 site
 rerouted p20's signature_block (signal_on_page=21, new_start=22 OOB) through the OOB-projection one-page-check,
 which fired self_contained on p21 ('НАКЛОНЕН ПОКРИВ') → boundary at 21. **A correct #1-lite must gate BOTH sites
-together** — deferred to its own probe cycle (backlog). FP31 stays a STRICT FP on #2+#4 for now.
+together** — deferred to its own probe cycle (backlog #1-lite v2). FP31 stays a STRICT FP on #2+#4 for now.
+**Verbatim [OOB-PROJECTION] evidence (`probe_1lite2.log` lines 395–398):**
+```
+[OOB-PROJECTION] new_start=22 > total_pages=21 — re-evaluating
+[ONE-PAGE-CHECK] p21 self_contained=True (conf=95%): The page has a clear document title ('НАКЛОНЕН ПОКРИВ' and 'ПОД НАД ЗЕМЯ') at the very top, indicating it is a self-contained document.
+[OOB-PROJECTION] p21 self-contained — boundary corrected to p20
+End at page 20 → doc starts at page 21 (conf=80%, signal=signature_block)
+```
+FP31-death evidence (`probe_1lite2.log` line 166, p31 own window): `End at page 31 → doc starts at page 32 (conf=92%, signal=signature_block)`.
+**Provenance note:** `git show 9fee964:split.py | md5sum` returns a different hash than the checked-out file (a
+macOS stdin-pipe artifact); the authoritative check is `git checkout 9fee964 -- split.py` → `md5sum` = **63da033**
+(matches the pod + Fable's probe5 reference). split.py restored to exactly 63da033; Stage 1 relaunched on it
+(`dev_stage1.log`) after a transient working-tree state (`fab0d5a`, a duplicated-comment block, logic-identical).
 
 ### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
 From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
@@ -297,6 +333,13 @@ backlog predicted; cost-conscious — confirm whether to spend pod-hours on Tier
 > exists from p31's own window at conf 92). **One-page-check v2 (future, post-#5):** reframe from completeness
 > to DIRECTION — "does the TOP of this page begin a NEW document given the previous page?" — or require a
 > TITLE-GATE-grounded fresh title before any one-page self-contained verdict is allowed to move a boundary.
+> **C-tracking — OOB-PROJECTION one-page-check = 4th framing-predetermined corrective query** (after (1)
+> `_query_confirm_boundary` inverted bias, (2) Fix 11 v1 yes-machine, (3) n+1 one-page-check structural-symmetry
+> fallacy). The OOB-projection branch runs its OWN `_query_is_self_contained` call site (never gated by #1-lite).
+> Its "title at top of page?" question is satisfied by closing drawing sheets too (082511233 p21 'НАКЛОНЕН ПОКРИВ'
+> is a sheet, not a doc start) → cannot discriminate boundary from non-boundary → moved truth-20 boundary to 21
+> (FP21). Same root family as the n+1 site; #1-lite v2 must gate BOTH. One-page-check v2 (post-#5) reframe applies
+> to BOTH call sites.
 > **C-tracking truth notes (closed):** GT boundaries 163444215:p10 and 084303475:p4 are human-attested
 > FINAL (p4: rest of ЧАСТ ЕЛЕКТРОТЕХНИЧЕСКА incl. its Челен лист is not in the combined PDF at all;
 > p3 = previous document). The 'convention-mismatch' category DISSOLVES for FP 10 (human did split the
