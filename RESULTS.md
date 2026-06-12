@@ -236,6 +236,17 @@ backlog predicted; cost-conscious — confirm whether to spend pod-hours on Tier
 > (lost 5 true starts) while passing fresh-looking drawing sheets — so routing titled_id_header through
 > it (Fix 8) costs recall without removing the drawing-sheet FPs. Implication: prompt-level exclusion
 > (Fix 9) is the right tool for titled FPs; the generic confirm is the wrong tool to *validate* titled starts.
+> **C-tracking — one-page-check (`_query_is_self_contained`) structural-symmetry fallacy:** it asks a
+> COMPLETENESS question ("is this page self-contained?") that EVERY closing page of a multi-page document
+> satisfies — a top label/heading + a bottom seal/signature (FP31 proof: p31 'СЪДЕЛИТЕЛИ' heading + notary
+> seal → self_contained=True → wrongly overrode the correct n+1 extension back to n). **Third instance of a
+> corrective query whose FRAMING predetermines its failure**, after (1) `_query_confirm_boundary` inverted
+> bias for titled signals and (2) Fix 11 v1 "yes-machine" (different=true 12/12). Pattern: a yes/no question
+> whose "yes" surface-pattern is present on BOTH the boundary and non-boundary case can only rubber-stamp.
+> Interim fix shipped: skip the n+1 one-page-check for signature_block/table_end (the real 31/32 cut already
+> exists from p31's own window at conf 92). **One-page-check v2 (future, post-#5):** reframe from completeness
+> to DIRECTION — "does the TOP of this page begin a NEW document given the previous page?" — or require a
+> TITLE-GATE-grounded fresh title before any one-page self-contained verdict is allowed to move a boundary.
 > **C-tracking truth notes (closed):** GT boundaries 163444215:p10 and 084303475:p4 are human-attested
 > FINAL (p4: rest of ЧАСТ ЕЛЕКТРОТЕХНИЧЕСКА incl. its Челен лист is not in the combined PDF at all;
 > p3 = previous document). The 'convention-mismatch' category DISSOLVES for FP 10 (human did split the
