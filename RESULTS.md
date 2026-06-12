@@ -284,6 +284,15 @@ macOS stdin-pipe artifact); the authoritative check is `git checkout 9fee964 -- 
 (matches the pod + Fable's probe5 reference). split.py restored to exactly 63da033; Stage 1 relaunched on it
 (`dev_stage1.log`) after a transient working-tree state (`fab0d5a`, a duplicated-comment block, logic-identical).
 
+#### ✅ STAGE 1 — DEV EVAL (#2+#4 on authoritative 63da033) — KEEP (+1.52 vs baseline)
+`logs/dev_stage1.log` + `logs/dev_stage1_results.json`. Dev tol=0 **F1 91.46%** (TP=75 FP=7 FN=7, P=R=91.46%),
+tol=1 F1 92.68%, 74/91 docs exact. Baseline round-1 candidate dev tol=0 **89.94** → **+1.52 → KEEP** (≥89.94 rule).
+Mechanism: #4 killed FP11/19/27@163444215 (FP 6→3) + FP13@142044854 → precision 87.36→91.46; cost one new
+FN19@142044854 → recall 92.68→91.46; net +1.52. FP31 retained (#1-lite reverted). Per-file: 163444215 FP[6,13,31]
+FN[]; 164505881 FP[9,13] FN[12]; 165204533 FN[3,4]; 082511233 FN[20]; 142044854 FP[6,17] FN[19,20]; 084303475
+FN[16]; (084552444/085108460/082544031 clean). Dev event counts: SUPPRESSED=6, one-of-two-capped=6,
+TITLE-GATE-RELOC=2, WINDOW-REQUERY=1. → Stage 2 full-tests launched.
+
 ### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
 From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
 classified by the full set of signals that resolved to it (per-event `End at page X → doc
