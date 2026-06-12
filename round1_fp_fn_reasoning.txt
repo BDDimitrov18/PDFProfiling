@@ -1,0 +1,737 @@
+ROUND-1 CANDIDATE (Fix9-only) — per-file FP/FN WITH MODEL REASONING
+For each FP (over-split) and FN (missed boundary), the model's decision trail from the run log
+(the 'Checking page P-1' block that determines whether page P is a boundary).
+FP=model split where no real boundary. FN=real boundary missed. Masked ranges excluded.
+====================================================================================================
+
+====================================================================================================
+FILE: tests/РС-31-2017/2/Image_00112022025163444215.pdf  [dev]
+  FP=[6, 11, 13, 19, 27, 31]   FN=none
+
+  -- FP p6 (model split here, no real boundary) --
+       01:22:19 [DEBUG]   End-of-doc response p5: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 5,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\' and a handwritten signature is present."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил' and a handwritten signature is present.
+       p5: end=True, signal=signature_block, signal_on_page=5, conf=90%
+       01:22:23 [DEBUG]   Next-page-start p6: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a different format and structure, indicating a new document.",\n  "next_page_heading": "ИЗВЕЩЕНИЕ ЗА ДОСТАВАНЕ"\n}\n```'
+       Next-page-start reason: The next page contains a different format and structure, indicating a new document.
+       Signature on p5 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВАНЕ']
+       End at page 5 → doc starts at page 6 (conf=92%, signal=signature_block)
+
+  -- FP p11 (model split here, no real boundary) --
+       01:23:25 [DEBUG]   End-of-doc response p10: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 11,\n  "confidence": 80,\n  "reason": "The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document.
+       p10: end=True, signal=titled_id_header, signal_on_page=11, conf=80%
+       End at page 10 → doc starts at page 11 (conf=80%, signal=titled_id_header)
+
+  -- FP p13 (model split here, no real boundary) --
+       01:23:49 [DEBUG]   End-of-doc response p12: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 13,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'ЗАЯВЛЕНИЕ\' and includes a document-level identifier \'Вх. № 2-94 00-304/27.02.2017 г.\' indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title 'ЗАЯВЛЕНИЕ' and includes a document-level identifier 'Вх. № 2-94 00-304/27.02.2017 г.' indicating the start of a new document.
+       p12: end=True, signal=titled_id_header, signal_on_page=13, conf=90%
+       End at page 12 → doc starts at page 13 (conf=90%, signal=titled_id_header)
+
+  -- FP p19 (model split here, no real boundary) --
+       01:24:52 [DEBUG]   End-of-doc response p18: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 19,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document.
+       p18: end=True, signal=titled_id_header, signal_on_page=19, conf=90%
+       End at page 18 → doc starts at page 19 (conf=90%, signal=titled_id_header)
+
+  -- FP p27 (model split here, no real boundary) --
+       01:26:35 [DEBUG]   End-of-doc response p26: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 27,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a numbered identifier, indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a numbered identifier, indicating the start of a new document.
+       p26: end=True, signal=titled_id_header, signal_on_page=27, conf=90%
+       End at page 26 → doc starts at page 27 (conf=90%, signal=titled_id_header)
+
+  -- FP p31 (model split here, no real boundary) --
+       01:27:19 [DEBUG]   End-of-doc response p30: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 31,\n  "confidence": 80,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', \'Одобрил\' contains handwritten signatures and is located at the bottom of the page."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures and is located at the bottom of the page.
+       p30: end=True, signal=signature_block, signal_on_page=31, conf=80%
+       [ONE-PAGE-CHECK] p31 self_contained=True (conf=95%): The page has a clear heading 'СЪДЕЛИТЕЛИ' at the top and a notary seal and signature at the bottom, indicating it is a self-contained document.
+       [ONE-PAGE-CHECK] p31 is self-contained — boundary corrected to p30
+       01:27:26 [DEBUG]   Next-page-start p31: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a new heading \'СЪДЕЛИТЕЛИ\' and a list format indicating a new section or document.",\n  "next_page_heading": "СЪДЕЛИТЕЛИ"\n}\n```'
+       End at page 30 → doc starts at page 31 (conf=88%, signal=signature_block)
+
+====================================================================================================
+FILE: tests/РС-31-2017/4/Image_00112022025164505881.pdf  [dev]
+  FP=[9, 13]   FN=[12]
+
+  -- FP p9 (model split here, no real boundary) --
+       01:43:00 [DEBUG]   End-of-doc response p8: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 8,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'За Клиента\' and \'За ЕВН ЕР\' sections, including handwritten signatures."\n}\n```'
+       Reason: The page contains a labeled approval grid with 'За Клиента' and 'За ЕВН ЕР' sections, including handwritten signatures.
+       p8: end=True, signal=signature_block, signal_on_page=8, conf=90%
+       01:43:07 [DEBUG]   Next-page-start p9: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'Търговски условия на предварителните договори за присъединяване на обект на Клиент към електроразпределителната мрежа на \\"ЕВН България Електроразпределение\\" ЕАД\'",\n  "next_page_heading": "Търговски ус'
+       Next-page-start reason: The next page has a new heading 'Търговски условия на предварителните договори за присъединяване на обект на Клиент към електроразпределителната мрежа на "ЕВН България Електроразпределение" ЕАД'
+       Signature on p8 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Търговски условия на предварителните договори за присъединяване на обект на Клиент към електроразпределителната мрежа на "ЕВН България Електроразпределение" ЕАД']
+       End at page 8 → doc starts at page 9 (conf=92%, signal=signature_block)
+
+  -- FP p13 (model split here, no real boundary) --
+       01:44:00 [DEBUG]   End-of-doc response p12: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 12,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 12 or the beginning of page 13."\n}\n```'
+       Reason: No clear end or start signals are present on page 12 or the beginning of page 13.
+       p12: end=False, signal=none, signal_on_page=12, conf=90%
+       End at page 12 → doc starts at page 13 (conf=90%, signal=signature_block)
+
+  -- FN p12 (real boundary, model missed) --
+       01:43:43 [DEBUG]   End-of-doc response p11: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 12,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', \'Одобрил\' includes handwritten signatures and dates, indicating the completion of the document."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' includes handwritten signatures and dates, indicating the completion of the document.
+       p11: end=True, signal=signature_block, signal_on_page=12, conf=90%
+       [ONE-PAGE-CHECK] p12 self_contained=False (conf=95%): The page begins with content and lacks a distinct document title or letterhead at the very top.
+       End at page 12 → doc starts at page 13 (conf=90%, signal=signature_block)
+
+====================================================================================================
+FILE: tests/РС-31-2017/6/Image_00112022025165204533.pdf  [dev]
+  FP=none   FN=[3, 4]
+
+  -- FN p3 (real boundary, model missed) --
+       01:47:24 [DEBUG]   End-of-doc response p2: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 4,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'ИЗХОДНИ ТОЧКИ\' and includes a structured format typical of a new document."\n}\n```'
+       Reason: The next page begins with a document title 'ИЗХОДНИ ТОЧКИ' and includes a structured format typical of a new document.
+       p2: end=True, signal=titled_id_header, signal_on_page=2, conf=90%
+       End at page 1 → doc starts at page 2 (conf=90%, signal=titled_id_header)
+
+  -- FN p4 (real boundary, model missed) --
+       01:47:35 [DEBUG]   End-of-doc response p3: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 3,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 3; the content appears to be a continuation of coordinate data without any conclusive indicators of document termination."\n}\n```'
+       Reason: No clear end or start signals are present on page 3; the content appears to be a continuation of coordinate data without any conclusive indicators of document termination.
+       p3: end=False, signal=none, signal_on_page=3, conf=90%
+
+====================================================================================================
+FILE: tests/РС-31-2017/7/Image_00112032025082511233.pdf  [dev]
+  FP=none   FN=[20]
+
+  -- FN p20 (real boundary, model missed) --
+       01:52:30 [DEBUG]   End-of-doc response p19: '```json\n{\n  "end": true,\n  "signal": "table_end",\n  "signal_on_page": 19,\n  "confidence": 90,\n  "reason": "The table on page 19 ends with a summary row containing totals, indicating the conclusion of the data presentation."\n}\n```'
+       Reason: The table on page 19 ends with a summary row containing totals, indicating the conclusion of the data presentation.
+       p19: end=True, signal=table_end, signal_on_page=19, conf=90%
+       Low-conf boundary at p19 (60%) rejected by confirmation pass
+
+====================================================================================================
+FILE: tests/РС-31-2017/7/Image_00112032025082544031.pdf  [dev]
+  FP=none   FN=none
+
+====================================================================================================
+FILE: tests/РС-32-2017/1/Image_00112022025142044854.pdf  [dev]
+  FP=[6, 13, 17]   FN=[20]
+
+  -- FP p6 (model split here, no real boundary) --
+       01:58:37 [DEBUG]   End-of-doc response p5: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 5,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\' and a handwritten signature is present."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил' and a handwritten signature is present.
+       p5: end=True, signal=signature_block, signal_on_page=5, conf=90%
+       01:58:40 [DEBUG]   Next-page-start p6: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a different heading and format, indicating a new document.",\n  "next_page_heading": "ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ"\n}\n```'
+       Next-page-start reason: The next page has a different heading and format, indicating a new document.
+       Signature on p5 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ']
+       End at page 5 → doc starts at page 6 (conf=92%, signal=signature_block)
+
+  -- FP p13 (model split here, no real boundary) --
+       02:00:21 [DEBUG]   End-of-doc response p12: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 13,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and an object number (обект №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and an object number (обект №), indicating the start of a new document.
+       p12: end=True, signal=titled_id_header, signal_on_page=13, conf=90%
+       End at page 12 → doc starts at page 13 (conf=90%, signal=titled_id_header)
+
+  -- FP p17 (model split here, no real boundary) --
+       02:01:12 [DEBUG]   End-of-doc response p16: '```json\n{\n  "end": true,\n  "signal": "project_signoff",\n  "signal_on_page": 16,\n  "confidence": 80,\n  "reason": "The page contains labeled fields \'Проектант\' with a handwritten signature next to it, indicating a project sign-off."\n}\n```'
+       Reason: The page contains labeled fields 'Проектант' with a handwritten signature next to it, indicating a project sign-off.
+       p16: end=True, signal=project_signoff, signal_on_page=16, conf=80%
+       02:01:16 [DEBUG]   Next-page-start p17: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading and a different format, indicating a new document.",\n  "next_page_heading": "No. 27.02.2014"\n}\n```'
+       Next-page-start reason: The next page has a new heading and a different format, indicating a new document.
+       Signature on p16 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='No. 27.02.2014']
+       End at page 16 → doc starts at page 17 (conf=88%, signal=project_signoff)
+
+  -- FN p20 (real boundary, model missed) --
+       02:01:50 [DEBUG]   End-of-doc response p19: '```json\n{\n  "end": true,\n  "signal": "table_end",\n  "signal_on_page": 19,\n  "confidence": 90,\n  "reason": "The table on page 19 ends with a summary row indicating family relationships, which is typical of a concluding section."\n}\n```'
+       Reason: The table on page 19 ends with a summary row indicating family relationships, which is typical of a concluding section.
+       p19: end=True, signal=table_end, signal_on_page=19, conf=90%
+       Low-conf boundary at p19 (60%) rejected by confirmation pass
+
+====================================================================================================
+FILE: tests/РС-33-2017/3/Image_00112032025084303475.pdf  [dev]
+  FP=none   FN=[16]
+
+  -- FN p16 (real boundary, model missed) --
+       02:30:34 [DEBUG]   End-of-doc response p15: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 15,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and an object identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and an object identifier (РС №), indicating the start of a new document.
+       p15: end=True, signal=titled_id_header, signal_on_page=15, conf=90%
+       End at page 14 → doc starts at page 15 (conf=90%, signal=titled_id_header)
+
+====================================================================================================
+FILE: tests/РС-33-2017/4/Image_00112032025084552444.pdf  [dev]
+  FP=none   FN=none
+
+====================================================================================================
+FILE: tests/РС-33-2017/7/Image_00112032025085108460.pdf  [dev]
+  FP=none   FN=none
+
+====================================================================================================
+FILE: tests/РС-31-2017/8/Image_00112032025082646183.pdf  [holdout]
+  FP=none   FN=[4]
+
+  -- FN p4 (real boundary, model missed) --
+       01:55:56 [DEBUG]   End-of-doc response p3: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 3,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 3; the content appears to be part of a continuous document."\n}\n```'
+       Reason: No clear end or start signals are present on page 3; the content appears to be part of a continuous document.
+       p3: end=False, signal=none, signal_on_page=3, conf=90%
+
+====================================================================================================
+FILE: tests/РС-33-2017/5/Image_00112032025084837699.pdf  [holdout]
+  FP=[7]   FN=[11, 12]
+
+  -- FP p7 (model split here, no real boundary) --
+       02:35:33 [DEBUG]   End-of-doc response p6: '```json\n{\n  "end": true,\n  "signal": "project_signoff",\n  "signal_on_page": 6,\n  "confidence": 90,\n  "reason": "The page contains a labeled field \'Проектант\' with a handwritten signature next to it, indicating a project sign-off."\n}\n```'
+       Reason: The page contains a labeled field 'Проектант' with a handwritten signature next to it, indicating a project sign-off.
+       p6: end=True, signal=project_signoff, signal_on_page=6, conf=90%
+       02:35:37 [DEBUG]   Next-page-start p7: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a completely different content structure and instructions, indicating a new document.",\n  "next_page_heading": ""\n}\n```'
+       Next-page-start reason: The next page contains a completely different content structure and instructions, indicating a new document.
+       Signature on p6 confirmed as end — next page starts new doc (conf=92%)
+       End at page 6 → doc starts at page 7 (conf=92%, signal=project_signoff)
+
+  -- FN p11 (real boundary, model missed) --
+       02:36:37 [DEBUG]   End-of-doc response p10: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": null,\n  "confidence": 100,\n  "reason": "No clear end or start signals are present on page 10; the content continues seamlessly into page 11."\n}\n```'
+       Reason: No clear end or start signals are present on page 10; the content continues seamlessly into page 11.
+       p10: end=False, signal=none, signal_on_page=10, conf=100%
+
+  -- FN p12 (real boundary, model missed) --
+       02:36:49 [DEBUG]   End-of-doc response p11: '```json\n{\n  "end": true,\n  "signal": "table_end",\n  "signal_on_page": 11,\n  "confidence": 90,\n  "reason": "The table on page 11 ends with a summary row (\'72 часова проба\') without a continuation arrow, indicating the end of the table and likely the document."\n}\n```'
+       Reason: The table on page 11 ends with a summary row ('72 часова проба') without a continuation arrow, indicating the end of the table and likely the document.
+       p11: end=True, signal=table_end, signal_on_page=11, conf=90%
+       Low-conf boundary at p11 (60%) rejected by confirmation pass
+
+====================================================================================================
+FILE: tests/РС-33-2017/6/Image_00112032025085002901.pdf  [holdout]
+  FP=none   FN=[9]
+
+  -- FN p9 (real boundary, model missed) --
+       02:39:10 [DEBUG]   End-of-doc response p8: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 8,\n  "confidence": 100,\n  "reason": "No clear end or start signals are present on page 8; the content appears continuous with the following page."\n}\n```'
+       Reason: No clear end or start signals are present on page 8; the content appears continuous with the following page.
+       p8: end=False, signal=none, signal_on_page=8, conf=100%
+
+====================================================================================================
+FILE: tests/РС-31-2017/1/Image_00112022025162710373.pdf  [fresh]
+  FP=[2, 4]   FN=none
+
+  -- FP p2 (model split here, no real boundary) --
+       01:16:49 [DEBUG]   End-of-doc response p1: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 1,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'Изготвил\' and a handwritten signature, indicating a signature block."\n}\n```'
+       Reason: The page contains a labeled approval grid with 'Изготвил' and a handwritten signature, indicating a signature block.
+       p1: end=True, signal=signature_block, signal_on_page=1, conf=90%
+       01:16:54 [DEBUG]   Next-page-start p2: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a new heading and appears to be a separate document.",\n  "next_page_heading": "Понуки за пазари 1763"\n}\n```'
+       Next-page-start reason: The next page contains a new heading and appears to be a separate document.
+       Signature on p1 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Понуки за пазари 1763']
+       End at page 1 → doc starts at page 2 (conf=92%, signal=signature_block)
+
+  -- FP p4 (model split here, no real boundary) --
+       01:17:17 [DEBUG]   End-of-doc response p3: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 3,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Подпис\', \'Постъпили възражения\', and \'Влязло в сила на\' is present, and the \'Подпис\' field contains a handwritten signature and date."\n}\n```'
+       Reason: The labeled approval grid with 'Подпис', 'Постъпили възражения', and 'Влязло в сила на' is present, and the 'Подпис' field contains a handwritten signature and date.
+       p3: end=True, signal=signature_block, signal_on_page=3, conf=90%
+       01:17:22 [DEBUG]   Next-page-start p4: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'Основни задължения на собственика след получаване на разрешението за строеж:\' indicating a new section or document.",\n  "next_page_heading": "Основни задължения на собственика след получаване на разреше'
+       Next-page-start reason: The next page has a new heading 'Основни задължения на собственика след получаване на разрешението за строеж:' indicating a new section or document.
+       Signature on p3 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Основни задължения на собственика след получаване на разрешението за строеж:']
+       End at page 3 → doc starts at page 4 (conf=92%, signal=signature_block)
+
+====================================================================================================
+FILE: tests/РС-31-2017/3/Image_00112022025164052657.pdf  [fresh]
+  FP=[14, 35]   FN=none
+
+  -- FP p14 (model split here, no real boundary) --
+       01:32:10 [DEBUG]   End-of-doc response p13: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 13,\n  "confidence": 90,\n  "reason": "The labeled approval grid includes \'Изготвил\', \'Съгласувал\', and \'Одобрил\' with handwritten signatures and dates."\n}\n```'
+       Reason: The labeled approval grid includes 'Изготвил', 'Съгласувал', and 'Одобрил' with handwritten signatures and dates.
+       p13: end=True, signal=signature_block, signal_on_page=13, conf=90%
+       01:32:14 [DEBUG]   Next-page-start p14: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a new heading and a different format, indicating a new document.",\n  "next_page_heading": ""\n}\n```'
+       Next-page-start reason: The next page contains a new heading and a different format, indicating a new document.
+       Signature on p13 confirmed as end — next page starts new doc (conf=92%)
+       End at page 13 → doc starts at page 14 (conf=92%, signal=signature_block)
+
+  -- FP p35 (model split here, no real boundary) --
+       01:36:44 [DEBUG]   End-of-doc response p34: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 34,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\' and handwritten signatures is present."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил' and handwritten signatures is present.
+       p34: end=True, signal=signature_block, signal_on_page=34, conf=90%
+       01:36:50 [DEBUG]   Next-page-start p35: '```json\n{\n  "starts_new": true,\n  "confidence": 90,\n  "reason": "The next page has a new heading \'Етаж 2. Надлъжна армировка в греди, cm2\', indicating a new section or document.",\n  "next_page_heading": "Етаж 2. Надлъжна армировка в греди, cm2"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'Етаж 2. Надлъжна армировка в греди, cm2', indicating a new section or document.
+       Signature on p34 confirmed as end — next page starts new doc (conf=90%) [next_page_heading='Етаж 2. Надлъжна армировка в греди, cm2']
+       End at page 34 → doc starts at page 35 (conf=90%, signal=signature_block)
+
+====================================================================================================
+FILE: tests/РС-31-2017/5/Image_00112022025164959043.pdf  [fresh]
+  FP=none   FN=none
+
+====================================================================================================
+FILE: tests/РС-33-2017/1/Image_00112032025083553577.pdf  [fresh]
+  FP=[7, 9, 19, 26, 33, 35, 38, 43]   FN=none
+
+  -- FP p7 (model split here, no real boundary) --
+       02:07:53 [DEBUG]   End-of-doc response p6: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 7,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and an outgoing number (изх. №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and an outgoing number (изх. №), indicating the start of a new document.
+       p6: end=True, signal=titled_id_header, signal_on_page=7, conf=90%
+       End at page 6 → doc starts at page 7 (conf=90%, signal=titled_id_header)
+
+  -- FP p9 (model split here, no real boundary) --
+       02:08:13 [DEBUG]   End-of-doc response p8: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 8,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\' and a handwritten signature is present."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил' and a handwritten signature is present.
+       p8: end=True, signal=signature_block, signal_on_page=8, conf=90%
+       02:08:17 [DEBUG]   Next-page-start p9: '```json\n{\n  "starts_new": true,\n  "confidence": 100,\n  "reason": "The next page has a new heading \'ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ\' indicating a new document.",\n  "next_page_heading": "ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ' indicating a new document.
+       Signature on p8 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ']
+       End at page 8 → doc starts at page 9 (conf=95%, signal=signature_block)
+
+  -- FP p19 (model split here, no real boundary) --
+       02:09:32 [DEBUG]   End-of-doc response p18: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 18,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\' and a handwritten signature is present."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил' and a handwritten signature is present.
+       p18: end=True, signal=signature_block, signal_on_page=18, conf=90%
+       02:09:36 [DEBUG]   Next-page-start p19: '```json\n{\n  "starts_new": true,\n  "confidence": 100,\n  "reason": "The next page has a new heading \'ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ\' and a different format indicating a new document.",\n  "next_page_heading": "ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ' and a different format indicating a new document.
+       Signature on p18 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ']
+       End at page 18 → doc starts at page 19 (conf=95%, signal=signature_block)
+
+  -- FP p26 (model split here, no real boundary) --
+       02:11:05 [DEBUG]   End-of-doc response p25: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 26,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a numbered identifier (\'Обект\'), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a numbered identifier ('Обект'), indicating the start of a new document.
+       p25: end=True, signal=titled_id_header, signal_on_page=26, conf=90%
+       End at page 25 → doc starts at page 26 (conf=90%, signal=titled_id_header)
+
+  -- FP p33 (model split here, no real boundary) --
+       02:12:21 [DEBUG]   End-of-doc response p32: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 32,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', \'Одобрил\' contains handwritten signatures and dates, indicating document completion."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures and dates, indicating document completion.
+       p32: end=True, signal=signature_block, signal_on_page=32, conf=90%
+       02:12:26 [DEBUG]   Next-page-start p33: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'CTAHAPT GNC TEMC OOA\' indicating a new section or document.",\n  "next_page_heading": "CTAHAPT GNC TEMC OOA"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'CTAHAPT GNC TEMC OOA' indicating a new section or document.
+       Signature on p32 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='CTAHAPT GNC TEMC OOA']
+       End at page 32 → doc starts at page 33 (conf=92%, signal=signature_block)
+
+  -- FP p35 (model split here, no real boundary) --
+       02:12:53 [DEBUG]   End-of-doc response p34: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 35,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a numbered identifier (РС № 3591), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a numbered identifier (РС № 3591), indicating the start of a new document.
+       p34: end=True, signal=titled_id_header, signal_on_page=35, conf=90%
+       End at page 34 → doc starts at page 35 (conf=90%, signal=titled_id_header)
+
+  -- FP p38 (model split here, no real boundary) --
+       02:13:32 [DEBUG]   End-of-doc response p37: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 38,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a numbered identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a numbered identifier (РС №), indicating the start of a new document.
+       p37: end=True, signal=titled_id_header, signal_on_page=38, conf=90%
+       End at page 37 → doc starts at page 38 (conf=90%, signal=titled_id_header)
+
+  -- FP p43 (model split here, no real boundary) --
+       02:14:44 [DEBUG]   End-of-doc response p42: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 43,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document.
+       p42: end=True, signal=titled_id_header, signal_on_page=43, conf=90%
+       End at page 42 → doc starts at page 43 (conf=90%, signal=titled_id_header)
+
+====================================================================================================
+FILE: tests/РС-33-2017/2/Image_00112032025084031203.pdf  [fresh]
+  FP=[6, 20, 28, 39, 46]   FN=[12, 30]
+
+  -- FP p6 (model split here, no real boundary) --
+       02:17:06 [DEBUG]   End-of-doc response p5: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": null,\n  "confidence": 100,\n  "reason": "No clear end or start signals are present on page 5; the content appears to continue seamlessly from page 4 to page 6."\n}\n```'
+       Reason: No clear end or start signals are present on page 5; the content appears to continue seamlessly from page 4 to page 6.
+       p5: end=False, signal=none, signal_on_page=5, conf=100%
+       [START-DETECT] p6 starts a new doc (conf=90%): Page 6 shows a different company/institution letterhead and a self-contained document header block at the top, indicating a new document.
+
+  -- FP p20 (model split here, no real boundary) --
+       02:20:34 [DEBUG]   End-of-doc response p19: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 20,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (numbers and dates) immediately following, indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (numbers and dates) immediately following, indicating the start of a new document.
+       p19: end=True, signal=titled_id_header, signal_on_page=20, conf=90%
+       End at page 19 → doc starts at page 20 (conf=90%, signal=titled_id_header)
+
+  -- FP p28 (model split here, no real boundary) --
+       02:22:36 [DEBUG]   End-of-doc response p27: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 28,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'УДОСТОВЕРЕНИЕ\' and includes a document-level identifier \'№ 48/19.12.2016 г.\', indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title 'УДОСТОВЕРЕНИЕ' and includes a document-level identifier '№ 48/19.12.2016 г.', indicating the start of a new document.
+       p27: end=True, signal=titled_id_header, signal_on_page=28, conf=90%
+       End at page 27 → doc starts at page 28 (conf=90%, signal=titled_id_header)
+
+  -- FP p39 (model split here, no real boundary) --
+       02:25:22 [DEBUG]   End-of-doc response p38: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 38,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'Съставил\' as a printed label, and it includes a handwritten signature next to it."\n}\n```'
+       Reason: The page contains a labeled approval grid with 'Съставил' as a printed label, and it includes a handwritten signature next to it.
+       p38: end=True, signal=signature_block, signal_on_page=38, conf=90%
+       02:25:27 [DEBUG]   Next-page-start p39: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'Приложение №2\' indicating a new section or document.",\n  "next_page_heading": "Приложение №2"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'Приложение №2' indicating a new section or document.
+       Signature on p38 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Приложение №2']
+       End at page 38 → doc starts at page 39 (conf=92%, signal=signature_block)
+
+  -- FP p46 (model split here, no real boundary) --
+       02:26:58 [DEBUG]   End-of-doc response p45: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 45,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', and \'Одобрил\' contains handwritten signatures and/or filled names/dates."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', and 'Одобрил' contains handwritten signatures and/or filled names/dates.
+       p45: end=True, signal=signature_block, signal_on_page=45, conf=90%
+       02:27:03 [DEBUG]   Next-page-start p46: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'ПРОЕКТАНТИ\' indicating a new section or document.",\n  "next_page_heading": "ПРОЕКТАНТИ"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'ПРОЕКТАНТИ' indicating a new section or document.
+       Signature on p45 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ПРОЕКТАНТИ']
+       End at page 45 → doc starts at page 46 (conf=92%, signal=signature_block)
+
+  -- FN p12 (real boundary, model missed) --
+       02:18:33 [DEBUG]   End-of-doc response p11: '```json\n{\n  "end": true,\n  "signal": "table_end",\n  "signal_on_page": 11,\n  "confidence": 90,\n  "reason": "The table on page 11 ends with a totals/summary row labeled \'ПРИБЛИЗИТЕЛНА СТРОИТЕЛНА СТОЙНОСТ - 14 000 лв\', indicating the conclusion of the table data."\n}\n```'
+       Reason: The table on page 11 ends with a totals/summary row labeled 'ПРИБЛИЗИТЕЛНА СТРОИТЕЛНА СТОЙНОСТ - 14 000 лв', indicating the conclusion of the table data.
+       p11: end=True, signal=table_end, signal_on_page=11, conf=90%
+       Low-conf boundary at p11 (60%) rejected by confirmation pass
+
+  -- FN p30 (real boundary, model missed) --
+       02:22:59 [DEBUG]   End-of-doc response p29: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 29,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'Договор\' and includes a document-level identifier next to it."\n}\n```'
+       Reason: The next page begins with a document title 'Договор' and includes a document-level identifier next to it.
+       p29: end=True, signal=titled_id_header, signal_on_page=29, conf=90%
+       End at page 28 → doc starts at page 29 (conf=90%, signal=titled_id_header)
+
+====================================================================================================
+FILE: tests/РС-34-2017/1/Image_00112022025142438096.pdf  [fresh]
+  FP=[6, 7, 11, 25, 37, 39, 48, 53, 67, 69, 88]   FN=[61, 64, 65]
+
+  -- FP p6 (model split here, no real boundary) --
+       02:44:03 [DEBUG]   End-of-doc response p5: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 6,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'Община Пловдив Район \\"Западен\\"\' and includes an outgoing number \'Изх. № 2-7000-223 (1) / 29.03.2017 г.\', indicating the start of a new docume'
+       Reason: The next page begins with a document title 'Община Пловдив Район "Западен"' and includes an outgoing number 'Изх. № 2-7000-223 (1) / 29.03.2017 г.', indicating the start of a new document.
+       p5: end=True, signal=titled_id_header, signal_on_page=6, conf=90%
+       End at page 5 → doc starts at page 6 (conf=90%, signal=titled_id_header)
+
+  -- FP p7 (model split here, no real boundary) --
+       02:44:15 [DEBUG]   End-of-doc response p6: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 7,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and an outgoing number (изх. № 2-7000-223 (2) / 29.03.2017 г.), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and an outgoing number (изх. № 2-7000-223 (2) / 29.03.2017 г.), indicating the start of a new document.
+       p6: end=True, signal=titled_id_header, signal_on_page=7, conf=90%
+       End at page 6 → doc starts at page 7 (conf=90%, signal=titled_id_header)
+
+  -- FP p11 (model split here, no real boundary) --
+       02:45:03 [DEBUG]   End-of-doc response p10: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 11,\n  "confidence": 80,\n  "reason": "The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document.
+       p10: end=True, signal=titled_id_header, signal_on_page=11, conf=80%
+       End at page 10 → doc starts at page 11 (conf=80%, signal=titled_id_header)
+
+  -- FP p25 (model split here, no real boundary) --
+       02:48:10 [DEBUG]   End-of-doc response p24: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 25,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (permit number) at the very top."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (permit number) at the very top.
+       p24: end=True, signal=titled_id_header, signal_on_page=25, conf=90%
+       End at page 24 → doc starts at page 25 (conf=90%, signal=titled_id_header)
+
+  -- FP p37 (model split here, no real boundary) --
+       02:50:54 [DEBUG]   End-of-doc response p36: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 37,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (policy number), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (policy number), indicating the start of a new document.
+       p36: end=True, signal=titled_id_header, signal_on_page=37, conf=90%
+       End at page 36 → doc starts at page 37 (conf=90%, signal=titled_id_header)
+
+  -- FP p39 (model split here, no real boundary) --
+       02:51:21 [DEBUG]   End-of-doc response p38: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 39,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a numbered identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a numbered identifier (РС №), indicating the start of a new document.
+       p38: end=True, signal=titled_id_header, signal_on_page=39, conf=90%
+       End at page 38 → doc starts at page 39 (conf=90%, signal=titled_id_header)
+
+  -- FP p48 (model split here, no real boundary) --
+       02:53:16 [DEBUG]   End-of-doc response p47: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 47,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', and \'Оператор\' contains handwritten signatures."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', and 'Оператор' contains handwritten signatures.
+       p47: end=True, signal=signature_block, signal_on_page=47, conf=90%
+       02:53:22 [DEBUG]   Next-page-start p48: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading and a different format indicating a new document.",\n  "next_page_heading": "ПРИЛОЖЕНИЕ №1 ТЕХНИЧЕСКО ЗАДАНИЕ - ИЗХОДНИ ДАННИ И ТЕХНИЧЕСКИ ПАРАМЕТРИ НА ПРИСЪЕДИНЯВАНЕТО КЪМ ПРЕДВАРИТЕЛЕН ДОГОВОР"\n}\n```'
+       Next-page-start reason: The next page has a new heading and a different format indicating a new document.
+       Signature on p47 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ПРИЛОЖЕНИЕ №1 ТЕХНИЧЕСКО ЗАДАНИЕ - ИЗХОДНИ ДАННИ И ТЕХНИЧЕСКИ ПАРАМЕТРИ НА ПРИСЪЕДИНЯВАНЕТО КЪМ ПРЕДВАРИТЕЛЕН ДОГОВОР']
+       End at page 47 → doc starts at page 48 (conf=92%, signal=signature_block)
+
+  -- FP p53 (model split here, no real boundary) --
+       02:54:30 [DEBUG]   End-of-doc response p52: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 52,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', and \'Оператор\' contains handwritten signatures or filled names."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', and 'Оператор' contains handwritten signatures or filled names.
+       p52: end=True, signal=signature_block, signal_on_page=52, conf=90%
+       02:54:36 [DEBUG]   Next-page-start p53: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading and a different format indicating a new document.",\n  "next_page_heading": "ПРИЛОЖЕНИЕ №1 ТЕХНИЧЕСКО ЗАДАНИЕ - ИЗХОДНИ ДАННИ И ТЕХНИЧЕСКИ ПАРАМЕТРИ НА ПРИСЪЕДИНЯВАНЕТО КЪМ ПРЕДВАРИТЕЛЕН ДОГОВОР"\n}\n```'
+       Next-page-start reason: The next page has a new heading and a different format indicating a new document.
+       Signature on p52 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ПРИЛОЖЕНИЕ №1 ТЕХНИЧЕСКО ЗАДАНИЕ - ИЗХОДНИ ДАННИ И ТЕХНИЧЕСКИ ПАРАМЕТРИ НА ПРИСЪЕДИНЯВАНЕТО КЪМ ПРЕДВАРИТЕЛЕН ДОГОВОР']
+       End at page 52 → doc starts at page 53 (conf=92%, signal=signature_block)
+
+  -- FP p67 (model split here, no real boundary) --
+       02:57:56 [DEBUG]   End-of-doc response p66: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 67,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a date, indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a date, indicating the start of a new document.
+       p66: end=True, signal=titled_id_header, signal_on_page=67, conf=90%
+       End at page 66 → doc starts at page 67 (conf=90%, signal=titled_id_header)
+
+  -- FP p69 (model split here, no real boundary) --
+       02:58:24 [DEBUG]   End-of-doc response p68: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 68,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', \'Одобрил\' contains handwritten signatures and dates, indicating the document\'s conclusion."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures and dates, indicating the document's conclusion.
+       p68: end=True, signal=signature_block, signal_on_page=68, conf=90%
+       02:58:30 [DEBUG]   Next-page-start p69: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'Основни задължения на собственика след получаване на разрешението за строеж\' indicating a new section or document.",\n  "next_page_heading": "Основни задължения на собственика след получаване на разрешен'
+       Next-page-start reason: The next page has a new heading 'Основни задължения на собственика след получаване на разрешението за строеж' indicating a new section or document.
+       Signature on p68 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Основни задължения на собственика след получаване на разрешението за строеж']
+       End at page 68 → doc starts at page 69 (conf=92%, signal=signature_block)
+
+  -- FP p88 (model split here, no real boundary) --
+       03:02:22 [DEBUG]   End-of-doc response p87: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 88,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'Изготвил\' and a handwritten signature, indicating a signature block."\n}\n```'
+       Reason: The page contains a labeled approval grid with 'Изготвил' and a handwritten signature, indicating a signature block.
+       p87: end=True, signal=signature_block, signal_on_page=88, conf=90%
+       [ONE-PAGE-CHECK] p88 self_contained=True (conf=95%): The page has a clear document title ('ОБЕКТ') and a structured format typical of a standalone certificate or permit.
+       [ONE-PAGE-CHECK] p88 is self-contained — boundary corrected to p87
+       03:02:30 [DEBUG]   Next-page-start p88: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page includes a repeated header block (ОБЕКТ), indicating a new document.",\n  "next_page_heading": "ОБЕКТ: ПЛОЩАДКОВИ ВК МРЕЖИ В ПИ С ИДЕНТИФИКАТОР 56784.510.387"\n}\n```'
+       End at page 87 → doc starts at page 88 (conf=92%, signal=signature_block)
+
+  -- FN p61 (real boundary, model missed) --
+       02:56:32 [DEBUG]   End-of-doc response p60: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 60,\n  "confidence": 100,\n  "reason": "No clear end or start signals are present on page 60 or the following page."\n}\n```'
+       Reason: No clear end or start signals are present on page 60 or the following page.
+       p60: end=False, signal=none, signal_on_page=60, conf=100%
+
+  -- FN p64 (real boundary, model missed) --
+       02:57:11 [DEBUG]   End-of-doc response p63: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 63,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 63 or the following page."\n}\n```'
+       Reason: No clear end or start signals are present on page 63 or the following page.
+       p63: end=False, signal=none, signal_on_page=63, conf=90%
+
+  -- FN p65 (real boundary, model missed) --
+       02:57:21 [DEBUG]   End-of-doc response p64: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 64,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 64; the content appears continuous with adjacent pages."\n}\n```'
+       Reason: No clear end or start signals are present on page 64; the content appears continuous with adjacent pages.
+       p64: end=False, signal=none, signal_on_page=64, conf=90%
+
+====================================================================================================
+FILE: tests/РС-35-2017/1/Image_00112022025143041245.pdf  [fresh]
+  MASKED (excluded): [[62, 66]]
+  FP=[7, 8, 36, 37, 43, 51, 56]   FN=[17, 18, 20, 26, 59, 68]
+
+  -- FP p7 (model split here, no real boundary) --
+       03:03:55 [DEBUG]   End-of-doc response p6: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 7,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'Община Пловдив Район \\"Западен\\"\' followed by a document-level identifier \'Изх.№ 2-7000-218 (1)/30.03.2017 г.\'"\n}\n```'
+       Reason: The next page begins with a document title 'Община Пловдив Район "Западен"' followed by a document-level identifier 'Изх.№ 2-7000-218 (1)/30.03.2017 г.'
+       p6: end=True, signal=titled_id_header, signal_on_page=7, conf=90%
+       End at page 6 → doc starts at page 7 (conf=90%, signal=titled_id_header)
+
+  -- FP p8 (model split here, no real boundary) --
+       03:04:07 [DEBUG]   End-of-doc response p7: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 8,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and an outgoing number (изх. №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and an outgoing number (изх. №), indicating the start of a new document.
+       p7: end=True, signal=titled_id_header, signal_on_page=8, conf=90%
+       End at page 7 → doc starts at page 8 (conf=90%, signal=titled_id_header)
+
+  -- FP p36 (model split here, no real boundary) --
+       03:10:33 [DEBUG]   End-of-doc response p35: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 36,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (policy number), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (policy number), indicating the start of a new document.
+       p35: end=True, signal=titled_id_header, signal_on_page=36, conf=90%
+       End at page 35 → doc starts at page 36 (conf=90%, signal=titled_id_header)
+
+  -- FP p37 (model split here, no real boundary) --
+       03:10:45 [DEBUG]   End-of-doc response p36: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 37,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'Изготвил\', \'Подпис\' as printed text labels, and at least one label has a handwritten signature or filled name next to it."\n}\n```'
+       Reason: The page contains a labeled approval grid with 'Изготвил', 'Подпис' as printed text labels, and at least one label has a handwritten signature or filled name next to it.
+       p36: end=True, signal=signature_block, signal_on_page=37, conf=90%
+       [ONE-PAGE-CHECK] p37 self_contained=True (conf=95%): The page contains a complete declaration and information about an insurance contract, including a title-like statement at the top ('Декларирам...') and a signature/stamp at the bottom.
+       [ONE-PAGE-CHECK] p37 is self-contained — boundary corrected to p36
+       03:10:52 [DEBUG]   Next-page-start p37: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a new heading and a different structure indicating the start of a new document.",\n  "next_page_heading": ""\n}\n```'
+       End at page 36 → doc starts at page 37 (conf=92%, signal=signature_block)
+
+  -- FP p43 (model split here, no real boundary) --
+       03:11:58 [DEBUG]   End-of-doc response p42: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 43,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Председател\' and member signatures is present at the bottom of the page."\n}\n```'
+       Reason: The labeled approval grid with 'Председател' and member signatures is present at the bottom of the page.
+       p42: end=True, signal=signature_block, signal_on_page=43, conf=90%
+       [ONE-PAGE-CHECK] p43 self_contained=True (conf=95%): The page has its own document title ('РЕШИ: ПРИЕМА СТРОЕЖА:') at the very top and a signature/stamp at the bottom.
+       [ONE-PAGE-CHECK] p43 is self-contained — boundary corrected to p42
+       03:12:06 [DEBUG]   Next-page-start p43: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'РЕШИ: ПРИЕМА СТРОЕЖА:\' indicating the start of a new document.",\n  "next_page_heading": "РЕШИ: ПРИЕМА СТРОЕЖА:"\n}\n```'
+       End at page 42 → doc starts at page 43 (conf=92%, signal=signature_block)
+
+  -- FP p51 (model split here, no real boundary) --
+       03:13:56 [DEBUG]   End-of-doc response p50: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 50,\n  "confidence": 80,\n  "reason": "The page contains a labeled approval grid with signatures for \'Изготвил\', \'Съгласувал\', and \'Одобрил\'."\n}\n```'
+       Reason: The page contains a labeled approval grid with signatures for 'Изготвил', 'Съгласувал', and 'Одобрил'.
+       p50: end=True, signal=signature_block, signal_on_page=50, conf=80%
+       03:14:00 [DEBUG]   Next-page-start p51: '```json\n{\n  "starts_new": true,\n  "confidence": 90,\n  "reason": "The next page has a new heading \'Търговски условия\' indicating the start of a new section or document.",\n  "next_page_heading": "Търговски условия"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'Търговски условия' indicating the start of a new section or document.
+       Signature on p50 confirmed as end — next page starts new doc (conf=85%) [next_page_heading='Търговски условия']
+       End at page 50 → doc starts at page 51 (conf=90%, signal=signature_block)
+       End at page 50 → doc starts at page 51 (conf=85%, signal=signature_block)
+
+  -- FP p56 (model split here, no real boundary) --
+       03:15:08 [DEBUG]   End-of-doc response p55: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 56,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'Община Пловдив Район „Западен“\' and includes a document-level identifier \'РАЗРЕШЕНИЕ ЗА СТРОЕЖ № 29/22.03.2016 г.\'"\n}\n```'
+       Reason: The next page begins with a document title 'Община Пловдив Район „Западен“' and includes a document-level identifier 'РАЗРЕШЕНИЕ ЗА СТРОЕЖ № 29/22.03.2016 г.'
+       p55: end=True, signal=titled_id_header, signal_on_page=56, conf=90%
+       End at page 55 → doc starts at page 56 (conf=90%, signal=titled_id_header)
+
+  -- FN p17 (real boundary, model missed) --
+       03:06:12 [DEBUG]   End-of-doc response p16: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 16,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 16; the content appears continuous with the following pages."\n}\n```'
+       Reason: No clear end or start signals are present on page 16; the content appears continuous with the following pages.
+       p16: end=False, signal=none, signal_on_page=16, conf=90%
+
+  -- FN p18 (real boundary, model missed) --
+       03:06:23 [DEBUG]   End-of-doc response p17: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 17,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 17; the content appears continuous with the preceding and following pages."\n}\n```'
+       Reason: No clear end or start signals are present on page 17; the content appears continuous with the preceding and following pages.
+       p17: end=False, signal=none, signal_on_page=17, conf=90%
+
+  -- FN p20 (real boundary, model missed) --
+       03:06:48 [DEBUG]   End-of-doc response p19: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 19,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'ДОКЛАД ЗА ОЦЕНКА НА СЪОТВЕТСТВИЕТО НА ИНВЕСТИЦИОНЕН ПРОЕКТ СЪС СЪЩЕСТВЕНИТЕ ИЗискВАНИЯ КЪМ СТРОЕЖТЕ\' and includes a document-level identifier '
+       "signal": "titled_id_header",
+       "signal_on_page": 19,
+       p19: end=False, signal=none, signal_on_page=19, conf=50%
+       [START-DETECT] p19 starts a new doc (conf=95%): Page 19 shows a different header 'ИСКАНЕ' indicating a new application or request document, distinct from the regulatory list on page 18.
+
+  -- FN p26 (real boundary, model missed) --
+       03:08:07 [DEBUG]   End-of-doc response p25: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 25,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'УДОСТОВЕРЕНИЕ\' and a document-level identifier \'№ RK-0267/03.09.2014г.\'"\n}\n```'
+       Reason: The next page begins with a document title 'УДОСТОВЕРЕНИЕ' and a document-level identifier '№ RK-0267/03.09.2014г.'
+       p25: end=True, signal=titled_id_header, signal_on_page=25, conf=90%
+       End at page 24 → doc starts at page 25 (conf=90%, signal=titled_id_header)
+
+  -- FN p59 (real boundary, model missed) --
+       03:15:43 [DEBUG]   End-of-doc response p58: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 58,\n  "confidence": 100,\n  "reason": "No clear end or start signals are present on page 58 or the beginning of page 59."\n}\n```'
+       Reason: No clear end or start signals are present on page 58 or the beginning of page 59.
+       p58: end=False, signal=none, signal_on_page=58, conf=100%
+
+  -- FN p68 (real boundary, model missed) --
+       03:17:29 [DEBUG]   End-of-doc response p67: '```json\n{\n  "end": false,\n  "signal": "none",\n  "signal_on_page": 67,\n  "confidence": 90,\n  "reason": "No clear end or start signals are present on page 67; the content appears to be a continuation of the same document."\n}\n```'
+       Reason: No clear end or start signals are present on page 67; the content appears to be a continuation of the same document.
+       p67: end=False, signal=none, signal_on_page=67, conf=90%
+
+====================================================================================================
+FILE: tests/РС-36-2017/1/Image_00112022025145428614.pdf  [fresh]
+  MASKED (excluded): [[146, 150]]
+  FP=[2, 6, 7, 26, 30, 34, 35, 37, 46, 47, 48, 65, 66, 71, 74, 76, 78, 81, 84, 86, 97, 102, 151, 163]   FN=[56, 104, 159]
+
+  -- FP p2 (model split here, no real boundary) --
+       03:19:26 [DEBUG]   End-of-doc response p1: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 1,\n  "confidence": 80,\n  "reason": "The labeled approval grid with \'С УВАЖЕНИЕ:\' and handwritten signatures is present at the bottom of the page."\n}\n```'
+       Reason: The labeled approval grid with 'С УВАЖЕНИЕ:' and handwritten signatures is present at the bottom of the page.
+       p1: end=True, signal=signature_block, signal_on_page=1, conf=80%
+       03:19:30 [DEBUG]   Next-page-start p2: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a standalone note that appears unrelated to the previous document\'s structure and content.",\n  "next_page_heading": ""\n}\n```'
+       Next-page-start reason: The next page contains a standalone note that appears unrelated to the previous document's structure and content.
+       Signature on p1 confirmed as end — next page starts new doc (conf=88%)
+       End at page 1 → doc starts at page 2 (conf=88%, signal=signature_block)
+
+  -- FP p6 (model split here, no real boundary) --
+       03:20:25 [DEBUG]   End-of-doc response p5: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 6,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'APOSTILLE\' and includes a serial number and other identifiers typical of a new document."\n}\n```'
+       Reason: The next page begins with a document title 'APOSTILLE' and includes a serial number and other identifiers typical of a new document.
+       p5: end=True, signal=titled_id_header, signal_on_page=6, conf=90%
+       End at page 5 → doc starts at page 6 (conf=90%, signal=titled_id_header)
+
+  -- FP p7 (model split here, no real boundary) --
+       03:20:38 [DEBUG]   End-of-doc response p6: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 7,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'ПЪЛНОМОЩНО\' and includes a document-level identifier \'Марчело Дел Монте, гражданин на Италия, роден на 11.08.1969 г., в качеството си на управи'
+       "signal": "titled_id_header",
+       "signal_on_page": 7,
+       p6: end=False, signal=none, signal_on_page=6, conf=50%
+       [START-DETECT] p7 starts a new doc (conf=95%): Page 7 shows a different document type (Letter of Attorney) and a new header block indicating a new context distinct from the Apostille on page 6.
+
+  -- FP p26 (model split here, no real boundary) --
+       03:24:49 [DEBUG]   End-of-doc response p25: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 26,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'Основни задължения на собственика след получаване на разрешението за строеж:\' and includes a numbered list, indicating the start of a new docu'
+       Reason: The next page begins with a document title 'Основни задължения на собственика след получаване на разрешението за строеж:' and includes a numbered list, indicating the start of a new document.
+       p25: end=True, signal=titled_id_header, signal_on_page=26, conf=90%
+       End at page 25 → doc starts at page 26 (conf=90%, signal=titled_id_header)
+
+  -- FP p30 (model split here, no real boundary) --
+       03:25:36 [DEBUG]   End-of-doc response p29: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 29,\n  "confidence": 90,\n  "reason": "The labeled approval grid with \'Изготвил\', \'Съгласувал\', and \'Одобрил\' contains handwritten signatures and/or filled names/dates."\n}\n```'
+       Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', and 'Одобрил' contains handwritten signatures and/or filled names/dates.
+       p29: end=True, signal=signature_block, signal_on_page=29, conf=90%
+       03:25:40 [DEBUG]   Next-page-start p30: '```json\n{\n  "starts_new": true,\n  "confidence": 100,\n  "reason": "The next page has a different format, including a new heading \'ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ\' and a distinct layout indicating a separate document.",\n  "next_page_heading": "ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ"\n}\n```'
+       Next-page-start reason: The next page has a different format, including a new heading 'ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ' and a distinct layout indicating a separate document.
+       Signature on p29 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ']
+       End at page 29 → doc starts at page 30 (conf=95%, signal=signature_block)
+
+  -- FP p34 (model split here, no real boundary) --
+       03:26:43 [DEBUG]   End-of-doc response p33: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 34,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'APOSTILLE\' and includes a numbered identifier, indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title 'APOSTILLE' and includes a numbered identifier, indicating the start of a new document.
+       p33: end=True, signal=titled_id_header, signal_on_page=34, conf=90%
+       End at page 33 → doc starts at page 34 (conf=90%, signal=titled_id_header)
+
+  -- FP p35 (model split here, no real boundary) --
+       03:26:55 [DEBUG]   End-of-doc response p34: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 35,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'ПЪЛНОМОЩНО\' and includes a personal identification number, indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title 'ПЪЛНОМОЩНО' and includes a personal identification number, indicating the start of a new document.
+       p34: end=True, signal=titled_id_header, signal_on_page=35, conf=90%
+       End at page 34 → doc starts at page 35 (conf=90%, signal=titled_id_header)
+
+  -- FP p37 (model split here, no real boundary) --
+       03:27:17 [DEBUG]   End-of-doc response p36: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 37,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a numbered identifier, indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a numbered identifier, indicating the start of a new document.
+       p36: end=True, signal=titled_id_header, signal_on_page=37, conf=90%
+       End at page 36 → doc starts at page 37 (conf=90%, signal=titled_id_header)
+
+  -- FP p46 (model split here, no real boundary) --
+       03:29:18 [DEBUG]   End-of-doc response p45: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 46,\n  "confidence": 90,\n  "reason": "The next page (Page 46) begins with a document title and an object identifier, indicating the start of a new document."\n}\n```'
+       Reason: The next page (Page 46) begins with a document title and an object identifier, indicating the start of a new document.
+       p45: end=True, signal=titled_id_header, signal_on_page=46, conf=90%
+       End at page 45 → doc starts at page 46 (conf=90%, signal=titled_id_header)
+
+  -- FP p47 (model split here, no real boundary) --
+       03:29:25 [DEBUG]   End-of-doc response p46: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 47,\n  "confidence": 90,\n  "reason": "The next page (Page 47) begins with a document title and a document-level identifier next to it."\n}\n```'
+       Reason: The next page (Page 47) begins with a document title and a document-level identifier next to it.
+       p46: end=True, signal=titled_id_header, signal_on_page=47, conf=90%
+       End at page 46 → doc starts at page 47 (conf=90%, signal=titled_id_header)
+
+  -- FP p48 (model split here, no real boundary) --
+       03:29:33 [DEBUG]   End-of-doc response p47: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 48,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document.
+       p47: end=True, signal=titled_id_header, signal_on_page=48, conf=90%
+       End at page 47 → doc starts at page 48 (conf=90%, signal=titled_id_header)
+
+  -- FP p65 (model split here, no real boundary) --
+       03:33:17 [DEBUG]   End-of-doc response p64: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 64,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'Изготвил\' and \'Съгласувал\' as printed text labels, and at least one label has a handwritten signature next to it."\n}\n```'
+       Reason: The page contains a labeled approval grid with 'Изготвил' and 'Съгласувал' as printed text labels, and at least one label has a handwritten signature next to it.
+       p64: end=True, signal=signature_block, signal_on_page=64, conf=90%
+       03:33:22 [DEBUG]   Next-page-start p65: '```json\n{\n  "starts_new": true,\n  "confidence": 90,\n  "reason": "The next page contains a new heading \'Член 9. Общи текстове\' indicating a new section or document structure.",\n  "next_page_heading": "Член 9. Общи текстове"\n}\n```'
+       Next-page-start reason: The next page contains a new heading 'Член 9. Общи текстове' indicating a new section or document structure.
+       Signature on p64 confirmed as end — next page starts new doc (conf=90%) [next_page_heading='Член 9. Общи текстове']
+       End at page 64 → doc starts at page 65 (conf=90%, signal=signature_block)
+
+  -- FP p66 (model split here, no real boundary) --
+       03:33:37 [DEBUG]   End-of-doc response p65: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 65,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'Изготвил\', \'Съгласувал\', \'Одобрил\' as printed text labels, and at least one label has an actual handwritten signature or filled name/date n'
+       Reason: The page contains a labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' as printed text labels, and at least one label has an actual handwritten signature or filled name/date next to it.
+       p65: end=True, signal=signature_block, signal_on_page=65, conf=90%
+       03:33:42 [DEBUG]   Next-page-start p66: '```json\n{\n  "starts_new": true,\n  "confidence": 90,\n  "reason": "The next page has a new heading \'Търговски условия\' indicating a new section or document.",\n  "next_page_heading": "Търговски условия"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'Търговски условия' indicating a new section or document.
+       Signature on p65 confirmed as end — next page starts new doc (conf=90%) [next_page_heading='Търговски условия']
+       End at page 65 → doc starts at page 66 (conf=90%, signal=signature_block)
+
+  -- FP p71 (model split here, no real boundary) --
+       03:35:01 [DEBUG]   End-of-doc response p70: '```json\n{\n  "end": true,\n  "signal": "project_signoff",\n  "signal_on_page": 70,\n  "confidence": 80,\n  "reason": "The labeled fields \'Проектант\', \'Изготвил\', \'Проверил\', \'Технически ръководител\' are present with actual handwritten signatures or stamps next to each label."\n}\n```'
+       Reason: The labeled fields 'Проектант', 'Изготвил', 'Проверил', 'Технически ръководител' are present with actual handwritten signatures or stamps next to each label.
+       p70: end=True, signal=project_signoff, signal_on_page=70, conf=80%
+       03:35:06 [DEBUG]   Next-page-start p71: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'СЪДЪРЖАНИЕ\' indicating a new section or document.",\n  "next_page_heading": "СЪДЪРЖАНИЕ"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'СЪДЪРЖАНИЕ' indicating a new section or document.
+       Signature on p70 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='СЪДЪРЖАНИЕ']
+       End at page 70 → doc starts at page 71 (conf=88%, signal=project_signoff)
+
+  -- FP p74 (model split here, no real boundary) --
+       03:35:47 [DEBUG]   End-of-doc response p73: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 74,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a policy number (No. 212216213000148/11-04-2016г.), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a policy number (No. 212216213000148/11-04-2016г.), indicating the start of a new document.
+       p73: end=True, signal=titled_id_header, signal_on_page=74, conf=90%
+       End at page 73 → doc starts at page 74 (conf=90%, signal=titled_id_header)
+
+  -- FP p76 (model split here, no real boundary) --
+       03:36:10 [DEBUG]   End-of-doc response p75: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 76,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (numbered reference) immediately following the title."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (numbered reference) immediately following the title.
+       p75: end=True, signal=titled_id_header, signal_on_page=76, conf=90%
+       End at page 75 → doc starts at page 76 (conf=90%, signal=titled_id_header)
+
+  -- FP p78 (model split here, no real boundary) --
+       03:36:34 [DEBUG]   End-of-doc response p77: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 78,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'ДОГОВОР ЗА ПРОДАЖБА НА НЕДВИЖИМИ ИМОТИ - ОБЩИНСКА СОБСТВЕННОСТ\' and includes a document-level identifier near the top."\n}\n```'
+       Reason: The next page begins with a document title 'ДОГОВОР ЗА ПРОДАЖБА НА НЕДВИЖИМИ ИМОТИ - ОБЩИНСКА СОБСТВЕННОСТ' and includes a document-level identifier near the top.
+       p77: end=True, signal=titled_id_header, signal_on_page=78, conf=90%
+       End at page 77 → doc starts at page 78 (conf=90%, signal=titled_id_header)
+
+  -- FP p81 (model split here, no real boundary) --
+       03:37:21 [DEBUG]   End-of-doc response p80: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 81,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (numbered reference) immediately following the title."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (numbered reference) immediately following the title.
+       p80: end=True, signal=titled_id_header, signal_on_page=81, conf=90%
+       End at page 80 → doc starts at page 81 (conf=90%, signal=titled_id_header)
+
+  -- FP p84 (model split here, no real boundary) --
+       03:37:59 [DEBUG]   End-of-doc response p83: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 84,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (ownership details and ID numbers), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (ownership details and ID numbers), indicating the start of a new document.
+       p83: end=True, signal=titled_id_header, signal_on_page=84, conf=90%
+       End at page 83 → doc starts at page 84 (conf=90%, signal=titled_id_header)
+
+  -- FP p86 (model split here, no real boundary) --
+       03:38:22 [DEBUG]   End-of-doc response p85: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 86,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and an outgoing number (изх. №), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and an outgoing number (изх. №), indicating the start of a new document.
+       p85: end=True, signal=titled_id_header, signal_on_page=86, conf=90%
+       End at page 85 → doc starts at page 86 (conf=90%, signal=titled_id_header)
+
+  -- FP p97 (model split here, no real boundary) --
+       03:41:01 [DEBUG]   End-of-doc response p96: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 97,\n  "confidence": 80,\n  "reason": "The next page begins with a document title and a document-level identifier (numbered reference), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (numbered reference), indicating the start of a new document.
+       p96: end=True, signal=titled_id_header, signal_on_page=97, conf=80%
+       End at page 96 → doc starts at page 97 (conf=80%, signal=titled_id_header)
+
+  -- FP p102 (model split here, no real boundary) --
+       03:42:04 [DEBUG]   End-of-doc response p101: '```json\n{\n  "end": true,\n  "signal": "signature_block",\n  "signal_on_page": 101,\n  "confidence": 90,\n  "reason": "The page contains a labeled approval grid with \'Изготвил\' and includes a handwritten signature."\n}\n```'
+       Reason: The page contains a labeled approval grid with 'Изготвил' and includes a handwritten signature.
+       p101: end=True, signal=signature_block, signal_on_page=101, conf=90%
+       03:42:08 [DEBUG]   Next-page-start p102: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page contains a new heading and a different format indicating a new document.",\n  "next_page_heading": ""\n}\n```'
+       Next-page-start reason: The next page contains a new heading and a different format indicating a new document.
+       Signature on p101 confirmed as end — next page starts new doc (conf=92%)
+       End at page 101 → doc starts at page 102 (conf=92%, signal=signature_block)
+
+  -- FP p151 (model split here, no real boundary) --
+       03:53:42 [DEBUG]   End-of-doc response p150: '```json\n{\n  "end": true,\n  "signal": "project_signoff",\n  "signal_on_page": 150,\n  "confidence": 80,\n  "reason": "The page contains labeled fields \'Проектант\', \'Изготвил\', \'Проверил\', and \'Технически ръководител\' with handwritten signatures next to them."\n}\n```'
+       Reason: The page contains labeled fields 'Проектант', 'Изготвил', 'Проверил', and 'Технически ръководител' with handwritten signatures next to them.
+       p150: end=True, signal=project_signoff, signal_on_page=150, conf=80%
+       03:53:46 [DEBUG]   Next-page-start p151: '```json\n{\n  "starts_new": true,\n  "confidence": 95,\n  "reason": "The next page has a new heading \'СЪДЪРЖАНИЕ\' indicating a new section or document.",\n  "next_page_heading": "СЪДЪРЖАНИЕ"\n}\n```'
+       Next-page-start reason: The next page has a new heading 'СЪДЪРЖАНИЕ' indicating a new section or document.
+       Signature on p150 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='СЪДЪРЖАНИЕ']
+       End at page 150 → doc starts at page 151 (conf=88%, signal=project_signoff)
+
+  -- FP p163 (model split here, no real boundary) --
+       03:56:48 [DEBUG]   End-of-doc response p162: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 163,\n  "confidence": 90,\n  "reason": "The next page begins with a document title and a document-level identifier (policy number), indicating the start of a new document."\n}\n```'
+       Reason: The next page begins with a document title and a document-level identifier (policy number), indicating the start of a new document.
+       p162: end=True, signal=titled_id_header, signal_on_page=163, conf=90%
+       End at page 162 → doc starts at page 163 (conf=90%, signal=titled_id_header)
+
+  -- FN p56 (real boundary, model missed) --
+       03:31:14 [DEBUG]   End-of-doc response p55: '```json\n{\n  "end": true,\n  "signal": "titled_id_header",\n  "signal_on_page": 55,\n  "confidence": 90,\n  "reason": "The next page begins with a document title \'УДОСТОВЕРЕНИЕ\' and includes a document-level identifier \'№ RK-0170/08.05.2014г.\'"\n}\n```'
+       Reason: The next page begins with a document title 'УДОСТОВЕРЕНИЕ' and includes a document-level identifier '№ RK-0170/08.05.2014г.'
+       p55: end=True, signal=titled_id_header, signal_on_page=55, conf=90%
+       End at page 54 → doc starts at page 55 (conf=90%, signal=titled_id_header)
+
+  -- FN p104 (real boundary, model missed) --
+       03:42:41 [DEBUG]   End-of-doc response p103: '```json\n{\n  "end": true,\n  "signal": "table_end",\n  "signal_on_page": 103,\n  "confidence": 90,\n  "reason": "The table on page 103 includes a totals/summary row (\'Общо количество армировка\', \'Общо количество кофраж\', \'Общо количество бетон\', \'Общо количество стомана\'), indicating the end of the table'
+       Reason: The table on page 103 includes a totals/summary row ('Общо количество армировка', 'Общо количество кофраж', 'Общо количество бетон', 'Общо количество стомана'), indicating the end of the table and thus the document.
+       p103: end=True, signal=table_end, signal_on_page=103, conf=90%
+       Low-conf boundary at p103 (60%) rejected by confirmation pass
+
+  -- FN p159 (real boundary, model missed) --
+       03:55:41 [DEBUG]   End-of-doc response p158: '```json\n{\n  "end": true,\n  "signal": "table_end",\n  "signal_on_page": 158,\n  "confidence": 90,\n  "reason": "The table on page 158 ends with a summary row labeled \'Брой\' indicating totals for the items listed, which is a clear signal of a table conclusion."\n}\n```'
+       Reason: The table on page 158 ends with a summary row labeled 'Брой' indicating totals for the items listed, which is a clear signal of a table conclusion.
+       p158: end=True, signal=table_end, signal_on_page=158, conf=90%
+       Low-conf boundary at p158 (60%) rejected by confirmation pass
