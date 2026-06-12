@@ -87,6 +87,39 @@ toward low-90s AND should transfer to fresh (none is dev-tuned prompt wording); 
 
 ### ROUND 2 LOG
 
+#### ⛓ OVERNIGHT CHAIN — BINDING AMENDMENTS (Fable 5 audit of 6015f0b, 2026-06-12)
+Verifier audited 6015f0b from repo: diff surgical (one functional clause `and signal not in
+("signature_block","table_end")`, NO prompt strings, project_signoff path intact), md5 7985f70 confirmed.
+Chain proceeds under these BINDING rules (rule arithmetic wins on conflict; any uncovered decision STOPS that
+branch → morning question; never self-attest GT):
+1. **Probe verdict gate — byte-level, not eyeball.** Expected sets: 163444215 FP=[6,13] FN=[] (FP31 dead AND
+   none of full-#1's failure modes: no +FP2, no 34→33, no +FN4); 164505881 FP=[9,13] FN=[12]; 165204533 FP=[]
+   FN=[3,4]; 082511233 FP=[] FN=[20]. ANY deviation beyond FP31's death → **revert 6015f0b immediately**, run
+   rest of chain on #2+#4 only (#1-lite retried later as its own probe; chain must NOT stall). Record full
+   per-file FP/FN sets in the RESULTS probe row either way; the "31/32 cut exists at conf 92" claim MUST be
+   evidenced by the quoted probe-log line.
+2. **Stage-1 dev revert order (binding — stack confounds attribution).** If dev tol=0 F1 < 89.94, revert
+   newest-first, ONE A/B re-run per revert, never >1 commit between evals: (a) 6015f0b #1-lite → re-run; (b)
+   9fee964 #4-upgrade → re-run; (c) 559b8d7 #4-base; (d) cf9f88a #2 last (least suspect — byte-identical on
+   probe). Record every A/B row.
+3. **Terminology — FN3/FN4/FN20 are NOT waivers; they are STRICT FNs.** A waiver = human-attested
+   filer-convention GT issue in waivers.json (which does NOT exist — do not create it; never put model failures
+   in it). Record mislocalization-class misses as "known strict FNs, deferred to backlog (requery-aware
+   relocation spec / Tier-3 class)." ALL overnight metrics are STRICT only.
+4. **Stage 2 (full-tests stratified) additions.** Beyond per-stratum [TITLE-GATE] SUPPRESSED / one-of-two
+   accept / [WINDOW-REQUERY] counts, ALSO count per stratum how often #1-lite changed behavior = end-events
+   where signal∈{signature_block,table_end} landed on n+1 (old code would have one-page-checked). Derive
+   POST-HOC from existing log lines — NO code edits after the probed md5. Masked 143041245[62-66],
+   145428614[146-150] excluded + listed. Strata 9/3/8 + aggregate, per-file FP/FN, overfitting gap flagged.
+   Baseline row = round1-candidate full-tests (85.84 aggregate / fresh P 77.31).
+5. **Stage 3 run8.py full-tests stratified runs REGARDLESS of Stage-2** (settles historical-88.5; same
+   masking/strata).
+6. **Stage 4 pod DOWN per REDEPLOY PROTOCOL.** Before shutdown: git status clean, all pushed, morning summary
+   written (final tables, event counts, open questions). Morning questions for USER (never self-attest): masked
+   ranges + the FP13@163444215 seam. Push + verifier-gate after EVERY stage (numbers match artifacts, git show
+   matches claims, no improvisation).
+
+
 **Tier 1 #1 — direction+position-aware `signal_on_page` — REVERTED (commit 3b06dff → revert 6917329).**
 Added a `signal_position` field (bottom=closing / top=countersignature) to `_query_document_end`, position-aware
 `effective_end`, and gated the n+1 one-page-check to `position=='none'`. Probe (5090, Tier1#1 md5 37340f8,
