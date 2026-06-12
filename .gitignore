@@ -28,3 +28,4 @@ eval_full/
 # Fable 5 benchmark — rendered page/query PNGs (regenerate via fable5_run/driver.py collect)
 fable5_run/pages_cache/
 fable5_run/queries/
+eval_probe/
