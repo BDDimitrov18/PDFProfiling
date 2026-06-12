@@ -531,9 +531,50 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         signal_page = int(data.get("signal_on_page", current_page))
     except (TypeError, ValueError):
         signal_page = current_page
-    if signal_page not in page_nums:
-        signal_page = current_page
+    # Tier1-#2: window-range validation. The model sometimes names a page OUTSIDE the
+    # shown window (e.g. signal_on_page=4 from context [1,2,3]). The old code silently
+    # substituted current_page and planted a misplaced boundary (FN3@165204533). Instead
+    # re-query ONCE, mapping each image to its real page number and forcing a choice in
+    # the window; only if that still fails do we clamp — and then LOUDLY, never silently.
+    if is_end and signal_page not in page_nums:
+        logger.warning(
+            f"  p{current_page}: signal_on_page={signal_page} outside window {page_nums} "
+            f"— re-querying with explicit page labels (no silent substitution)"
+        )
+        signal_page = _requery_signal_page(
+            images, page_nums, current_page, signal, model, processor, config, logger
+        )
+        if signal_page not in page_nums:
+            logger.error(
+                f"  p{current_page}: re-query STILL returned out-of-window page {signal_page} "
+                f"— clamping to {current_page}; boundary placement UNRELIABLE"
+            )
+            signal_page = current_page
     return is_end, conf, signal, signal_page
+
+
+def _requery_signal_page(images: list, page_nums: list, current_page: int, signal: str,
+                         model, processor, config, logger: logging.Logger) -> int:
+    """Tier1-#2: the end-detector named a signal_on_page outside the shown window.
+    Re-ask ONCE, mapping each image to its real page number, forcing a choice within the
+    window. Returns the page the model picks (caller validates it is in-window and handles
+    a persistent miss explicitly — this never silently substitutes current_page)."""
+    mapping = "; ".join(f"image {i + 1} = page {p}" for i, p in enumerate(page_nums))
+    valid = ", ".join(str(p) for p in page_nums)
+    prompt = (
+        f"You are shown {len(images)} scanned pages, in this order: {mapping}.\n"
+        f"A '{signal}' signal was reported among them. Looking ONLY at these pages, on which "
+        f"one do you actually see it? Your answer MUST be one of: {valid}.\n"
+        'Respond ONLY with JSON: {"signal_on_page": <page_number>}'
+    )
+    raw = _infer(prompt, images, model, processor, config, logger, max_tokens=40)
+    data = _parse_json(raw or "", logger)
+    try:
+        picked = int(data.get("signal_on_page", current_page))
+    except (TypeError, ValueError):
+        picked = current_page
+    logger.info(f"  [WINDOW-REQUERY] '{signal}' re-placed on page {picked} (window {page_nums})")
+    return picked
 
 
 # ---------------------------------------------------------------------------
