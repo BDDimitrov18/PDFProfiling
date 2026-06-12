@@ -133,6 +133,24 @@ p21 self-contained and the boundary is then dropped downstream → neither 20 no
 off-by-one signature-localization family as #1 (un-fixable without prompt bleed) — reclassified to **Tier 3 #6**
 (table/numbering branch + signature-position). → no probe needed.
 
+**Tier 2 #4 — transcribe-then-judge titled gate — PROBE PASS, KEPT pending dev eval (commit 559b8d7).**
+Probe (Tier2#4 md5 7f67d16, `probe_t2_4.log`) vs round-1 reference on the 4 files, tol=0:
+| File | Round-1 | Tier2#4 | Δ |
+|---|---|---|---|
+| 163444215 | FP[6,**11**,13,**19**,**27**,31] FN[] | FP[6,13,31] FN[] | **−3 FP (FP11/19/27 killed)** |
+| 164505881 | FP[9,13] FN[12] | FP[9,13] FN[12] | identical (p4 suppressed but co-detected → no FN) |
+| 165204533 | FP[] FN[3,4] | FP[] FN[3,4] | identical |
+| 082511233 | FP[] FN[20] | FP[] FN[20] | identical |
+| **F1 tol0** | **83.3%** | **86.96%** | **+3.66 (all precision)** |
+KILL-direction: all 3 named targets dead (`[TITLE-GATE] p19/p27/p15 → none/none → SUPPRESS`).
+SURVIVE-direction: every grounded titled TP kept — p10 (СКИЦА № 15-158202), p12 (протокол №5),
+p25, p26 (НОТАРИАЛЕН АКТ №30705), p2 (УДОСТОВЕРЕНИЕ №02944), p5 (договор №4279762), p6 (полица).
+No true boundary lost; recall unchanged. **FLAG (both-directions watch):** p4@164505881 is a TRUE
+start with a real identifier (`изх. № 6480458`) but model read `title='none'` → BOTH-grounded rule
+SUPPRESSED it; it survived only via co-detection (no FN here, but the rule could FN an изх-№-only
+start with no redundancy — also p1@082511233 ЧЕЛЕН ЛИСТ suppressed, but p1 is excluded from scoring).
+Dev/full eval must watch for titled-suppressions that become FNs. → stacked #2+#4 dev eval next.
+
 ### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
 From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
 classified by the full set of signals that resolved to it (per-event `End at page X → doc
