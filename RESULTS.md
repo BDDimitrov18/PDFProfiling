@@ -46,6 +46,45 @@ not 2" where the 3rd was the reverted Fix 11 impl — neither a deviation.)
 **QUEUE COMPLETE. Loop stopped.** Round-1 candidate = Fix9-only (tag round1-candidate). Awaiting human:
 attest masked ranges, decide round-2 target (fresh-file over-splitting / table-confirm v2).
 
+## 🗂 ROUND 2 BACKLOG (local-only, strict order, one commit + targeted probe each)
+
+Sorted by certainty-of-gain ÷ risk. **Probe set = 163444215, 164505881, 165204533, 082511233** (~100 pages,
+~30 min on 5090). **Named test cases:** FP31, FN12+FP13, FN3, FN20, FP11, FP19, FP27. Revert rule unchanged
+(revert if dev tol=0 F1 drops). Stratified full-tests run is the real verdict — fresh-precision is the target.
+
+**TIER 1 — pure logic bugs (no model-behavior change, no overfitting risk). Each its own commit.**
+1. **Direction-aware `signal_on_page`.** Current logic treats ALL signals as start-markers. Correct only for
+   `titled_id_header`/`plain_title` (header on n+1 → cut BEFORE n+1, current behavior). INVERTED for end-markers:
+   `signature_block`/`table_end` on n+1 means the doc extends THROUGH n+1 → cut AFTER it. Add signature POSITION:
+   bottom-of-page = closing; top-of-page = title-page countersignature (start context). Fixes severed deed
+   signature (FP31@163444215) + the FN12/FP13 spillover pair (164505881) in one change. **Highest-confidence fix.**
+2. **Window-range validation.** Model returned `signal_on_page=4` from context [1,2,3]; code silently substituted
+   page 2 and planted a boundary (FN3@165204533). Validate returned page ∈ window; on violation, ONE re-query with
+   explicit page labels ("you are looking at pages 1, 2, 3"); NEVER silently substitute.
+3. **Rotation everywhere.** OSD rotation applies in Phase 1 only; confirm/one-page-check/start-detect see RAW
+   orientations and judged a rotated 'Проектант'+signature page as mid-document (FN20@082511233). Route every image
+   through the same rotation path, log per-page angle, pass "orientation differs between n and n+1" as a context
+   line to the confirm prompt (orientation flips correlate with boundaries here).
+
+**TIER 2 — local anti-hallucination gate (replaces a Fable arbiter).**
+4. **Transcribe-then-judge for `titled_id_header`.** Signal JSON must carry the verbatim identifier string +
+   location; then ONE follow-up: "Transcribe all text in the top quarter of page N" — accept the signal only if the
+   quoted identifier appears in the transcription. Kills invented-РС№ class (FP11, FP19, FP27) by separating reading
+   from concluding (32B confabulates when judging, far less when reading). Cost: +1 query per titled firing (~15–20/file).
+
+**TIER 3 — BLOCKED until the fresh-FP attribution table is delivered (don't build before the data).**
+5. **Repeated-form suppression.** Consecutive pages sharing a printed template = one doc. Likely kills the ЕСУТ-stack
+   class + maybe the fresh collapse (24 FP on 145428614). Implement ONLY after fresh-FP attribution confirms form
+   stacks are the bulk. Local impl: structural similarity on binarized page skeleton (downsample + perceptual hash /
+   line-grid correlation), VLM consulted only when the score is ambiguous — NOT pairwise VLM "is this the same form".
+6. **Fix 11 v2 (table confirm).** v1 answered different=true 12/12 (prompt primed it). v2: force evidence before
+   verdict — JSON must report `last_row_number(n)` and `first_row_number(n+1)`; continuous numbering = same document
+   MECHANICALLY, no judgment question asked. Targets table FN cluster (20@082511233, 19–20@142044854, 15–16@084303475).
+
+**PROCESS:** Tier 1 = 3 commits → probe (4 files only) → check 7 named cases pass → full dev eval. Then Tier 2 →
+probe → full dev eval. Stratified full-tests run only after both tiers settle. Expected: Tier 1+2 ≈ +2–4 dev F1
+toward low-90s AND should transfer to fresh (none is dev-tuned prompt wording); Tier 3 attacks fresh 77% precision.
+
 ---
 
 > **RESUME POINT (2026-06-11):** Working on a migrated **RTX 5090** pod (the original run-8 pod;
