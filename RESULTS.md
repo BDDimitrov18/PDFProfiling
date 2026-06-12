@@ -161,6 +161,16 @@ confidence, never block. Bands PROVISIONAL/reporting-only (real thresholds tuned
 Tests: **17/17 pass** — corruption-robust positives (letter-spacing, single drop/sub, homoglyph, case chaos,
 appended identifiers, truncation) MATCH; negatives (НАКЛОНЕН ПОКРИВ, ЧЕЛЕН ЛИСТ, НОТАРИАЛЕН АКТ) all NONE.
 
+#### 🔬 ITEM 6 — NOMENCLATURE EXPERIMENT (`nomenclature_experiment.py`, RECORDED; EXECUTE after Stage-2 log)
+DATA-REPORT-ONLY analyzer: parses every `[TITLE-GATE]`/`[TITLE-GATE-RELOC]` event from the full-tests log,
+labels each vs GT (TP / FP / suppressed-was-true / suppressed-was-false), matches the title via
+`nomenclature_match`, and reports per stratum: (1) TP-vs-FP match-score distributions; (2) per-table-entry
+hit counts split TP/FP with SHEET-TYPES separated from admin docs (tests "sheet-types concentrate on FPs");
+(3) suppressed-was-true ∩ table-MATCH = RESCUE candidates; (4) full AMBIGUOUS list + top-3 candidates (gauges
+AI-adjudication need). Proposes/changes NOTHING — integration is a morning human call. Parser crash-tested on
+`logs/probe_1lite2.log` (14 events, all 4 sections render). Run after Stage 2:
+`python3 nomenclature_experiment.py logs/fulltests_stage2.log` (defaults to `eval_full/` GT/strata/masked).
+
 
 **Tier 1 #1 — direction+position-aware `signal_on_page` — REVERTED (commit 3b06dff → revert 6917329).**
 Added a `signal_position` field (bottom=closing / top=countersignature) to `_query_document_end`, position-aware
