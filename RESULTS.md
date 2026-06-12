@@ -154,6 +154,19 @@ MODEL's transcription (inherent to build 63da033, not a logging defect) → nome
   commit + full 4-file probe with exact expected sets.
 - **FN3 / FN4 / FN20:** known STRICT FNs, mislocalization-class. NOT waivers (no waivers.json).
 
+#### 🔬 ADDENDUM — RUN8 CROSS-ARCHITECTURE NOMENCLATURE EXPERIMENT (`nomenclature_experiment_run8.py`, CPU/pod-less)
+After Stage 3 lands, run (does NOT block pod-down): `python3 nomenclature_experiment_run8.py logs/run8_stage3.log
+--gt eval_full/ground_truth.json --strata eval_full/strata.json --masked eval_full/masked.json >
+logs/nomenclature_experiment_run8.txt` → commit. run8 logs `[next_page_heading='…']` on confirmed boundaries (its
+analog of split's titled title) + header_block_reset/appendix_heading; the script labels each vs current GT (TP/FP +
+run8-FNs whose page carries a heading) and matches headings via `nomenclature_match`, same report format. **run8.py
+stays BYTE-FROZEN** (referee + fingerprint roles) — any mechanism this motivates is a forward-port into split.py,
+never a run8 edit. Crash-tested on the partial log: works; notable early signal — **run8 uses `fresh_letterhead`,
+NOT `titled_id_header`**, as its start signal (different vocabulary). This cross-architecture comparison (how a
+heading-grounded vs title-grounded start-detector distributes nomenclature MATCHes across TP/FP) **feeds the
+relocation-fix design** — it shows whether grounding on the next-page heading (run8) vs the claimed-page title
+(split) changes which true starts are recoverable.
+
 #### 🔤 ITEM 5 — NOMENCLATURE MATCHER (`nomenclature_match.py` + `test_nomenclature_match.py`, pod-less CPU)
 STANDALONE module (zero split.py integration) matching VLM-transcribed titles against
 `номенклатура_цяла.xls`. Parse VALIDATED to Fable spec: **382 entries / 220 unique names / 19 categories**
