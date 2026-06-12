@@ -121,6 +121,27 @@ thesis vs #1's prompt-level perturbation). Kept as a real correctness fix (kills
 the probe's 4 files just don't exercise); the full dev eval is its real test — A/B-revert if it regresses there. FN3
 reclassified as a model-localization failure for #5/#6 (single-page-doc stacks), not a substitution bug. → **Tier 1 #3**.
 
+**Tier 1 #3 — rotation everywhere — SKIPPED (premise stale; no code change).** Audit of split.py:899-914 shows
+`detect_rotation(p)` already rotates `page_buffer[p]` IN PLACE for n-1/n/n+1 at the top of every Phase-1 iteration,
+and EVERY gate (style-continuity 924, one-page-check 959/1066, start-detect 1001/1101, confirm 1028/1046) reads from
+`page_buffer` — so the gates already see UPRIGHT pages. The backlog's premise ("confirm/one-page-check/start-detect
+see RAW orientations") is false in the current code; #3 is already implemented. **FN20@082511233 is NOT a rotation
+case:** pages 18-21 carry no rotation (the file's only OSD hit was p15→270°, correctly detected + applied, then
+smoothed to 0). Real FN20 mechanism (`probe_t1_2.log`): on p20 (ctx [19,20,21]) the model reads the `НАКЛОНЕН ПОКРИВ`
+title + signature and localizes the new-doc start at **p21 (one page late; truth=p20)**; the one-page-check confirms
+p21 self-contained and the boundary is then dropped downstream → neither 20 nor 21 survives. This is the same
+off-by-one signature-localization family as #1 (un-fixable without prompt bleed) — reclassified to **Tier 3 #6**
+(table/numbering branch + signature-position). → no probe needed.
+
+### TIER 1 VERDICT
+Of 3 Tier-1 fixes, only **#2 (window-range validation)** is a viable kept change, and it is **net-zero on the probe**
+(real value untested — kills a silent-misplacement FP class the 4 probe files don't exercise). #1 reverted (shared-prompt
+bleed), #3 skipped (already implemented; target mis-attributed). **Tier 1's named FN targets (FN3, FN20) are model
+localization/hallucination failures, not the logic bugs the backlog assumed** — they belong to Tier 2/3, not Tier 1.
+The real lever remains **Tier 2 #4** (transcribe-then-judge anti-hallucination on `titled_id_header`) which attacks the
+invented-РС№ class = 58% of fresh FPs per the attribution table. CHECKPOINT: surfaced to user (Tier 1 thinner than the
+backlog predicted; cost-conscious — confirm whether to spend pod-hours on Tier 2 #4 next or pause).
+
 ---
 
 > **RESUME POINT (2026-06-11):** Working on a migrated **RTX 5090** pod (the original run-8 pod;
