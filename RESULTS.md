@@ -151,6 +151,25 @@ SUPPRESSED it; it survived only via co-detection (no FN here, but the rule could
 start with no redundancy — also p1@082511233 ЧЕЛЕН ЛИСТ suppressed, but p1 is excluded from scoring).
 Dev/full eval must watch for titled-suppressions that become FNs. → stacked #2+#4 dev eval next.
 
+**Tier 2 #4 UPGRADE — localizer + one-of-two — KEPT (commit 9fee964), FN3 BLOCKED by #2 interaction.**
+Probe5 (md5 63da033, `probe_t2_4b.log`): score IDENTICAL to filter-only #4 (tol=0 F1 86.96 TP30/FP5/FN4;
+tol=1 89.86). 163444215 FP[6,13,31] FN[]; 164505881 FP[9,13] FN[12]; 165204533 FN[3,4]; 082511233 FN[20].
+Audit: (b) FP11/19/27 STAY DEAD ✓ — p11/p27 SUPPRESSED ("2 grounded-title pages ambiguous"), p19/p15
+SUPPRESSED ("no grounded-title page"; p15 is a TRUE bndry but survived via signature_block co-detection,
+FN[] holds). (c) p10 (2/2) KEEP, **p4@164505881 (1/2, изх.№-only) now accepted-capped 0.60 by one-of-two
+EXPLICITLY** (was luck-of-redundancy before) ✓; all 2/2 titles kept. (d) capped boundaries: confirmation
+pass correctly rejects genuine low-conf non-boundaries (p18/p19@082511233), capped true starts survive.
+(a) **FN3 NOT resolved.** Mechanism (165204533, a stack with p1=ЧЕЛЕН ЛИСТ cover, p3=ИЗХОДНИ ТОЧКИ title):
+p2 end-detect hallucinated `signal_on_page=4` (true p3) → #2 requery forced in-window picked **p1** → gate
+on p1 read `title='ЧЕЛЕН ЛИСТ' id=none` grounded=1/2 → **one-of-two accepted p1 (capped), skipping
+relocation** (relocation fires only on NEITHER) → degenerate boundary at p1, p3 never reached. Relocation
+WOULD have worked (search [1,2,3]−p1 → only p3 grounds a title → exactly one → relocate to p3); it was
+pre-empted by the cover-sheet title on the mis-claimed page. **Proposed in-spirit fix (beyond written spec,
+NOT yet implemented):** make relocation requery-aware — when #2 requeried the claim (out-of-window original →
+unreliable claimed page) AND it is not BOTH-grounded, run the relocation search even on a 1/2 claim. Cleanly
+separates FN3 (requeried→relocate→p3) from p4 (in-window→trust capped accept). KEPT the upgrade (net-neutral,
+strictly more robust, no regression); FN3 fork surfaced to user before the stacked dev eval.
+
 ### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
 From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
 classified by the full set of signals that resolved to it (per-event `End at page X → doc
