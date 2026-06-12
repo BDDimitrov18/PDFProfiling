@@ -119,6 +119,15 @@ paths + a MATCH⇒new-doc path that fires solely on real document-types). Predic
 165204533/082511233 unchanged. **Falsifier:** ANY signature-TP lost (over-veto regression), any new FP/FN, or dev
 F1 drop. FP13 is titled-not-signature-attributed → unaffected by B.
 
+**Commit C — Fix 11 v2 (table confirm, evidence-first numbering).** C routes `table_end` through
+`_query_confirm_table_boundary` (mechanical: suppress ONLY on proven-continuous numbering, else stand). PROBE: **082511233
+FN=[20] → []** expected (table_end@p19 → p20 was capped→confirm-vetoed under the generic confirm; v2 stands it unless
+p19→p20 row numbering is continuous). RISK on 163444215: table_end signals on p34/p36 were correctly rejected before;
+v2 could ADD FP35/FP37 if their numbering reads non-continuous — falsifier = any new table FP. **DEV:** FN19/20@142044854
+→ TP. **HOLDOUT (log forensics):** FN12@084837699 = `p11: end=True, signal=table_end, conf=90%` → capped 0.60 →
+`rejected by confirmation pass` — same veto class; v2 flips it → **holdout R 73.33 → 80.00** expected. Falsifier: 082511233
+FN20 not recovered, OR a new table FP, OR any signature/titled boundary changes (C touches table_end ONLY).
+
 ### 🔭 ROUND 3 SPEC STUBS (spec only — no code this round)
 - **(a) Duplicate-guard** (relocate-to-duplicate, fresh dup-reloc=8): FORK **CLOSED 2026-06-13 → keep-original-capped**
   (human decision). Implemented Commit A (`_titled_gate_decision`): when the unique grounded relocation target is a page
@@ -131,7 +140,11 @@ F1 drop. FP13 is titled-not-signature-attributed → unaffected by B.
   97.9%** (47/48). HARD: judges page n+1's freshness ONLY, never re-judges page n ⇒ **start-page-grid class
   (p45/46@084031203) cannot regress**. Tests `test_next_page_gate.py` (12, pass — the 6 dossier scenarios as fixtures
   + priority/neutral-default checks).
-- **(c) Fix 11 v2** — unchanged from prior spec (table-numbering branch).
+- **(c) Fix 11 v2** — IMPLEMENTED Commit C (`_query_confirm_table_boundary` + pure `_table_boundary_decision`):
+  evidence-first JSON states `last_row_number(n)` + `first_row_number(n+1)` BEFORE any verdict; continuous numbering
+  (first==last+1) ⇒ suppress (same table), else ⇒ boundary STANDS mechanically (no free-form yes/no). Routed for
+  `signal=="table_end"` in the low-conf confirm pass. Targets FN20@082511233 + FN19/20@142044854 + FN12@084837699.
+  Tests `test_table_confirm.py` (6, pass).
 
 **ROUND 2 BOOKS CLOSED.** Corrected GT (committed) is the round-3 baseline; #2+#4 (md5 63da033) is the candidate.
 
