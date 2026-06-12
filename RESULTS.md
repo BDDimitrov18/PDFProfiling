@@ -38,8 +38,13 @@ fine (92–93% everywhere); precision does not. So round-1's gains are partly de
 
 ### Overnight deviations: NONE
 All steps verifier-gated PASS (Fable 5). No improvisation, no extra edits; every keep/revert followed the
-rule arithmetic. (Two cosmetic verifier notes only: a note block splitting a markdown table, and "3 commits
+rule arithmetic. Final-report gate: checks 1–4 PASS (numbers re-verified on pod = exact, masking applied,
+strata 9/3/8, CANDIDATE md5 ca8aea3); check 5 flagged an untracked `eval_full/` → gitignored (generated
+symlink dir), tree clean. (Cosmetic verifier notes only: a note block splitting a markdown table; "3 commits
 not 2" where the 3rd was the reverted Fix 11 impl — neither a deviation.)
+
+**QUEUE COMPLETE. Loop stopped.** Round-1 candidate = Fix9-only (tag round1-candidate). Awaiting human:
+attest masked ranges, decide round-2 target (fresh-file over-splitting / table-confirm v2).
 
 ---
 
