@@ -116,6 +116,16 @@ architectures — only compare rows with the same `gpu`).
 | Fix 8 (KEPT, flagged) | RTX 5090 | 87.95% | 89.02% | 88.48% | 68/91 | **−1.69 vs Fix 4** | — |
 | Fix 9 (Fix 8+9) | RTX 5090 | 89.02% | 89.02% | 89.02% | 69/91 | **+0.54 vs Fix 8; −1.15 vs Fix 4** | — |
 | **Fix9-only (A/B WINNER)** | RTX 5090 | 87.36% | 92.68% | **89.94%** | 72/91 | **+0.92 vs Fix8+9; −0.23 vs Fix 4** | — |
+| Fix 11 (REVERTED) | RTX 5090 | 83.87% | 95.12% | 89.14% | 73/91 | **−0.80 vs Fix9-only → REVERT** | — |
+
+**Fix 11 (table-confirm, commit e719049, RTX 5090) — step 4 → REVERTED.** TP=78 FP=15 FN=4. Keep rule
+`tol0_F1 ≥ 89.44 (=89.94−0.5) AND FN_reduced ≥ 2`: **FN_reduced = 6→4 = 2 ✓** (recovered table boundaries
+`20@082511233`, `20@142044854`; recall 92.68→95.12) but **F1 89.14 < 89.44 ✗** → AND fails → **REVERT**.
+Cause: the table-confirm fired 12× and answered different=True EVERY time (too permissive) — recovered 2 real
+boundaries but added 4 FPs (`35,37@163444215`, `19@082511233`, `5@085108460`). Per-[TABLE-CONFIRM]: 2 TP
+(20@082511233, 20@142044854) + the 4 FPs above + 6 fires on already-detected/correct boundaries. main reverted
+to Fix9-only. **Open question (morning): table-confirm needs a stricter "continues numbering" branch to cut FPs
+without losing the 2 recovered boundaries.**
 
 **A/B verdict (step 3): WINNER = Fix9-only.** Rule `argmax tol0_F1 {Fix8+9=89.02, Fix9-only=89.94}` → Fix9-only
 (89.94 > 89.02, not a tie). Recall 92.68% vs Fix8+9 89.02% confirms Fix 8's confirmation routing was costing
