@@ -179,11 +179,11 @@ any other probe delta. Net of A+B+C+D stacked is the round-3 full-tests run (STR
   97.9%** (47/48). HARD: judges page n+1's freshness ONLY, never re-judges page n ⇒ **start-page-grid class
   (p45/46@084031203) cannot regress**. Tests `test_next_page_gate.py` (12, pass — the 6 dossier scenarios as fixtures
   + priority/neutral-default checks).
-- **(c) Fix 11 v2** — IMPLEMENTED Commit C (`_query_confirm_table_boundary` + pure `_table_boundary_decision`):
-  evidence-first JSON states `last_row_number(n)` + `first_row_number(n+1)` BEFORE any verdict; continuous numbering
-  (first==last+1) ⇒ suppress (same table), else ⇒ boundary STANDS mechanically (no free-form yes/no). Routed for
-  `signal=="table_end"` in the low-conf confirm pass. Targets FN20@082511233 + FN19/20@142044854 + FN12@084837699.
-  Tests `test_table_confirm.py` (6, pass).
+- **(c) Fix 11 v2** — TRIED (Commit C) then **REVERTED 2026-06-13** (probe falsifier: FP35/37@163444215 + FP19@082511233).
+  Mechanical "non-continuous numbering ⇒ stand" is too permissive — a reset-to-1/jump occurs at BOTH real boundaries AND
+  intra-doc section breaks (FP37 `10→1` vs TP20 `6→1` both reset). **Fix 11 v3 (backlog):** numbering discontinuity must be
+  CORROBORATED by a heading/issuer/letterhead change on n+1; not a standalone confirm. FN20@082511233 / FN12@084837699 /
+  FN19,20@142044854 stay STRICT FNs until v3.
 
 #### 🩺 HOLDOUT-FN MECHANISM DIAGNOSIS (human attest 2026-06-13 + Stage-2 log forensics) — backlog item 3 CLOSED
 All 5 holdout FNs confirmed REAL model misses (holdout GT fully confirmed, NO GT change): 082646183 p4 (heading not in
