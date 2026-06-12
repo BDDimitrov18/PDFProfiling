@@ -5,12 +5,17 @@
 **NEW CANDIDATE = #2 (window-range validation) + #4 (transcribe-then-judge titled gate, localizer + one-of-two).**
 split.py md5 **63da033** (HEAD has it). Boundary detection, RTX 5090, 150 DPI, corrected+masked GT.
 
-**Final stratified tables (all masked-excluded; 143041245[62-66], 145428614[146-150]):**
+**Final stratified tables — CORRECTED GT, masks LIFTED (2026-06-13 human attestation; see CLOSE-OUT below). STRICT:**
 | build | dev F1 | holdout F1 | fresh F1 | fresh P | **aggregate F1** | dev−fresh gap |
 |---|--:|--:|--:|--:|--:|--:|
-| round-1 candidate (Fix9-only) | 89.94 | 81.48 | 84.63 | 77.31 | 85.84 | +5.31 |
-| run8 referee (run-8 code) | 89.16 | 76.92 | 87.42 | 83.19 | 87.44 | +1.74 |
-| **#2+#4 (CANDIDATE)** | **91.46** | 81.48 | **88.54** | **85.65** | **88.99** | **+2.92** |
+| round-1 candidate (Fix9-only) | 89.94 | 81.48 | 84.41 | 76.89 | 85.67 | +5.53 |
+| run8 referee (run-8 code) | 89.16 | 76.92 | 87.15 | 82.64 | 87.25 | +2.01 |
+| **#2+#4 (CANDIDATE)** | **91.46** | 81.48 | **88.44** | **85.41** | **88.92** | **+3.02** |
+
+**WAIVED** (083553577 p9 filer-convention FP excluded from FP count only; run8 unaffected — it didn't predict p9):
+round-1 agg **85.80** (freshP 77.19) · #2+#4 agg **89.06** (fresh 88.64, freshP 85.78) · run8 agg **87.25** (unchanged).
+(Prior masked numbers were 85.84 / 87.44 / 88.99; the correction nets ≈neutral — +FP66 on 143041245 vs +2 TP on
+145428614/147,150 + FN63 dissolved. Ordering unchanged; #2+#4's fresh-P lead WIDENS — it fired no FP146.)
 
 **Headline:** #2+#4 is best on every aggregate metric — **+3.15 aggregate / +8.34 fresh-precision vs round-1**, and
 **+1.55 / +2.46 vs the genuine run-8 baseline**. #4's anti-hallucination gate kills the invented-РС№ FP class and
@@ -41,9 +46,70 @@ set against the run-8 fingerprint (163444215 run8 FP=[6,11,13,31], FN=[7,9] — 
 FP set ⇒ anchors valid, proceed. Mismatch ⇒ the env differs: re-run ONE #2+#4 dev eval on the new pod, make THAT the
 same-GPU anchor, update the gpu column, and measure all subsequent deltas against it. Model `/hf_cache`,
 `HF_HOME=/hf_cache HF_HUB_DISABLE_XET=1`, deps per `requirements-lock.txt`.
+**REDEPLOY checklist — FIRST action after fingerprint:** export holdout-FN triage dossiers (oldest unpaid debt;
+holdout recall is architecture-independent — candidate R 73.33 / run8 R 66.67). DONE 2026-06-13 (pod-less, CPU):
+`attestations/holdout_triage/` has [M−1,M,M+1] @200 DPI for each holdout FN — 082646183 p4, 084837699 p11/p12,
+085002901 p9. Human-eyes-only; awaiting attestation of whether these missed boundaries are real doc starts.
 
 **POD:** all GPU work complete; the RunPod 5090 is now IDLE and billing. I cannot stop RunPod billing from the CLI —
 **terminate the pod in the RunPod console.** All artifacts (logs/, attestations/, results) are committed + pushed.
+
+---
+
+## 🔏 ROUND 2 CLOSE-OUT — human attestations applied, GT corrected (2026-06-13). Corrected GT = round-3 baseline.
+
+**Attestation log (verbatim human summaries, 2026-06-13):**
+- **082511233:** p20 IS a new doc (GT CONFIRMED, FN20 real); p19 carries rotated signatures; **p21 has NO heading** →
+  the Stage-probe OOB one-page-check verdict ("clear title at top of p21", conf 95) was a **CONFABULATION**.
+- **143041245:** pp62–66 are ONE document.
+- **145428614:** 146=end, 147=new doc, 148='Обяснителна записка' section of the 147 composite (NOT a start), 149
+  continues, 150=new doc → **GT correct** (147,150 stand).
+- **Sig-triage verdicts:** 083553577 pp8–10 filer-combined (WAIVER); 084031203 p45=start carrying grid, 46 continues;
+  142438096 p68=start, p69=verso of same sheet, 70=new; 143041245 p50 end-ish, p51=section header (would NOT
+  nomenclature-match), 52 continues; 145428614 p64 no end-signs, p65 mid-doc signature block no heading, p66 section
+  heading (no nomenclature match), 67 continues; 162710373 p1=start w/ own signatures + nomenclature match, p2=
+  handwritten verso of p1's sheet, p3=new doc.
+
+**GT EDIT (attested):** `eval_full/ground_truth.json` — 143041245 remove starts **63 and 66** (no other GT change;
+145428614 already correct). **Masks LIFTED** everywhere (`masked.json` = {}). `groundTruthHuman` is a separate sparse
+artifact and does not carry these coverage-derived boundaries. Corrected GT JSONs committed (force-added).
+**`waivers.json` created** (first entry: 083553577 p9, class `filer_convention`, human-attested). Semantics: excluded
+from the **WAIVED** metric's FP count ONLY; **STRICT** unchanged. Model failures are NEVER waivers.
+
+**Per-file deltas from the correction (STRICT):** 143041245 — all three builds' predicted **p66 → now FP**
+(was masked), and the old FN63 **dissolves** (63 no longer a boundary). 145428614 [146-150] unmasked — #2+#4 predicted
+exactly {147,150} = **+2 TP, no new FP**; round-1 & run8 also fired **FP146** (146 is an end, not a start). Net ≈neutral
+on aggregate but #2+#4's fresh-precision lead widens.
+
+**SIGNATURE-FP CLASS TABLE (29 events → attested classes where dossier evidence allows):**
+| stratum | verso | mid-doc-grid+section-heading | start-page-grid | filer-convention | undiagnosed-remainder | total |
+|---|--:|--:|--:|--:|--:|--:|
+| fresh | 2 | 3 | 1 | 1 | 16 | 23 |
+| dev | 0 | 0 | 0 | 0 | 5 | 5 |
+| holdout | 0 | 0 | 0 | 0 | 1 | 1 |
+| ALL | 2 | 3 | 1 | 1 | 22 | 29 |
+
+Classified (dossier-backed): verso = {162710373 p2, 142438096 p69}; mid-doc-grid+section-heading = {143041245 p51,
+145428614 p65, p66}; start-page-grid = {084031203 p46}; filer-convention = {083553577 p9, WAIVED}. The 22 undiagnosed
+have no dossier — NOT guessed.
+
+**C-tracking — first HARD evidence of confabulated page content in a confirm-style query:** the OOB-projection
+one-page-check claimed "clear title at top of p21" (conf 95) on 082511233; human attests **p21 has NO heading**. This
+is not just a framing fallacy (4th-instance) but the model *inventing* page content to justify a verdict — the
+strongest argument yet that confirm-style queries must TRANSCRIBE before judging (the #4 pattern), never free-judge.
+
+### 🔭 ROUND 3 SPEC STUBS (spec only — no code this round)
+- **(a) Duplicate-guard** (relocate-to-duplicate, fresh dup-reloc=8): FORK **NOTED OPEN** — *suppress-with-flag* vs
+  *keep-original-capped*. **Human decision pending.**
+- **(b) Next-page-gate REBUILD (transcribe-then-judge shape).** Replace the free-judge signature/OOB gates: a dedicated
+  READ of the TOP of page n+1 → an **evidence JSON** {transcribed_heading, nomenclature_band, continuation_cues,
+  verso_cues (rotation mismatch + identical contour/frame to n)} produced BEFORE any verdict. **Nomenclature hook:** a
+  table **MATCH ⇒ new-doc evidence**, justified by P(TP|MATCH) replicated across architectures — **Stage-2 95.2%**
+  (40/42) and **run8 97.9%** (47/48). Must NOT regress the **start-page-grid** class (p46@084031203: a real start
+  carrying a grid — the gate must not read "grid ⇒ continuation").
+- **(c) Fix 11 v2** — unchanged from prior spec (table-numbering branch).
+
+**ROUND 2 BOOKS CLOSED.** Corrected GT (committed) is the round-3 baseline; #2+#4 (md5 63da033) is the candidate.
 
 ---
 

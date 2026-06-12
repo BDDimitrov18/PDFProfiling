@@ -1,0 +1,12 @@
+{
+  "waivers": [
+    {
+      "file": "Image_00112032025083553577.pdf",
+      "fp_page": 9,
+      "class": "filer_convention",
+      "rationale": "pp8-10 are separately filable documents; the filer combined them for a case-specific reason — human attested 2026-06-13",
+      "attested_by": "human",
+      "date": "2026-06-13"
+    }
+  ]
+}
