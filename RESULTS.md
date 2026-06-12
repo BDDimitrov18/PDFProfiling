@@ -5,17 +5,18 @@
 **NEW CANDIDATE = #2 (window-range validation) + #4 (transcribe-then-judge titled gate, localizer + one-of-two).**
 split.py md5 **63da033** (HEAD has it). Boundary detection, RTX 5090, 150 DPI, corrected+masked GT.
 
-**Final stratified tables — CORRECTED GT, masks LIFTED (2026-06-13 human attestation; see CLOSE-OUT below). STRICT:**
+**Final stratified tables — GT v3 (corrected GT + 163444215 p13 start added; masks lifted; 2026-06-13). STRICT:**
 | build | dev F1 | holdout F1 | fresh F1 | fresh P | **aggregate F1** | dev−fresh gap |
 |---|--:|--:|--:|--:|--:|--:|
-| round-1 candidate (Fix9-only) | 89.94 | 81.48 | 84.41 | 76.89 | 85.67 | +5.53 |
-| run8 referee (run-8 code) | 89.16 | 76.92 | 87.15 | 82.64 | 87.25 | +2.01 |
-| **#2+#4 (CANDIDATE)** | **91.46** | 81.48 | **88.44** | **85.41** | **88.92** | **+3.02** |
+| round-1 candidate (Fix9-only) | 90.59 | 81.48 | 84.41 | 76.89 | 85.84 | +6.18 |
+| run8 referee (run-8 code) | 89.82 | 76.92 | 87.15 | 82.64 | 87.42 | +2.67 |
+| **#2+#4 (CANDIDATE)** | **92.12** | 81.48 | **88.44** | **85.41** | **89.10** | **+3.68** |
 
-**WAIVED** (083553577 p9 filer-convention FP excluded from FP count only; run8 unaffected — it didn't predict p9):
-round-1 agg **85.80** (freshP 77.19) · #2+#4 agg **89.06** (fresh 88.64, freshP 85.78) · run8 agg **87.25** (unchanged).
-(Prior masked numbers were 85.84 / 87.44 / 88.99; the correction nets ≈neutral — +FP66 on 143041245 vs +2 TP on
-145428614/147,150 + FN63 dissolved. Ordering unchanged; #2+#4's fresh-P lead WIDENS — it fired no FP146.)
+**WAIVED** (083553577 p9 filer-convention FP excluded from FP count only; run8 unaffected — never predicted p9):
+round-1 agg **85.97** · #2+#4 agg **89.24** (fresh 88.64, freshP 85.78) · run8 agg **87.42** (unchanged).
+**GT v3 effect:** adding the attested start 163444215 p13 flips all three builds' predicted-13 from FP→TP (dev↑:
+round-1 89.94→90.59, run8 89.16→89.82, #2+#4 **91.46→92.12** = NEW dev baseline & round-3 keep gate). Three-way
+ordering PRESERVED (85.84 < 87.42 < 89.10). Re-score reproducible via `reroll_scores.py` on GT v3.
 
 **Headline:** #2+#4 is best on every aggregate metric — **+3.15 aggregate / +8.34 fresh-precision vs round-1**, and
 **+1.55 / +2.46 vs the genuine run-8 baseline**. #4's anti-hallucination gate kills the invented-РС№ FP class and
@@ -76,6 +77,16 @@ artifact and does not carry these coverage-derived boundaries. Corrected GT JSON
 **`waivers.json` created** (first entry: 083553577 p9, class `filer_convention`, human-attested). Semantics: excluded
 from the **WAIVED** metric's FP count ONLY; **STRICT** unchanged. Model failures are NEVER waivers.
 
+**GT v3 (2026-06-13, definitive human attestation):** **163444215 add start p13** — "p13 starts a new document
+(ЗАЯВЛЕНИЕ Вх. № 2-94 00-304/27.02.2017; grouped with pp12 by the filer for a niche-specific reason, but genuinely
+separate)" (verbatim, recorded in `groundTruthHuman` + `eval_full/ground_truth.json`). Effect: all three builds'
+predicted-13@163444215 flips FP→TP → dev rises (candidate **91.46 → 92.12** = NEW dev baseline & round-3 keep gate;
+round-1 89.94→90.59; run8 89.16→89.82); aggregate STRICT round-1 85.84 / run8 87.42 / **#2+#4 89.10**; ordering
+preserved. **SEAM-RULING PRINCIPLE (recorded):** *definitive human separateness ⇒ GT edit; "could be treated either
+way" ⇒ waiver.* Under this rule 083553577 p9 stays a WAIVER (reclassifiable only by explicit human instruction).
+**Convention-seam list:** FP13@163444215 → **RESOLVED pro-models** (GT v3); the two-model-consensus-against-GT flag is
+now **1-for-1**. FP6@163444215 (pp5–7 seam) remains **OPEN/unattested**.
+
 **Per-file deltas from the correction (STRICT):** 143041245 — all three builds' predicted **p66 → now FP**
 (was masked), and the old FN63 **dissolves** (63 no longer a boundary). 145428614 [146-150] unmasked — #2+#4 predicted
 exactly {147,150} = **+2 TP, no new FP**; round-1 & run8 also fired **FP146** (146 is an end, not a start). Net ≈neutral
@@ -103,21 +114,21 @@ Probe set = 163444215, 164505881, 165204533, 082511233. Redeploy order: fingerpr
 dev → probe C → dev → probe D → dev → round-3 stratified full-tests (STRICT+WAIVED). Same revert discipline as round 2.
 
 **Commit A — duplicate-guard (keep-original-capped).** PROBE expectation = **BYTE-IDENTICAL on all 4 probe files**
-(its targets — FN19@142044854 + the 8 fresh dup FNs — live OUTSIDE the probe set): 163444215 FP=[6,13,31] FN=[];
-164505881 FP=[9,13] FN=[12]; 165204533 FP=[] FN=[3,4]; 082511233 FP=[] FN=[20]. **Real gate = DEV EVAL**: expect
-FN19@142044854 → TP (142044854 FN=[19,20] → [20]) IF the kept p19 boundary (capped 0.60) survives the low-conf
-confirmation pass; dev tol0 F1 **≥ 91.46** (→ ~92.1 if FN19 recovers; ≥91.46 / neutral-safe if the capped boundary is
-rejected — dup-guard never silently drops, so it cannot regress). Falsifier: any probe-file delta, or dev < 91.46.
+(its targets — FN19@142044854 + the 8 fresh dup FNs — live OUTSIDE the probe set): **163444215 FP=[6,31] FN=[]
+(GT v3: p13 now TP)**; 164505881 FP=[9,13] FN=[12]; 165204533 FP=[] FN=[3,4]; 082511233 FP=[] FN=[20]. **Real gate =
+DEV EVAL**: expect FN19@142044854 → TP (142044854 FN=[19,20] → [20]) IF the kept p19 boundary (capped 0.60) survives
+the low-conf confirmation pass; dev tol0 F1 **≥ 92.12** (GT v3 baseline; → ~92.7 if FN19 recovers; ≥92.12 / neutral-safe
+if the capped boundary is rejected — dup-guard never silently drops). Falsifier: any probe-file delta, or dev < 92.12.
 
 **Commit B — next-page-gate rebuild (evidence-first).** B touches signature-gate boundaries. Per-file signature-gate
 starts on the probe set (from Stage-2 attribution): 163444215 — TPs {3,4,7,8,15,22,23,24,32,34} MUST be PRESERVED,
 FP **kill-candidates {6, 31}**; 164505881 — TPs {2,15} preserve, FP candidate **{9}**; 165204533 TPs {2,6} (no
 sig-FP); 082511233 TPs {2,7} (no sig-FP). **Expectation:** all 16 signature-TPs preserved; the gate may VETO the
 3 FP candidates if page n+1 shows continuation/verso/section-no-match; NO new FP/FN (the rebuild only ADDS veto
-paths + a MATCH⇒new-doc path that fires solely on real document-types). Predicted per-file: 163444215 FP=[6,13,31]→
-[13] (best case, 6&31 vetoed) … [6,13,31] (if evidence doesn't trigger); 164505881 FP=[9,13]→[13]…[9,13] FN=[12];
-165204533/082511233 unchanged. **Falsifier:** ANY signature-TP lost (over-veto regression), any new FP/FN, or dev
-F1 drop. FP13 is titled-not-signature-attributed → unaffected by B.
+paths + a MATCH⇒new-doc path that fires solely on real document-types). Predicted per-file **(GT v3: p13 is TP, not
+FP)**: 163444215 FP=[6,31]→[31] (best case, 6&31 vetoed→just 31 or fewer) … [6,31]; 164505881 FP=[9,13]→[13]…[9,13]
+FN=[12]; 165204533/082511233 unchanged. **Falsifier:** ANY signature-TP lost (over-veto regression), any new FP/FN, or
+dev F1 < 92.12. FP13@163444215 is now a TP (GT v3); FP13@164505881 is titled-not-signature-attributed → unaffected by B.
 
 **Commit C — Fix 11 v2 (table confirm, evidence-first numbering).** C routes `table_end` through
 `_query_confirm_table_boundary` (mechanical: suppress ONLY on proven-continuous numbering, else stand). PROBE: **082511233
@@ -128,9 +139,9 @@ v2 could ADD FP35/FP37 if their numbering reads non-continuous — falsifier = a
 `rejected by confirmation pass` — same veto class; v2 flips it → **holdout R 73.33 → 80.00** expected. Falsifier: 082511233
 FN20 not recovered, OR a new table FP, OR any signature/titled boundary changes (C touches table_end ONLY).
 
-**Commit D — #1-lite v2 (gate BOTH one-page-check sites for signature_block/table_end).** PROBE: **163444215
-FP=[6,13,31] → [6,13]** (FP31 dies — the site-1 self-contained override that created it is skipped; p31 is not the
-last page so no OOB path). **082511233 UNCHANGED** = FP[] FN[20]: both sites gated, so the v1 OOB reroute that
+**Commit D — #1-lite v2 (gate BOTH one-page-check sites for signature_block/table_end).** PROBE **(GT v3: p13 is TP)**:
+**163444215 FP=[6,31] → [6]** (FP31 dies — the site-1 self-contained override that created it is skipped; p31 is not
+the last page so no OOB path). **082511233 UNCHANGED** = FP[] FN[20]: both sites gated, so the v1 OOB reroute that
 produced FP21 CANNOT happen (current commits [1,2,3,4,7,10] — the p21 correction never committed anyway). 164505881
 FP[9,13] FN[12], 165204533 FN[3,4] unchanged. **Critical contract (v1's failure):** FP31 dead AND NO FP21 — verified
 by the contract test (both sites gate on `_one_page_check_applies`). Falsifier: FP31 not dead, FP21 (re)appears, or
@@ -543,6 +554,7 @@ confidence-ADD under neutral-default (never a block) — but DECISION DEFERRED t
 fresh AMBIGUOUS-band events** → an AI-adjudication tier is not obviously needed at current provisional bounds.
 
 #### ✅ STAGE 1 — DEV EVAL (#2+#4 on authoritative 63da033) — KEEP (+1.52 vs baseline)
+*(as-run under pre-v3 GT; under GT v3 this re-scores to dev tol0 **92.12** TP76/FP6/FN7 — the NEW round-3 keep gate; see top table.)*
 `logs/dev_stage1.log` + `logs/dev_stage1_results.json`. Dev tol=0 **F1 91.46%** (TP=75 FP=7 FN=7, P=R=91.46%),
 tol=1 F1 92.68%, 74/91 docs exact. Baseline round-1 candidate dev tol=0 **89.94** → **+1.52 → KEEP** (≥89.94 rule).
 Mechanism: #4 killed FP11/19/27@163444215 (FP 6→3) + FP13@142044854 → precision 87.36→91.46; cost one new
