@@ -360,6 +360,41 @@ dev per-file sets UNCHANGED. Net: −4 FP, +1 FN.
 Dev event counts: SUPPRESSED=6, one-of-two-capped=6, TITLE-GATE-RELOC=2 (**of which duplicate-reloc=1** = p18@142044854,
 the FN19 cause), WINDOW-REQUERY=1. → Stage 2 full-tests launched. (Counts via `stage2_event_counts.py`.)
 
+#### 🖼 SIGNATURE-FP TRIAGE — all signature-gate FP events (Stage-2 log, #2+#4)
+Criterion: an FP start page P (tol=0) preceded by a `Signature on p(P-1) confirmed as end — next page starts new doc` verdict. **29 events** (23 fresh / 5 dev / 1 holdout); of these **25 commit as signal=signature_block, 4 as project_signoff** (over-determined). NOTE: Fable cited 22 — delta is criterion-dependent (committed-signal filter / masked-page exclusion); full set listed for reconciliation. ★ = page rendered in `attestations/sig_triage/`. Dossiers + this table are for HUMAN eyes (no model commentary on page content).
+
+| ★ | stratum | file | sig page | claimed start | conf | committed signal | verbatim next_page_starts_new verdict |
+|---|---|---|--:|--:|--:|---|---|
+| ★ | fresh | 083553577 | 8 | 9 | 95 | signature_block | Signature on p8 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='ИЗВЕСТИЕ ЗА ДОСТАВЯНЕ'] |
+|  | fresh | 083553577 | 18 | 19 | 95 | signature_block | Signature on p18 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ'] |
+|  | fresh | 083553577 | 32 | 33 | 92 | signature_block | Signature on p32 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='CTAHAPT GNC TEMC OOA'] |
+|  | fresh | 084031203 | 38 | 39 | 92 | signature_block | Signature on p38 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Приложение №2'] |
+| ★ | fresh | 084031203 | 45 | 46 | 92 | signature_block | Signature on p45 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ПРОЕКТАНТИ'] |
+|  | fresh | 142438096 | 47 | 48 | 92 | signature_block | Signature on p47 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ПРИЛОЖЕНИЕ №1 ТЕХНИЧЕСКО ЗАДАНИЕ - ИЗХОДНИ ДАННИ И ТЕХНИЧЕСКИ ПАРАМЕТРИ НА ПРИСЪЕДИНЯВАНЕТО КЪМ ПРЕДВАРИТЕЛЕН ДОГОВОР'] |
+|  | fresh | 142438096 | 52 | 53 | 92 | signature_block | Signature on p52 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ПРИЛОЖЕНИЕ №1 ТЕХНИЧЕСКО ЗАДАНИЕ - ИЗХОДНИ ДАННИ И ТЕХНИЧЕСКИ ПАРАМЕТРИ НА ПРИСЪЕДИНЯВАНЕТО КЪМ ПРЕДВАРИТЕЛЕН ДОГОВОР'] |
+| ★ | fresh | 142438096 | 68 | 69 | 92 | signature_block | Signature on p68 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Основни задължения на собственика след получаване на разрешението за строеж'] |
+|  | fresh | 142438096 | 87 | 88 | 92 | signature_block | Signature on p87 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ОБЕКТ: ПЛОЩАДКОВИ ВК МРЕЖИ В ПИ С ИДЕНТИФИКАТОР 56784.510.387'] |
+|  | fresh | 143041245 | 36 | 37 | 92 | signature_block | Signature on p36 confirmed as end — next page starts new doc (conf=92%) |
+|  | fresh | 143041245 | 42 | 43 | 92 | signature_block | Signature on p42 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='РЕШИ: ПРИЕМА СТРОЕЖА:'] |
+| ★ | fresh | 143041245 | 50 | 51 | 85 | signature_block | Signature on p50 confirmed as end — next page starts new doc (conf=85%) [next_page_heading='Търговски условия'] |
+|  | fresh | 145428614 | 1 | 2 | 88 | signature_block | Signature on p1 confirmed as end — next page starts new doc (conf=88%) |
+|  | fresh | 145428614 | 29 | 30 | 95 | signature_block | Signature on p29 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ'] |
+| ★ | fresh | 145428614 | 64 | 65 | 90 | signature_block | Signature on p64 confirmed as end — next page starts new doc (conf=90%) [next_page_heading='Член 9. Общи текстове'] |
+| ★ | fresh | 145428614 | 65 | 66 | 90 | signature_block | Signature on p65 confirmed as end — next page starts new doc (conf=90%) [next_page_heading='Търговски условия'] |
+|  | fresh | 145428614 | 70 | 71 | 88 | project_signoff | Signature on p70 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='СЪДЪРЖАНИЕ'] |
+|  | fresh | 145428614 | 101 | 102 | 92 | signature_block | Signature on p101 confirmed as end — next page starts new doc (conf=92%) |
+|  | fresh | 145428614 | 150 | 151 | 88 | project_signoff | Signature on p150 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='СЪДЪРЖАНИЕ'] |
+| ★ | fresh | 162710373 | 1 | 2 | 92 | signature_block | Signature on p1 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Понуки за пазари 1763'] |
+|  | fresh | 162710373 | 3 | 4 | 92 | signature_block | Signature on p3 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Основни задължения на собственика след получаване на разрешението за строеж:'] |
+|  | fresh | 164052657 | 13 | 14 | 92 | signature_block | Signature on p13 confirmed as end — next page starts new doc (conf=92%) |
+|  | fresh | 164052657 | 34 | 35 | 90 | signature_block | Signature on p34 confirmed as end — next page starts new doc (conf=90%) [next_page_heading='Етаж 2. Надлъжна армировка в греди, cm2'] |
+|  | dev | 142044854 | 5 | 6 | 92 | signature_block | Signature on p5 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВЯНЕ'] |
+|  | dev | 142044854 | 16 | 17 | 88 | project_signoff | Signature on p16 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='No. 27.02.2014'] |
+|  | dev | 163444215 | 5 | 6 | 92 | signature_block | Signature on p5 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ИЗВЕЩЕНИЕ ЗА ДОСТАВАНЕ'] |
+|  | dev | 163444215 | 30 | 31 | 88 | signature_block | Signature on p30 confirmed as end — next page starts new doc (conf=88%) [next_page_heading='СЪДЕЛИТЕЛИ'] |
+|  | dev | 164505881 | 8 | 9 | 92 | signature_block | Signature on p8 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='Търговски условия на предварителните договори за присъединяване на обект на Клиент към електроразпределителната мрежа на "ЕВН България Електроразпределение" ЕАД'] |
+|  | holdout | 084837699 | 6 | 7 | 92 | project_signoff | Signature on p6 confirmed as end — next page starts new doc (conf=92%) |
+
 ### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
 From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
 classified by the full set of signals that resolved to it (per-event `End at page X → doc
