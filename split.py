@@ -972,28 +972,64 @@ def detect_boundaries(
                 f"adjusting boundary: doc ends at p{effective_end}, next doc starts at p{effective_end + 1}"
             )
 
-        # Tier2-#4: transcribe-then-judge gate for titled_id_header (anti-hallucination).
-        # The shared end-detection prompt is left untouched (no bleed); we add ONE dedicated
-        # READ on the signal page and keep the boundary only if BOTH a title AND a document-
-        # level identifier are actually grounded there. Kills the invented-РС№ FP class
-        # (FP11/19/27); a true titled start (e.g. p10 СКИЦА № 15-158202) transcribes both and
-        # survives. Every gate decision is logged for both-directions auditing.
+        # Tier2-#4 (LOCALIZER + one-of-two rule): transcribe-then-judge gate for
+        # titled_id_header. Shared end-detection prompt untouched (no bleed). A dedicated READ
+        # grounds the claimed page; the verdict is three-way:
+        #   BOTH (title AND identifier) grounded -> accept at full confidence
+        #   EXACTLY ONE grounded                 -> accept, confidence capped at 0.60
+        #   NEITHER grounded                     -> RELOCATE: ground the other window pages
+        #     (≤2 extra READs, this path only); if EXACTLY ONE returns a grounded title, move
+        #     the boundary there (new doc starts on that page) and apply the one-of-two verdict
+        #     on it; if none or multiple, suppress. Kills invented-РС№ FPs (FP11/19/27: nothing
+        #     grounds anywhere in the window) while RECOVERING title-only true starts the model
+        #     mislocated (FN3: ИЗХОДНИ ТОЧКИ grounds a title one page over).
         if is_end and signal == "titled_id_header" and signal_page in page_buffer:
+            def _grounded(v):
+                return v.lower() not in ("", "none")
+
             t_title, t_ident = _query_transcribe_title(
                 page_buffer[signal_page], signal_page, model, processor, config, logger
             )
-            grounded = (t_title.lower() not in ("", "none")) and (t_ident.lower() not in ("", "none"))
+            gcnt = int(_grounded(t_title)) + int(_grounded(t_ident))
             logger.info(
-                f"  [TITLE-GATE] p{signal_page}: title={t_title!r} identifier={t_ident!r} "
-                f"-> {'KEEP' if grounded else 'SUPPRESS'}"
+                f"  [TITLE-GATE] p{signal_page}: title={t_title!r} identifier={t_ident!r} -> grounded={gcnt}/2"
             )
-            if not grounded:
-                is_end = False
-                effective_end = n
-                logger.info(
-                    f"  [TITLE-GATE] titled_id_header at p{signal_page} SUPPRESSED "
-                    f"— title/identifier not grounded on the page"
-                )
+            if gcnt == 2:
+                pass  # BOTH grounded — accept, boundary stays at signal_page, full confidence
+            elif gcnt == 1:
+                conf = min(conf, 0.60)
+                logger.info(f"  [TITLE-GATE] p{signal_page} one-of-two (title XOR identifier) — accepted, conf capped to 0.60")
+            else:
+                # NEITHER on the claimed page — try to relocate within the window.
+                reloc = []
+                for wp in context_pages:
+                    if wp == signal_page or wp not in page_buffer:
+                        continue
+                    w_title, w_ident = _query_transcribe_title(
+                        page_buffer[wp], wp, model, processor, config, logger
+                    )
+                    if _grounded(w_title):
+                        reloc.append((wp, w_title, w_ident, int(_grounded(w_ident))))
+                if len(reloc) == 1:
+                    wp, w_title, w_ident, w_idg = reloc[0]
+                    signal_page = wp
+                    effective_end = wp - 1
+                    capped = (w_idg == 0)
+                    if capped:
+                        conf = min(conf, 0.60)
+                    logger.info(
+                        f"  [TITLE-GATE-RELOC] grounded title on p{wp} (title={w_title!r} id={w_ident!r}, "
+                        f"grounded={1 + w_idg}/2) — boundary relocated, new doc starts at p{wp}"
+                        + ("; conf capped to 0.60" if capped else "")
+                    )
+                else:
+                    is_end = False
+                    effective_end = n
+                    why = "no grounded-title page" if not reloc else f"{len(reloc)} grounded-title pages (ambiguous)"
+                    logger.info(
+                        f"  [TITLE-GATE] titled_id_header at p{signal_page} SUPPRESSED "
+                        f"— neither grounded on claimed page and {why} in window {context_pages}"
+                    )
 
         # One-page-check: when an END-on-page signal was projected forward to n+1,
         # disambiguate whether n+1 is self-contained (boundary at n) or a closing
