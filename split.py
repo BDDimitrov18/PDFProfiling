@@ -686,6 +686,42 @@ def _query_confirm_boundary(img_n, img_n1, page_n, page_n1, model, processor, co
     return different, conf
 
 
+def _query_confirm_table_boundary(img_n, img_n1, page_n, page_n1, model, processor, config, logger):
+    """Table-specialized boundary confirmation. Returns (different: bool|None, conf: float).
+    None = parse failure; caller must treat as 'no positive evidence' (reject boundary)."""
+    prompt = (
+        f"Page {page_n} ends with a table that has a totals/summary row. Look at page {page_n1} "
+        "and decide whether it belongs to the SAME table-document or starts a SEPARATE one.\n\n"
+        "These archives often contain several table-documents back-to-back (e.g. a "
+        "количествена сметка per trade, coordinate registers, certificates with fee tables) — "
+        "same issuer, same visual format, but separate documents each with its own totals.\n\n"
+        f"different_documents=true if page {page_n1} shows ANY of:\n"
+        "  - its own table header/title row at the top (column captions repeated as a fresh table)\n"
+        "  - row numbering restarting at 1 (or a new item/position sequence)\n"
+        "  - a new document or section title above the table (a different ЧАСТ, trade, or subject)\n"
+        "  - a different table structure (column count/widths visibly different)\n\n"
+        f"different_documents=false if page {page_n1}:\n"
+        "  - continues the row numbering or item sequence from page "
+        f"{page_n}, or\n"
+        "  - starts mid-table with no header row, or\n"
+        f"  - is a narrative/annex continuation of the document the table on page {page_n} belongs to.\n\n"
+        "Respond ONLY with JSON:\n"
+        '{"different_documents": true/false, "confidence": <0-100>, '
+        '"reason": "<one sentence: the numbering/header cue you used>"}'
+    )
+    raw = _infer(prompt, [img_n, img_n1], model, processor, config, logger, max_tokens=120)
+    logger.debug(f"  Confirm TABLE boundary p{page_n}->{page_n1}: {repr((raw or '')[:200])}")
+    data = _parse_json(raw or "", logger)
+    if not data:
+        return None, 0.0
+    different = bool(data.get("different_documents", False))
+    conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
+    reason = str(data.get("reason", "")).strip()
+    if reason:
+        logger.info(f"  [TABLE-CONFIRM] p{page_n}->{page_n1}: different={different} ({conf:.0%}): {reason}")
+    return different, conf
+
+
 # ---------------------------------------------------------------------------
 # Phase 1e — style continuity detection
 # ---------------------------------------------------------------------------
@@ -1001,16 +1037,32 @@ def detect_boundaries(
         # Low-confidence confirmation pass — skip for strong visual signals that
         # don't need corroboration (fresh letterhead and header resets are visually unambiguous)
         if is_end and conf < 0.75 and signal not in ("fresh_letterhead", "header_block_reset", "titled_id_header"):
-            confirmed, confirm_conf = _query_confirm_boundary(
-                page_buffer[n], page_buffer[n + 1], n, n + 1,
-                model, processor, config, logger,
-            )
-            if not confirmed:
-                is_end = False
-                logger.info(f"  Low-conf boundary at p{n} ({conf:.0%}) rejected by confirmation pass")
+            # Fix 11: table_end gets a table-specialized confirm (the generic confirm is 0-for-5
+            # on consecutive table-documents). Table path: None (parse failure) → reject, since a
+            # table boundary needs positive evidence.
+            if signal == "table_end":
+                confirmed, confirm_conf = _query_confirm_table_boundary(
+                    page_buffer[n], page_buffer[n + 1], n, n + 1,
+                    model, processor, config, logger,
+                )
+                if confirmed is None or not confirmed:
+                    is_end = False
+                    logger.info(f"  Table boundary at p{n} ({conf:.0%}) rejected by table-confirm"
+                                f"{' (parse failure)' if confirmed is None else ''}")
+                else:
+                    conf = (conf + confirm_conf) / 2
+                    logger.info(f"  Table boundary at p{n} confirmed by table-confirm — averaged conf={conf:.0%}")
             else:
-                conf = (conf + confirm_conf) / 2
-                logger.info(f"  Low-conf boundary at p{n} confirmed — averaged conf={conf:.0%}")
+                confirmed, confirm_conf = _query_confirm_boundary(
+                    page_buffer[n], page_buffer[n + 1], n, n + 1,
+                    model, processor, config, logger,
+                )
+                if not confirmed:
+                    is_end = False
+                    logger.info(f"  Low-conf boundary at p{n} ({conf:.0%}) rejected by confirmation pass")
+                else:
+                    conf = (conf + confirm_conf) / 2
+                    logger.info(f"  Low-conf boundary at p{n} confirmed — averaged conf={conf:.0%}")
 
         if is_end:
             new_start = effective_end + 1
