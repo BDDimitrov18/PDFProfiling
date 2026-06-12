@@ -303,6 +303,22 @@ macOS stdin-pipe artifact); the authoritative check is `git checkout 9fee964 -- 
 (matches the pod + Fable's probe5 reference). split.py restored to exactly 63da033; Stage 1 relaunched on it
 (`dev_stage1.log`) after a transient working-tree state (`fab0d5a`, a duplicated-comment block, logic-identical).
 
+#### 🏁 STAGE 3 — RUN8 REFEREE (historical-88.5 reference, run-8 code, 5090, same 150 DPI + corrected/masked GT)
+`logs/run8_stage3.log` + `logs/run8_stage3_results.json` (via `eval_run8.py`, import-swapped to run8; run8.py byte-frozen).
+| stratum | TP/FP/FN | P | R | F1 |
+|---|---|---|---|---|
+| dev (9) | 74/10/8 | 88.10 | 90.24 | 89.16 |
+| holdout (3) | 10/1/5 | 90.91 | 66.67 | 76.92 |
+| fresh (8) | 198/40/17 | 83.19 | 92.09 | 87.42 |
+| **AGGREGATE** | 282/51/30 | 84.68 | 90.38 | **87.44** |
+**Three-way ordering (corrected+masked GT): round-1 candidate 85.84 < run8 referee 87.44 < #2+#4 88.99.** #2+#4
+beats the genuine run-8 baseline by **+1.55 aggregate / +2.46 fresh-P (85.65 vs 83.19)** → the #2+#4 gains are real
+improvements over run-8, not artifacts of a weak round-1 anchor. **Historical-88.5 reconciliation:** run8 cited ~88.5
+historically; scores **87.44** here on the CORRECTED+masked GT — the ~1pt delta is the GT correction (added
+163444215:p10, 084303475:p4 + coverage-based derivation) + masking, not a regression (run8 reproduces run-8
+behaviour; fingerprint check in Stage 4). Notable: run8 still emits FP11@163444215 (the invented-РС№ #4's gate kills)
+and misses 163444215 p7/p9 that #2+#4 catches.
+
 #### ✅✅ STAGE 2 — FULL-TESTS STRATIFIED (#2+#4 on 63da033) — STRONG GENERALIZATION
 `logs/fulltests_stage2.log` + `logs/fulltests_stage2_results.json` (250/336 docs exact). Masked excluded:
 143041245[62-66], 145428614[146-150].
