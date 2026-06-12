@@ -148,6 +148,19 @@ MODEL's transcription (inherent to build 63da033, not a logging defect) → nome
 - **Tier 3 #5 repeated-form suppression:** pod-less, CPU structural similarity on binarized page skeletons.
 - **FN3 / FN4 / FN20:** known STRICT FNs, mislocalization-class, deferred here. NOT waivers (no waivers.json).
 
+#### 🔤 ITEM 5 — NOMENCLATURE MATCHER (`nomenclature_match.py` + `test_nomenclature_match.py`, pod-less CPU)
+STANDALONE module (zero split.py integration) matching VLM-transcribed titles against
+`номенклатура_цяла.xls`. Parse VALIDATED to Fable spec: **382 entries / 220 unique names / 19 categories**
+(category = the X000-code section heading each row falls under; codes %1000==0 are headings). Normalization
+(both table + titles): NFC→lower→Latin/Cyrillic homoglyph fold→strip punct/№/dashes→squashed (whitespace
+removed, defeats 'С К И Ц А') + tokens; transcribed titles also drop identifier tokens (digits/№). Matching
+levels: (1) exact-squashed (2) guarded containment (3) char-trigram Jaccard (4) token-set difflib ratio →
+returns (best_entry, level_scores, band). **NEUTRAL-DEFAULT hard rule** (docstring + `test_neutral_default` +
+`is_confidence_signal()`): only MATCH is actionable; AMBIGUOUS≡NONE≡"no signal" — table can only ADD
+confidence, never block. Bands PROVISIONAL/reporting-only (real thresholds tuned later from TP/FP on dev).
+Tests: **17/17 pass** — corruption-robust positives (letter-spacing, single drop/sub, homoglyph, case chaos,
+appended identifiers, truncation) MATCH; negatives (НАКЛОНЕН ПОКРИВ, ЧЕЛЕН ЛИСТ, НОТАРИАЛЕН АКТ) all NONE.
+
 
 **Tier 1 #1 — direction+position-aware `signal_on_page` — REVERTED (commit 3b06dff → revert 6917329).**
 Added a `signal_position` field (bottom=closing / top=countersignature) to `_query_document_end`, position-aware
