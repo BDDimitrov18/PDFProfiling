@@ -109,17 +109,28 @@ FN19@142044854 → TP (142044854 FN=[19,20] → [20]) IF the kept p19 boundary (
 confirmation pass; dev tol0 F1 **≥ 91.46** (→ ~92.1 if FN19 recovers; ≥91.46 / neutral-safe if the capped boundary is
 rejected — dup-guard never silently drops, so it cannot regress). Falsifier: any probe-file delta, or dev < 91.46.
 
+**Commit B — next-page-gate rebuild (evidence-first).** B touches signature-gate boundaries. Per-file signature-gate
+starts on the probe set (from Stage-2 attribution): 163444215 — TPs {3,4,7,8,15,22,23,24,32,34} MUST be PRESERVED,
+FP **kill-candidates {6, 31}**; 164505881 — TPs {2,15} preserve, FP candidate **{9}**; 165204533 TPs {2,6} (no
+sig-FP); 082511233 TPs {2,7} (no sig-FP). **Expectation:** all 16 signature-TPs preserved; the gate may VETO the
+3 FP candidates if page n+1 shows continuation/verso/section-no-match; NO new FP/FN (the rebuild only ADDS veto
+paths + a MATCH⇒new-doc path that fires solely on real document-types). Predicted per-file: 163444215 FP=[6,13,31]→
+[13] (best case, 6&31 vetoed) … [6,13,31] (if evidence doesn't trigger); 164505881 FP=[9,13]→[13]…[9,13] FN=[12];
+165204533/082511233 unchanged. **Falsifier:** ANY signature-TP lost (over-veto regression), any new FP/FN, or dev
+F1 drop. FP13 is titled-not-signature-attributed → unaffected by B.
+
 ### 🔭 ROUND 3 SPEC STUBS (spec only — no code this round)
 - **(a) Duplicate-guard** (relocate-to-duplicate, fresh dup-reloc=8): FORK **CLOSED 2026-06-13 → keep-original-capped**
   (human decision). Implemented Commit A (`_titled_gate_decision`): when the unique grounded relocation target is a page
   already opened by a prior boundary, KEEP the original claimed page as the boundary, conf capped 0.60, log
   `[DUP-GUARD-KEEP]` — never silently drop. Tests `test_dup_guard.py` (10, pass; fixtures = real traces).
-- **(b) Next-page-gate REBUILD (transcribe-then-judge shape).** Replace the free-judge signature/OOB gates: a dedicated
-  READ of the TOP of page n+1 → an **evidence JSON** {transcribed_heading, nomenclature_band, continuation_cues,
-  verso_cues (rotation mismatch + identical contour/frame to n)} produced BEFORE any verdict. **Nomenclature hook:** a
-  table **MATCH ⇒ new-doc evidence**, justified by P(TP|MATCH) replicated across architectures — **Stage-2 95.2%**
-  (40/42) and **run8 97.9%** (47/48). Must NOT regress the **start-page-grid** class (p46@084031203: a real start
-  carrying a grid — the gate must not read "grid ⇒ continuation").
+- **(b) Next-page-gate REBUILD (transcribe-then-judge shape).** IMPLEMENTED Commit B (`_query_next_page_starts_new`
+  evidence-first + pure `_next_page_decision`): evidence JSON {transcription, heading, continuation, verso, starts_new}
+  produced BEFORE the verdict; CPU post-processor priority = **verso veto > nomenclature MATCH⇒new-doc > continuation
+  veto > model**. Nomenclature hook justified by P(TP|MATCH) across architectures — **Stage-2 95.2%** (40/42), **run8
+  97.9%** (47/48). HARD: judges page n+1's freshness ONLY, never re-judges page n ⇒ **start-page-grid class
+  (p45/46@084031203) cannot regress**. Tests `test_next_page_gate.py` (12, pass — the 6 dossier scenarios as fixtures
+  + priority/neutral-default checks).
 - **(c) Fix 11 v2** — unchanged from prior spec (table-numbering branch).
 
 **ROUND 2 BOOKS CLOSED.** Corrected GT (committed) is the round-3 baseline; #2+#4 (md5 63da033) is the candidate.
