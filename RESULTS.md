@@ -128,6 +128,14 @@ v2 could ADD FP35/FP37 if their numbering reads non-continuous — falsifier = a
 `rejected by confirmation pass` — same veto class; v2 flips it → **holdout R 73.33 → 80.00** expected. Falsifier: 082511233
 FN20 not recovered, OR a new table FP, OR any signature/titled boundary changes (C touches table_end ONLY).
 
+**Commit D — #1-lite v2 (gate BOTH one-page-check sites for signature_block/table_end).** PROBE: **163444215
+FP=[6,13,31] → [6,13]** (FP31 dies — the site-1 self-contained override that created it is skipped; p31 is not the
+last page so no OOB path). **082511233 UNCHANGED** = FP[] FN[20]: both sites gated, so the v1 OOB reroute that
+produced FP21 CANNOT happen (current commits [1,2,3,4,7,10] — the p21 correction never committed anyway). 164505881
+FP[9,13] FN[12], 165204533 FN[3,4] unchanged. **Critical contract (v1's failure):** FP31 dead AND NO FP21 — verified
+by the contract test (both sites gate on `_one_page_check_applies`). Falsifier: FP31 not dead, FP21 (re)appears, or
+any other probe delta. Net of A+B+C+D stacked is the round-3 full-tests run (STRICT+WAIVED) — the real verdict.
+
 ### 🔭 ROUND 3 SPEC STUBS (spec only — no code this round)
 - **(a) Duplicate-guard** (relocate-to-duplicate, fresh dup-reloc=8): FORK **CLOSED 2026-06-13 → keep-original-capped**
   (human decision). Implemented Commit A (`_titled_gate_decision`): when the unique grounded relocation target is a page
@@ -321,8 +329,10 @@ MODEL's transcription (inherent to build 63da033, not a logging defect) → nome
 - **SHELVED — nomenclature integration:** experiment shows NO current score-moving hook — capped one-of-two accepts
   already admit the matched admin-type starts, and there are ZERO rescue candidates (no suppressed-was-true that a
   MATCH would recover). Re-evaluate ONLY after the relocation fix changes which events exist. (Module + tests kept.)
-- **#1-lite v2:** gate BOTH one-page-check call sites (n+1 AND OOB-PROJECTION) for signature_block/table_end; one
-  commit + full 4-file probe with exact expected sets.
+- **#1-lite v2:** IMPLEMENTED Commit D (`_one_page_check_applies` predicate). Gates BOTH one-page-check sites (n+1
+  branch AND OOB-PROJECTION) for signature_block/table_end — v1 gated only the first, rerouting the override to the OOB
+  site → FP21. Tests `test_one_page_check_gate.py` (4, pass; incl. a contract test that BOTH sites gate on the
+  predicate). Targets FP31@163444215 with no FP21 reroute.
 - **FN3 / FN4 / FN20:** known STRICT FNs, mislocalization-class. NOT waivers (no waivers.json).
 
 #### 🔬 ADDENDUM — RUN8 CROSS-ARCHITECTURE NOMENCLATURE EXPERIMENT (`nomenclature_experiment_run8.py`, CPU/pod-less)

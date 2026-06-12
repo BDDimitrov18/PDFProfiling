@@ -664,6 +664,16 @@ def _next_page_decision(heading, continuation, verso, nom_band, model_starts_new
     return bool(model_starts_new), model_conf, "model verdict (no decisive evidence cue)"
 
 
+def _one_page_check_applies(signal):
+    """Round-3 Commit D (#1-lite v2): the self-contained one-page-check is a structural-symmetry
+    fallacy for CLOSING-page signals — every closing page (top label + bottom seal/signature/totals)
+    looks 'self-contained', so the check cannot discriminate and wrongly pulls boundaries back
+    (FP31). Skip it for signature_block / table_end at BOTH call sites (normal n+1 AND OOB-projection);
+    #1-lite v1 gated only the first, which rerouted the override to the OOB site → FP21. Returns True
+    if the one-page-check may run (project_signoff and START signals are NOT affected)."""
+    return signal not in ("signature_block", "table_end")
+
+
 # ---------------------------------------------------------------------------
 # Phase 1b — appendix standalone check
 # ---------------------------------------------------------------------------
@@ -1157,8 +1167,10 @@ def detect_boundaries(
         # disambiguate whether n+1 is self-contained (boundary at n) or a closing
         # page of the current doc (keep projection at n+1). Only fires for
         # signal in END_ON_PAGE_SIGNALS — START signals are correctly placed by -1
-        # and must not also trigger this.
+        # and must not also trigger this. #1-lite v2 (Commit D): skip for
+        # signature_block/table_end (structural-symmetry fallacy → FP31); see _one_page_check_applies.
         if (is_end and signal in END_ON_PAGE_SIGNALS
+                and _one_page_check_applies(signal)
                 and signal_page == n + 1
                 and n + 1 <= total_pages
                 and n + 1 in page_buffer):
@@ -1275,17 +1287,26 @@ def detect_boundaries(
                 logger.info(
                     f"  [OOB-PROJECTION] new_start={new_start} > total_pages={total_pages} — re-evaluating"
                 )
-                sc, _ = _query_is_self_contained(
-                    page_buffer[n + 1], n + 1, model, processor, config, logger
-                )
-                if sc:
-                    effective_end = n
-                    new_start = n + 1
-                    logger.info(f"  [OOB-PROJECTION] p{n+1} self-contained — boundary corrected to p{n}")
-                else:
+                if not _one_page_check_applies(signal):
+                    # #1-lite v2 (Commit D): a closing-page signal (signature_block/table_end)
+                    # projected beyond the PDF — the doc ends on the signature/totals page; do NOT
+                    # use the self-contained fallacy to pull it back (that path created FP21). No new
+                    # boundary within the PDF.
                     is_end = False
                     effective_end = min(effective_end, total_pages)
-                    logger.info(f"  [OOB-PROJECTION] p{n+1} is continuation — no boundary recorded, new doc beyond PDF")
+                    logger.info(f"  [OOB-PROJECTION] p{n+1} closing-page signal ({signal}) — no boundary (#1-lite v2)")
+                else:
+                    sc, _ = _query_is_self_contained(
+                        page_buffer[n + 1], n + 1, model, processor, config, logger
+                    )
+                    if sc:
+                        effective_end = n
+                        new_start = n + 1
+                        logger.info(f"  [OOB-PROJECTION] p{n+1} self-contained — boundary corrected to p{n}")
+                    else:
+                        is_end = False
+                        effective_end = min(effective_end, total_pages)
+                        logger.info(f"  [OOB-PROJECTION] p{n+1} is continuation — no boundary recorded, new doc beyond PDF")
 
             if new_start not in doc_starts and new_start <= total_pages:
                 doc_starts.append(new_start)
