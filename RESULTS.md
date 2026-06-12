@@ -127,6 +127,11 @@ and push immediately: `logs/probe_1lite2.log` (done), `logs/dev_stage1.log`, `lo
 edit/trim/regenerate a committed log; a re-run commits under a NEW name (e.g. `dev_stage1_ab_revert4.log`), old
 kept. Gzip (`.log.gz`) if >50 MB, never truncate. `eval_dev/ eval_holdout/ eval_full/ eval_probe/` stay gitignored
 (symlink dirs) — this tracks logs + predictions only.
+**Item-4 log-retention check (CONFIRMED, no code edit):** `[TITLE-GATE]` lines preserve full `title=`/`identifier=`
+verbatim at INFO with NO truncation — code logs `{t_title!r}` (repr, no slice); inspected `logs/probe_1lite2.log`:
+longest title 'РАЙОНЕН ЕКСПЕРТЕН СЪВЕТ ПО УСТРОЙСТВО…РАЙОН "ЗАПАДЕН"' (90 chars) printed complete, 0 ellipsis
+truncations, 16/16 verdict lines at INFO. Sole length bound is `_query_transcribe_title` `max_tokens=120` on the
+MODEL's transcription (inherent to build 63da033, not a logging defect) → nomenclature experiment has full strings.
 
 #### 🌅 MORNING QUESTIONS (human attestation only — never self-attest, never touch GT)
 - **082511233 p20 vs p21:** is the true `НАКЛОНЕН ПОКРИВ` boundary on p20 or p21? (GT currently p20; #1-lite's FP21
