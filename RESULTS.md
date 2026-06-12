@@ -1,5 +1,48 @@
 # Boundary / Rotation Eval Results
 
+## ☀ MORNING SUMMARY (overnight round 1 complete, 2026-06-12)
+
+**CANDIDATE = Fix9-only, `git tag round1-candidate` (88f58dc).** Boundary detection, RTX 5090, corrected GT.
+
+**5090 fix chain (dev eval, tol=0 F1):**
+| stage | F1 | verdict |
+|---|---|---|
+| Baseline (anchor) | 85.88% | — |
+| Fix 8 (titled→confirm) | 88.48% | superseded |
+| Fix 8+9 | 89.02% | superseded |
+| **Fix9-only** | **89.94%** | **KEPT = CANDIDATE (+4.06 vs baseline)** |
+| Fix 11 (table-confirm) | 89.14% | REVERTED (< 89.44 keep-threshold) |
+
+**Full-`tests/` CANDIDATE run (20 files / 733 pages, masked gaps excluded), STRATIFIED:**
+| stratum | files | P | R | **F1** |
+|---|---|---|---|---|
+| dev (tuned) | 9 | 87.36% | 92.68% | **89.94%** |
+| holdout (unseen) | 3 | 91.67% | 73.33% | **81.48%** |
+| fresh (unseen) | 8 | 77.31% | 93.49% | **84.63%** |
+| **aggregate** | 20 | 80.22% | 92.31% | **85.84%** |
+
+docs exactly recovered (aggregate): 231/336.
+
+**⚠ OVERFITTING MEASURE: dev 89.94% vs unseen — fresh 84.63% (gap +5.31), holdout 81.48% (gap +8.46).**
+Round 1 tuned on the 9 dev files; unseen files score 5–8 F1 lower. Pattern: **fresh precision 77% vs dev 87%**
+— the pipeline OVER-SPLITS on unseen files (e.g. 145428614 = 24 FP, 142438096 = 11 FP). Recall generalizes
+fine (92–93% everywhere); precision does not. So round-1's gains are partly dev-specific.
+
+### Open questions for human (morning)
+1. **Masked ranges to attest** (scored neither way overnight): `143041245[63-65]` and `145428614[147-149]`
+   (same gap pattern as the attested dev cases — likely real СКИЦА/section boundaries; inspect & attest).
+2. **Fix 11 table-confirm is too permissive** — fired 12× and answered different=true every time; recovered 2
+   real table boundaries but added 4 FP → reverted. Needs a stricter "continues numbering" branch before re-try.
+3. **Generalization gap (+5–8 F1)** — fresh-file over-splitting (precision 77%) is the round-2 target; the
+   titled_id_header drawing-block / page-counter exclusions tuned on dev don't fully transfer.
+
+### Overnight deviations: NONE
+All steps verifier-gated PASS (Fable 5). No improvisation, no extra edits; every keep/revert followed the
+rule arithmetic. (Two cosmetic verifier notes only: a note block splitting a markdown table, and "3 commits
+not 2" where the 3rd was the reverted Fix 11 impl — neither a deviation.)
+
+---
+
 > **RESUME POINT (2026-06-11):** Working on a migrated **RTX 5090** pod (the original run-8 pod;
 > env reproduces run-8 exactly, so the **84.57% baseline is reused as the 5090 anchor**, no
 > baseline re-run). Model cached at `/hf_cache`; deps per `requirements-lock.txt`; `HF_HOME=/hf_cache`,
