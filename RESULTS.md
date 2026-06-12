@@ -133,6 +133,27 @@ p21 self-contained and the boundary is then dropped downstream → neither 20 no
 off-by-one signature-localization family as #1 (un-fixable without prompt bleed) — reclassified to **Tier 3 #6**
 (table/numbering branch + signature-position). → no probe needed.
 
+### FREE TP-SIDE ATTRIBUTION (no GPU) — titled_id_header: ABLATE vs GATE decision
+From the saved candidate (Fix9-only) full-tests log + GT/strata/masked, each TP boundary
+classified by the full set of signals that resolved to it (per-event `End at page X → doc
+starts at Y (...signal=S)` lines + `[START-DETECT]`). Script `titled_tp_attribution.py`.
+
+| stratum | titled TPs | **unique-titled** | co-detected | titled FPs |
+|---|--:|--:|--:|--:|
+| dev | 28 | **22** | 6 | 5 |
+| holdout | 2 | **2** | 0 | 0 |
+| fresh | 83 | **74** | 9 | 34 |
+
+Co-detected (survive ablation) = 15 total, ~all signature_block/project_signoff/table_end on
+the prior page. **DECISION: do NOT ablate — proceed with #4's grounding gate.** Rule was
+"unique ≤~2 dev AND low fresh ⇒ ablate"; reality is 22 dev / 74 fresh unique → titled is the
+single largest recall mechanism (this archive identifies docs by top title/ID, not closing
+signature, so most boundaries have NO prior-page end-signal and titled is the sole catcher).
+Ablation would cost ~98 unique TPs to save ~39 FPs. titled-FP=34 fresh reconciles with the
+prior fresh-FP attribution (59 FPs × 58% ≈ 34) → parser validated. #4 was already built
+(`559b8d7`) + probing when this ran → attribution confirms the path, no rework. run8 full-tests
+still launches after the #4 experiment (answers the historical 88.5 question; ablation would not).
+
 ### TIER 1 VERDICT
 Of 3 Tier-1 fixes, only **#2 (window-range validation)** is a viable kept change, and it is **net-zero on the probe**
 (real value untested — kills a silent-misplacement FP class the 4 probe files don't exercise). #1 reverted (shared-prompt
