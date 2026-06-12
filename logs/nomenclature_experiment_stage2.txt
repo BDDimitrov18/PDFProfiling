@@ -1,0 +1,82 @@
+==========================================================================================
+NOMENCLATURE EXPERIMENT — DATA REPORT ONLY (no thresholds tuned, no pipeline change proposed)
+log=logs/fulltests_stage2.log  nomenclature=382 entries
+==========================================================================================
+
+############################## STRATUM: dev (35 TITLE-GATE events) ##############################
+
+[dev/TP] trigram n=25 mean=0.451 median=0.360 min=0.000 max=1.000
+[dev/TP] token_set n=25 mean=0.633 median=0.615 min=0.333 max=1.000
+[dev/TP] bands {'NONE': 14, 'MATCH': 10, 'AMBIGUOUS': 1}
+
+[dev/FP] trigram n=2 mean=0.293 median=0.293 min=0.292 max=0.294
+[dev/FP] token_set n=2 mean=0.499 median=0.499 min=0.417 max=0.581
+[dev/FP] bands {'MATCH': 1, 'NONE': 1}
+
+[dev] SHEET-TYPE entry hits (TP/FP) — hypothesis: concentrate on FP:
+    (none)
+[dev] ADMIN-document entry hits (TP/FP):
+    Удостоверение за търпимост                 TP=6 FP=0
+    Протокол                                   TP=2 FP=0
+    Молба (Заявление, Искане)                  TP=0 FP=1
+    Предварителен договор за присъединяване    TP=1 FP=0
+    Конструктивно становище                    TP=1 FP=0
+    Количествена сметка                        TP=1 FP=0
+
+[dev] RESCUE candidates (suppressed-was-true with table MATCH):
+    (none)
+
+[dev] AMBIGUOUS-band events (top-3 candidates — measures AI-adjudication need):
+    303475 p15 [TP] title='Количествено-стойностна сметка' -> Количествена сметка(0.6429,0.7347); Количествена сметка(0.6429,0.7347); Документ за собственост(0.1395,0.3774)
+
+############################## STRATUM: holdout (2 TITLE-GATE events) ##############################
+
+[holdout/TP] trigram n=1 mean=0.182 median=0.182 min=0.182 max=0.182
+[holdout/TP] token_set n=1 mean=0.545 median=0.545 min=0.545 max=0.545
+[holdout/TP] bands {'NONE': 1}
+
+[holdout/FP] trigram n=0
+[holdout/FP] token_set n=0
+[holdout/FP] bands {}
+
+[holdout] SHEET-TYPE entry hits (TP/FP) — hypothesis: concentrate on FP:
+    (none)
+[holdout] ADMIN-document entry hits (TP/FP):
+
+[holdout] RESCUE candidates (suppressed-was-true with table MATCH):
+    (none)
+
+[holdout] AMBIGUOUS-band events (top-3 candidates — measures AI-adjudication need):
+    (none)
+
+############################## STRATUM: fresh (136 TITLE-GATE events) ##############################
+
+[fresh/TP] trigram n=93 mean=0.407 median=0.360 min=0.000 max=1.000
+[fresh/TP] token_set n=93 mean=0.586 median=0.606 min=0.083 max=1.000
+[fresh/TP] bands {'MATCH': 40, 'NONE': 53}
+
+[fresh/FP] trigram n=11 mean=0.267 median=0.143 min=0.000 max=1.000
+[fresh/FP] token_set n=11 mean=0.468 median=0.364 min=0.333 max=1.000
+[fresh/FP] bands {'NONE': 9, 'MATCH': 2}
+
+[fresh] SHEET-TYPE entry hits (TP/FP) — hypothesis: concentrate on FP:
+    (none)
+[fresh] ADMIN-document entry hits (TP/FP):
+    Удостоверение за търпимост                 TP=16 FP=0
+    Разрешение за строеж (РС)                  TP=7 FP=0
+    Молба (Заявление, Искане)                  TP=3 FP=0
+    Предварителен договор за присъединяване    TP=3 FP=0
+    Разписен лист                              TP=2 FP=0
+    Заповед за отказ                           TP=2 FP=0
+    Пълномощно                                 TP=0 FP=2
+    Обяснителна записка                        TP=2 FP=0
+    Застраховка                                TP=2 FP=0
+    Количествена сметка                        TP=1 FP=0
+    Протокол                                   TP=1 FP=0
+    Доклад                                     TP=1 FP=0
+
+[fresh] RESCUE candidates (suppressed-was-true with table MATCH):
+    (none)
+
+[fresh] AMBIGUOUS-band events (top-3 candidates — measures AI-adjudication need):
+    (none)

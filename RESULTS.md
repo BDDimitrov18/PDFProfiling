@@ -309,6 +309,17 @@ requery-aware relocation-trigger fix is worth implementing (decided by this coun
 `onelite_would_fire`=29 = end-events a correct (both-sites) #1-lite v2 would gate. Next: nomenclature experiment
 on this log, then Stage 3 run8 referee.
 
+#### 🔬 ITEM 6 — NOMENCLATURE EXPERIMENT RESULTS (`logs/nomenclature_experiment_stage2.txt`, DATA ONLY)
+TITLE-GATE events: dev 35, holdout 2, fresh 136. **Findings (no thresholds tuned, no pipeline change — integration
+is a morning human call):** (1) **Sheet-type hypothesis REFUTED** — 0 sheet-type entry hits in ANY stratum; the
+titled gate's titles do not transcribe to drawing-sheet types, so a "sheet-type negative list" integration option
+is moot. (2) **A nomenclature MATCH strongly co-occurs with TP**: fresh TP bands MATCH=40/NONE=53; fresh FP bands
+NONE=9/MATCH=2 — i.e. MATCHes are overwhelmingly admin-doc TYPES on true starts (Удостоверение 16/0, РС 7/0, Молба
+3/0…), titled-FPs are mostly NONE. Only 2 fresh-FP MATCHes (Пълномощно). Consistent with using MATCH as a
+confidence-ADD under neutral-default (never a block) — but DECISION DEFERRED to human. (3) **No RESCUE candidates**
+(no suppressed-was-true with a table MATCH → the gate didn't wrongly suppress any real nomenclature doc). (4) **No
+fresh AMBIGUOUS-band events** → an AI-adjudication tier is not obviously needed at current provisional bounds.
+
 #### ✅ STAGE 1 — DEV EVAL (#2+#4 on authoritative 63da033) — KEEP (+1.52 vs baseline)
 `logs/dev_stage1.log` + `logs/dev_stage1_results.json`. Dev tol=0 **F1 91.46%** (TP=75 FP=7 FN=7, P=R=91.46%),
 tol=1 F1 92.68%, 74/91 docs exact. Baseline round-1 candidate dev tol=0 **89.94** → **+1.52 → KEEP** (≥89.94 rule).
