@@ -1,5 +1,52 @@
 # Boundary / Rotation Eval Results
 
+## 🧭 ROUND 3 CLOSE-OUT + A′ RE-SPEC — dup-guard fork REVERSED (2026-06-13, human-directed)
+
+**Round-3 batch outcome (final): candidate UNCHANGED.** Fable 5 reproduced all round-3 verdicts under GT v3 directly
+from the committed prediction arrays — **#2+#4 correctly stays the candidate (agg 89.10 vs A+D 88.41 vs A+B+D 88.16)**.
+The dev gains were *real* (A+D dev 93.33 ≥ 92.12) but **did not survive full-tests**. A/B/C/D all → backlog. This was a
+clean negative result: every fix's target was a dev case, so they overfit dev and lost on fresh/holdout.
+
+**DUP-GUARD FORK REVERSED on evidence — keep-original-capped is REJECTED; Commit A → A′ (SUPPRESS-WITH-FLAG).**
+The Fable 5 per-file audit isolated the keep-original-capped variant of the dup-guard (Commit A) as the cause of A+D's
+fresh-precision crash. Keep-capped didn't only fire on the duplicate-target case it was specced for — it resurrected an
+ungrounded original boundary on *every* neither-grounded relocation, adding **+15 fresh FP and costing −1 fresh TP**:
+- `145428614` — +6 FP (pp 37, 46, 76, 78, 81, 84, 86) resurrected as capped-0.60 boundaries
+- `083553577` — +4 FP / −1 TP
+- `142438096` and others — remaining fresh FP to total +15/−1
+This is exactly why A+D's fresh precision fell 85.41→81.78 (+12 net fresh FP at the aggregate after offsets). The
+dup-guard's *intended* win (recover FN19@142044854, whose unique grounded target p18 was already a boundary) does NOT
+require keeping the ungrounded p19 — it only requires not letting the consumed-target collision silently mis-fire.
+
+**A′ = SUPPRESS-WITH-FLAG (re-implemented this commit, from the #2+#4 base):** on the already-consumed-target case
+ONLY (unique grounded reloc target ∈ doc_starts), SUPPRESS the claimed boundary and log `[DUP-GUARD-SUPPRESS]`; do
+**NOT** keep the original. `_titled_gate_decision` consumed-target branch now returns
+`(signal_page, n, conf, False, ("DUP-GUARD-SUPPRESS", signal_page, wp))`. All other relocation paths (normal reloc,
+both-grounded, one-of-two cap, suppress-none/ambiguous) are UNCHANGED. `test_dup_guard.py` updated to suppress
+semantics (10 tests pass): the four consumed-target tests now assert `is_end=False` + `DUP-GUARD-SUPPRESS` + claim NOT
+kept; `TestRelocationPreserved` unchanged.
+> **OPEN (verify on pod, not assumed):** at the *unit* level A′ drops the n=18 claim. The "still recovers FN19"
+> assertion is a *pipeline*-level claim (the consumed-target dup is the trigger that previously mis-fired) and MUST be
+> confirmed on the A′ isolation **dev** run — recorded transparently, not silently assumed.
+
+**C-tracking — keep-original-capped is a PROVEN-BAD component.** Logged for the C/Fix-11 backlog and any future
+relocation work: keep-original-capped is a dev-win/fresh-loss overfit, **caught by the full-tests gate** (dev 93.33 but
++15 fresh FP). Same failure shape as C (Fix 11 v2): a mechanical rule that wins on tuned dev cases and over-fires on
+unseen fresh data. Do not reintroduce keep-original-capped; relocation recovery must be grounded, not resurrected.
+
+**ISOLATION PLAN (one-fix-one-probe, human-controlled — NO stacking, NO autonomous revert without asking first):**
+- **A′ (suppress-flag dup-guard) ALONE** — this commit, from #2+#4 base (NOT D, NOT B). Chain: fingerprint → probe
+  (expect byte-identical on the 4 probe files; targets are off-probe) → dev (expect FN19→TP, dev ≥ 92.12) → full-tests
+  (THE real gate — expect **fresh P ≥ 85.4**, i.e. must NOT regress like keep-capped did).
+- **C (Fix 11 v2) ALONE** — fresh from `63da033` (NOT stacked on A′). No clean isolation read exists yet (C was only
+  ever seen stacked). Chain: probe (GT-v3 expected sets) → dev → full-tests.
+- **B (next-page-gate rebuild) — HOLD.** Do NOT re-run until re-spec'd (it over-vetoes: +5 fresh FP/+3 FN + holdout +1 FN).
+- B and C were reverted/recombined *inside* a run earlier — that decision class is the human's, not the agent's.
+  Going forward: each isolation is its own commit + probe + dev + full-tests; push after each; surface any
+  revert/recombine decision as a question BEFORE acting.
+
+---
+
 ## 🔬 ROUND 3b — A+D HYPOTHESIS TEST (revert B; in progress, new pod 213.173.103.213)
 **Hypothesis:** A+D (dup-guard + #1-lite-v2, WITHOUT B's next-page-gate rebuild) keeps the dev gains (FN19@142044854,
 FP31@163444215) WITHOUT B's unseen-data regression (B added fresh +5FP/+3FN + holdout +1FN), and therefore BEATS the

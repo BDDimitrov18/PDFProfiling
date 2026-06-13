@@ -1,49 +1,42 @@
-"""Round-3 Commit A — unit tests for the TITLE-GATE duplicate-guard (keep-original-capped).
+"""Round-3 Commit A' — unit tests for the TITLE-GATE duplicate-guard (SUPPRESS-WITH-FLAG).
 Pure-logic tests of split._titled_gate_decision; no GPU/model. Fixtures reconstruct real
 dup-reloc traces from logs/dev_stage1.log + logs/fulltests_stage2.log.
+A' fork reversal (2026-06-13): keep-original-capped was REVERTED on full-tests evidence
+(+15 fresh FP / −1 TP — resurrected ungrounded claims). On a consumed relocation target the
+gate now SUPPRESSES the claim (is_end=False, [DUP-GUARD-SUPPRESS]), never keeps the original.
 Run: python3 -m unittest test_dup_guard -v"""
 import unittest
 from split import _titled_gate_decision as D
 
 
-class TestDupGuard(unittest.TestCase):
-    # --- the dev FN19 cause: 142044854 n=18, claimed p19, unique grounded target p18 (already
-    #     opened at n=17). Keep-original-capped must keep p19 (boundary), NOT drop to p18. ---
-    def test_dev_142044854_p19_kept(self):
-        # gcnt=0, claimed signal_page=19, effective_end=18, conf 0.90, n=18,
-        # reloc=[(18, title, ident, idg=1)], doc_starts already has 18
+class TestDupGuardSuppress(unittest.TestCase):
+    # --- the dev FN19 trigger: 142044854 n=18, claimed p19, unique grounded target p18 (already
+    #     opened at n=17). A' SUPPRESSES the claim (does NOT keep the ungrounded p19). ---
+    def test_dev_142044854_consumed_target_suppressed(self):
         sp, ee, conf, is_end, action = D(0, 19, 18, 0.90, 18,
                                          [(18, "УДОСТОВЕРЕНИЕ", "№ 000193", 1)], {2, 18})
-        self.assertEqual(sp, 19)            # original claim kept
-        self.assertEqual(ee, 18)            # boundary = ee+1 = 19 (the true start)
-        self.assertEqual(ee + 1, 19)
-        self.assertAlmostEqual(conf, 0.60)  # capped
-        self.assertTrue(is_end)             # NEVER silently dropped
-        self.assertEqual(action[0], "DUP-GUARD-KEEP")
-        self.assertEqual(action[1], 19)     # kept page
-        self.assertEqual(action[2], 18)     # target that was already a boundary
+        self.assertFalse(is_end)                       # claim SUPPRESSED, not kept
+        self.assertEqual(action[0], "DUP-GUARD-SUPPRESS")
+        self.assertEqual(action[1], 19)                # the suppressed claimed page
+        self.assertEqual(action[2], 18)                # target that was already a boundary
 
-    def test_fresh_083553577_p38_kept(self):
-        sp, ee, conf, is_end, action = D(0, 38, 37, 0.92, 37, [(37, "x", "y", 1)], {36, 37})
-        self.assertEqual((sp, ee + 1), (38, 38))
-        self.assertAlmostEqual(conf, 0.60)
-        self.assertTrue(is_end)
-        self.assertEqual(action[0], "DUP-GUARD-KEEP")
+    def test_fresh_083553577_consumed_target_suppressed(self):
+        _, _, _, is_end, action = D(0, 38, 37, 0.92, 37, [(37, "x", "y", 1)], {36, 37})
+        self.assertFalse(is_end)
+        self.assertEqual(action[0], "DUP-GUARD-SUPPRESS")
 
-    def test_fresh_142438096_p39_kept(self):
-        sp, ee, conf, is_end, action = D(0, 39, 38, 0.90, 38, [(38, "x", "y", 1)], {37, 38})
-        self.assertEqual((sp, ee + 1), (39, 39))
-        self.assertTrue(is_end)
-        self.assertEqual(action[0], "DUP-GUARD-KEEP")
+    def test_fresh_142438096_consumed_target_suppressed(self):
+        _, _, _, is_end, action = D(0, 39, 38, 0.90, 38, [(38, "x", "y", 1)], {37, 38})
+        self.assertFalse(is_end)
+        self.assertEqual(action[0], "DUP-GUARD-SUPPRESS")
 
-    def test_dup_guard_never_drops(self):
-        # invariant: whenever the unique grounded target is already a boundary, is_end stays True
+    def test_dup_guard_suppresses_never_resurrects(self):
+        # invariant (A'): a consumed grounded target => SUPPRESS, never keep an ungrounded claim
         for claimed, target in [(19, 18), (38, 37), (76, 75), (86, 85)]:
-            _, _, conf, is_end, action = D(0, claimed, claimed - 1, 0.9, claimed - 1,
-                                           [(target, "t", "i", 1)], {target})
-            self.assertTrue(is_end, f"dup-guard dropped claim {claimed}")
-            self.assertEqual(action[0], "DUP-GUARD-KEEP")
-            self.assertAlmostEqual(conf, 0.60)
+            _, _, _, is_end, action = D(0, claimed, claimed - 1, 0.9, claimed - 1,
+                                        [(target, "t", "i", 1)], {target})
+            self.assertFalse(is_end, f"dup-guard wrongly kept claim {claimed}")
+            self.assertEqual(action[0], "DUP-GUARD-SUPPRESS")
 
 
 class TestRelocationPreserved(unittest.TestCase):

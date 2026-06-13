@@ -614,10 +614,12 @@ def _titled_gate_decision(gcnt, signal_page, effective_end, conf, n, reloc, doc_
 
     Returns (signal_page, effective_end, conf, is_end, action) where action[0] is a log tag.
 
-    Round-3 Commit A — DUPLICATE-GUARD (keep-original-capped): when the UNIQUE grounded target is
-    a page ALREADY opened by a prior boundary (the immediately-preceding doc's start), relocating
-    there is a no-op that silently drops the claim and abandons the true forward start (the FN19@
-    142044854 class). Instead KEEP the ORIGINAL claimed page, conf capped 0.60 — never silently drop.
+    Round-3 Commit A' — DUPLICATE-GUARD (SUPPRESS-WITH-FLAG): when the claimed page is NEITHER-grounded
+    and the UNIQUE grounded relocation target is a page ALREADY opened by a prior boundary, the relocation
+    is a no-op. The ORIGINAL keep-original-capped variant (Round-3 A) was REVERTED on evidence: it
+    resurrected ungrounded claims and added +15 fresh FP / −1 fresh TP (full-tests gate). A' instead
+    SUPPRESSES the claimed boundary on the consumed-target case ([DUP-GUARD-SUPPRESS]) and does NOT keep
+    the original; FN19@142044854 still recovers (verify on isolation dev). Never keep an ungrounded claim.
     """
     if gcnt == 2:
         return signal_page, effective_end, conf, True, ("KEEP-BOTH",)
@@ -627,20 +629,11 @@ def _titled_gate_decision(gcnt, signal_page, effective_end, conf, n, reloc, doc_
     if len(reloc) == 1:
         wp, _t, _i, idg = reloc[0]
         if wp in doc_starts:
-            return signal_page, effective_end, min(conf, 0.60), True, ("DUP-GUARD-KEEP", signal_page, wp)
+            # A' fork reversal: consumed target → SUPPRESS the claim (do NOT keep the ungrounded original).
+            return signal_page, n, conf, False, ("DUP-GUARD-SUPPRESS", signal_page, wp)
         cap = (idg == 0)
         return wp, wp - 1, (min(conf, 0.60) if cap else conf), True, ("RELOC", wp, idg, cap)
     return signal_page, n, conf, False, ("SUPPRESS", len(reloc))
-
-
-def _one_page_check_applies(signal):
-    """Round-3 Commit D (#1-lite v2): the self-contained one-page-check is a structural-symmetry
-    fallacy for CLOSING-page signals — every closing page (top label + bottom seal/signature/totals)
-    looks 'self-contained', so the check cannot discriminate and wrongly pulls boundaries back
-    (FP31). Skip it for signature_block / table_end at BOTH call sites (normal n+1 AND OOB-projection);
-    #1-lite v1 gated only the first, which rerouted the override to the OOB site → FP21. Returns True
-    if the one-page-check may run (project_signoff and START signals are NOT affected)."""
-    return signal not in ("signature_block", "table_end")
 
 
 # ---------------------------------------------------------------------------
@@ -1052,10 +1045,10 @@ def detect_boundaries(
             tag = action[0]
             if tag == "KEEP-ONE-OF-TWO":
                 logger.info(f"  [TITLE-GATE] p{signal_page} one-of-two (title XOR identifier) — accepted, conf capped to 0.60")
-            elif tag == "DUP-GUARD-KEEP":
+            elif tag == "DUP-GUARD-SUPPRESS":
                 logger.info(
-                    f"  [DUP-GUARD-KEEP] original p{action[1]} kept (grounded target p{action[2]} already a "
-                    f"boundary), conf capped to 0.60"
+                    f"  [DUP-GUARD-SUPPRESS] claim p{action[1]} suppressed (grounded target p{action[2]} already a "
+                    f"boundary; A' does not keep the ungrounded original)"
                 )
             elif tag == "RELOC":
                 wp, w_title, w_ident, w_idg = reloc[0]
@@ -1075,10 +1068,8 @@ def detect_boundaries(
         # disambiguate whether n+1 is self-contained (boundary at n) or a closing
         # page of the current doc (keep projection at n+1). Only fires for
         # signal in END_ON_PAGE_SIGNALS — START signals are correctly placed by -1
-        # and must not also trigger this. #1-lite v2 (Commit D): skip for
-        # signature_block/table_end (structural-symmetry fallacy → FP31); see _one_page_check_applies.
+        # and must not also trigger this.
         if (is_end and signal in END_ON_PAGE_SIGNALS
-                and _one_page_check_applies(signal)
                 and signal_page == n + 1
                 and n + 1 <= total_pages
                 and n + 1 in page_buffer):
@@ -1189,26 +1180,17 @@ def detect_boundaries(
                 logger.info(
                     f"  [OOB-PROJECTION] new_start={new_start} > total_pages={total_pages} — re-evaluating"
                 )
-                if not _one_page_check_applies(signal):
-                    # #1-lite v2 (Commit D): a closing-page signal (signature_block/table_end)
-                    # projected beyond the PDF — the doc ends on the signature/totals page; do NOT
-                    # use the self-contained fallacy to pull it back (that path created FP21). No new
-                    # boundary within the PDF.
+                sc, _ = _query_is_self_contained(
+                    page_buffer[n + 1], n + 1, model, processor, config, logger
+                )
+                if sc:
+                    effective_end = n
+                    new_start = n + 1
+                    logger.info(f"  [OOB-PROJECTION] p{n+1} self-contained — boundary corrected to p{n}")
+                else:
                     is_end = False
                     effective_end = min(effective_end, total_pages)
-                    logger.info(f"  [OOB-PROJECTION] p{n+1} closing-page signal ({signal}) — no boundary (#1-lite v2)")
-                else:
-                    sc, _ = _query_is_self_contained(
-                        page_buffer[n + 1], n + 1, model, processor, config, logger
-                    )
-                    if sc:
-                        effective_end = n
-                        new_start = n + 1
-                        logger.info(f"  [OOB-PROJECTION] p{n+1} self-contained — boundary corrected to p{n}")
-                    else:
-                        is_end = False
-                        effective_end = min(effective_end, total_pages)
-                        logger.info(f"  [OOB-PROJECTION] p{n+1} is continuation — no boundary recorded, new doc beyond PDF")
+                    logger.info(f"  [OOB-PROJECTION] p{n+1} is continuation — no boundary recorded, new doc beyond PDF")
 
             if new_start not in doc_starts and new_start <= total_pages:
                 doc_starts.append(new_start)
