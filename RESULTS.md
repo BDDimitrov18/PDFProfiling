@@ -1,5 +1,18 @@
 # Boundary / Rotation Eval Results
 
+## 🔬 ROUND 3b — A+D HYPOTHESIS TEST (revert B; in progress, new pod 213.173.103.213)
+**Hypothesis:** A+D (dup-guard + #1-lite-v2, WITHOUT B's next-page-gate rebuild) keeps the dev gains (FN19@142044854,
+FP31@163444215) WITHOUT B's unseen-data regression (B added fresh +5FP/+3FN + holdout +1FN), and therefore BEATS the
+#2+#4 candidate on full-tests aggregate. **Build:** constructed by `git checkout 8ff1fbe -- split.py` (=#2+#4+A) then
+re-applying D's three edits (`_one_page_check_applies` helper + gate BOTH one-page-check sites). Verified: A present
+(`_titled_gate_decision`), B ABSENT (`_next_page_decision`/nomenclature hook gone, verdict-first next-page gate
+restored), D present (2 gating sites, contract test passes); 14 unit tests pass (`test_dup_guard` 10 +
+`test_one_page_check_gate` 4); `test_next_page_gate.py` removed (B reverted). GT v3, masks lifted.
+**Pre-registered expectation (vs #2+#4 GTv3 STRICT dev 92.12/holdout 81.48/fresh 88.44/agg 89.10):** dev ~93.3 (A+D
+wins: FN19→TP, FP31 dead), holdout ~81.48 (B's holdout FN10 gone), fresh ~88.4+ (B's fresh FPs/FNs gone), **aggregate
+> 89.10**. Falsifier: aggregate ≤ 89.10 ⇒ A+D doesn't beat #2+#4 either ⇒ #2+#4 stays and A/D go to backlog individually.
+Chain: fingerprint → A+D probe → dev (keep gate 92.12) → full-tests stratified (STRICT+WAIVED). Results logged below.
+
 ## ☀☀☀ ROUND 3 MORNING SUMMARY (new-pod redeploy + A–D eval, 2026-06-13)
 
 **Bottom line: #2+#4 REMAINS the production candidate. The round-3 stack did NOT beat it on the real metric.**

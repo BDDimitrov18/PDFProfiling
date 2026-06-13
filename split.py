@@ -633,37 +633,6 @@ def _titled_gate_decision(gcnt, signal_page, effective_end, conf, n, reloc, doc_
     return signal_page, n, conf, False, ("SUPPRESS", len(reloc))
 
 
-_NOM_ENTRIES = None
-
-
-def _nomenclature_entries():
-    """Lazy, cached load of the construction nomenclature (for the next-page gate's MATCH hook).
-    Returns [] if the table/lib is unavailable so the gate degrades to the model verdict."""
-    global _NOM_ENTRIES
-    if _NOM_ENTRIES is None:
-        try:
-            import nomenclature_match as _nm
-            _NOM_ENTRIES = _nm.load_nomenclature()
-        except Exception:
-            _NOM_ENTRIES = []
-    return _NOM_ENTRIES
-
-
-def _next_page_decision(heading, continuation, verso, nom_band, model_starts_new, model_conf):
-    """PURE evidence-first verdict for the next-page gate (Round-3 Commit B). Judges page n+1's
-    FRESHNESS ONLY — it never re-judges page n, so the start-page-grid class (a real start page
-    that happens to carry a grid, e.g. p45/46@084031203) cannot regress.
-    Priority of evidence: verso veto > nomenclature MATCH (new-doc) > continuation veto > model.
-    Returns (starts_new: bool, confidence: float, reason: str)."""
-    if verso:
-        return False, 0.90, "verso of the previous sheet (rotation/handwriting/stamp-only) — not a new document"
-    if nom_band == "MATCH":
-        return True, max(model_conf, 0.85), "heading nomenclature-MATCHes a document type — new document"
-    if continuation and nom_band != "MATCH":
-        return False, 0.85, "continuation cues and heading is not a document type (section header / mid-doc) — not a new document"
-    return bool(model_starts_new), model_conf, "model verdict (no decisive evidence cue)"
-
-
 def _one_page_check_applies(signal):
     """Round-3 Commit D (#1-lite v2): the self-contained one-page-check is a structural-symmetry
     fallacy for CLOSING-page signals — every closing page (top label + bottom seal/signature/totals)
@@ -867,55 +836,41 @@ def _query_rotation(img, page_num: int, model, processor, config, logger: loggin
 # ---------------------------------------------------------------------------
 
 def _query_next_page_starts_new(img_curr, img_next, page_curr, page_next, model, processor, config, logger):
-    """Round-3 Commit B — EVIDENCE-FIRST next-page gate. Called when page_curr has a signature/
-    signoff. Instead of asking for a verdict first (which let the model free-judge and confabulate),
-    it gathers EVIDENCE about page_next in order — transcription → continuation cues → verso cues →
-    only then a verdict — and a CPU post-processor (nomenclature band + the cues) renders the final
-    call via _next_page_decision. Judges page_next's freshness ONLY; never re-judges page_curr.
-    Returns (starts_new: bool, confidence float 0-1, next_page_heading str)."""
+    """
+    Called when page_curr has a signature/signoff. A signature only ends a
+    document if page_next actually starts a new one. Returns (starts_new: bool,
+    confidence float 0-1, reason str).
+    """
     prompt = (
-        f"The previous page (page {page_curr}) ended with a signature/approval block. Examine ONLY "
-        f"the NEXT page (page {page_next}) and gather evidence, IN THIS ORDER. Do NOT decide first.\n\n"
-        f"1. TRANSCRIBE verbatim the top ~quarter of page {page_next} (heading text if any).\n"
-        f"2. 'heading': the document TITLE/heading at the very top of page {page_next} verbatim, or "
-        "empty string if the page has no heading (begins mid-content).\n"
-        "3. 'continuation': true if page {n} CONTINUES the previous page — begins mid-sentence, "
-        "carries a running page number, continues the same table, or sits in the SAME printed frame/"
-        "contour as the previous page (a section header like '3.4 ...' counts as continuation, NOT a "
-        "new document).\n".replace("{n}", str(page_next)) +
-        "4. 'verso': true if page {n} is the BACK (verso) of the previous sheet — its orientation/"
-        "rotation differs from the previous page, OR it is handwriting-only or stamp-only with no "
-        "printed body.\n".replace("{n}", str(page_next)) +
-        f"5. ONLY THEN, 'starts_new': does page {page_next} begin a NEW, separate document?\n\n"
+        f"Page {page_curr} ends with a signature or approval block. Look at the NEXT "
+        f"page (page {page_next}) and decide whether it STARTS a new, separate document.\n\n"
+        f"Page {page_next} starts a new document (starts_new=true) if ANY of:\n"
+        "  - It has a new heading, title, or document header at the top\n"
+        "  - It has a different letterhead, logo, or issuing organization\n"
+        "  - It repeats a self-contained header block (ОБЕКТ / ВЪЗЛОЖИТЕЛ / ЧАСТ etc.)\n"
+        "  - It has NO new heading, but is clearly a different document type or issuer "
+        "(different subject, different form, different authority)\n\n"
+        f"Page {page_next} does NOT start a new document (starts_new=false) if:\n"
+        "  - It continues the same text, table, or narrative in the same style\n"
+        "  - It is a continuation page of the document that page "
+        f"{page_curr} belongs to\n\n"
+        "Be strict: if the next page just continues in the same style with no new "
+        "heading and no change of subject/issuer, answer false — the signature was "
+        "mid-document.\n\n"
         "Respond ONLY with JSON:\n"
-        '{"transcription": "<verbatim top quarter>", "heading": "<verbatim heading or empty>", '
-        '"continuation": true/false, "verso": true/false, "starts_new": true/false, '
-        '"confidence": <0-100>, "reason": "<one sentence>"}'
+        '{"starts_new": true/false, "confidence": <0-100>, "reason": "<one sentence>", '
+        '"next_page_heading": "<verbatim heading/title at the top of the next page, or empty string if none>"}'
     )
-    raw = _infer(prompt, [img_curr, img_next], model, processor, config, logger, max_tokens=320)
+    raw = _infer(prompt, [img_curr, img_next], model, processor, config, logger, max_tokens=250)
     logger.debug(f"  Next-page-start p{page_next}: {repr((raw or '')[:300])}")
     data = _parse_json(raw or "", logger)
-    heading = str(data.get("heading", "")).strip()
-    continuation = bool(data.get("continuation", False))
-    verso = bool(data.get("verso", False))
-    model_sn = bool(data.get("starts_new", True))
-    model_conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
-    # CPU post-processing: nomenclature band on the transcribed heading (MATCH ⇒ new-doc evidence).
-    band = "NONE"
-    if heading and heading.lower() not in ("", "none"):
-        ents = _nomenclature_entries()
-        if ents:
-            try:
-                import nomenclature_match as _nm
-                band = _nm.match_title(heading, ents)[2]
-            except Exception:
-                band = "NONE"
-    starts_new, conf, reason = _next_page_decision(heading, continuation, verso, band, model_sn, model_conf)
-    logger.info(
-        f"  [NEXT-PAGE-GATE] p{page_next}: heading={heading!r} nom={band} continuation={continuation} "
-        f"verso={verso} -> starts_new={starts_new} ({reason})"
-    )
-    return starts_new, conf, heading
+    starts_new = bool(data.get("starts_new", True))
+    conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
+    reason = str(data.get("reason", "")).strip()
+    next_page_heading = str(data.get("next_page_heading", "")).strip()
+    if reason:
+        logger.info(f"  Next-page-start reason: {reason}")
+    return starts_new, conf, next_page_heading
 
 
 # ---------------------------------------------------------------------------
