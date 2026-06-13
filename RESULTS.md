@@ -10,10 +10,16 @@ eval_probe 4 / eval_dev 9 / eval_full 20 PDFs), model re-downloaded to `/hf_cach
 and FP `[6,11,13,31]` / FN `[7,9]` — **byte-identical** to the historical run-8 fingerprint ⇒ env reproduces run-8,
 all anchors valid. → A′ probe.
 
-**STEP 2 A′ PROBE: in progress** (`eval_boundaries.py eval_probe`, split.py A′). Pre-registered expectation:
-**`DUP-GUARD-SUPPRESS` fires 0×** (the dup-targets 142044854/083553577/142438096 are all OFF the probe set) ⇒ A′ is
-provably inert on probe and its probe pred = #2+#4 probe by construction. Validation = event-count 0 (not a noisy
-F1 byte-compare, since no clean committed #2+#4-only probe array exists). Results below when done.
+**STEP 2 A′ PROBE: PASS** (`logs/round4_aprime_probe.*`). **`DUP-GUARD-SUPPRESS` fired 0×** ⇒ A′ provably inert on
+probe, pred = #2+#4 by construction (pre-registration met). tol0 TP30/FP5/FN4 **F1 86.96** (P85.71/R88.24); tol1
+**F1 89.86**. Per-file (tol0): 163444215 FP=[6,13,31] FN=[]; 164505881 FP=[9,13] FN=[12]; 165204533 FN=[3,4];
+082511233 FN=[20]. NOTE: this is the **#2+#4 baseline** on probe — 163444215 carries FP13/FP31 because A′ has **no D**
+(D's one-page-check killed those two; correctly absent here). The dup-guard adds nothing on probe (targets off-probe),
+exactly as predicted. → A′ dev (FN19 recovery + 92.12 keep gate).
+
+**STEP 3 A′ DEV: in progress** (`eval_boundaries.py eval_dev`, 9 files incl 142044854). Pre-registered: `DUP-GUARD-SUPPRESS`
+SHOULD fire on 142044854 (its consumed-target p18 is the trigger); expect **FN19→TP** (the open pipeline-level claim)
+and **dev F1 ≥ 92.12** keep gate. Results below.
 
 ---
 
