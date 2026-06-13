@@ -38,13 +38,36 @@ as rsynced**: TP75/FP7/FN7 **F1 91.46** — **byte-identical to the #2+#4 baseli
   user's premise ("A′ still recovers FN19 because its target-dup is the trigger") is **wrong**: suppressing a claim does
   not *create* a boundary. base #2+#4 already collapses that same claim onto the already-existing p18 (relocate-to-a-
   boundary that's deduped), so **A′ ≡ #2+#4 on dev** — it only makes base's implicit collapse explicit + logs it.
-- **Consequence (the real dilemma, now proven):** the ONLY dup-guard variant that recovers FN19 is **keep-capped**
-  (it KEEPS p19), and keep-capped is the proven-bad one (+15 fresh FP, since the same "keep the ungrounded original"
-  mechanism overfires on fresh). A′ (suppress) avoids those FPs but recovers nothing → **behaviorally a no-op vs the
-  candidate.** FN19 is therefore **unrecoverable via the dup-guard branch**: its true cause is the *mis-relocation* of
-  the p19 titled signal onto p18 — a relocation-grounding bug, not a keep/suppress choice.
-- **STOPPED before full-tests** (pre-registered gate is "exceed 92.12"; A′ only *ties* it, and is provably ≡ candidate).
-  Surfaced to human rather than auto-deciding. See decision block below.
+- **Consequence:** the ONLY dup-guard variant that recovers FN19 is **keep-capped** (it KEEPS p19), and keep-capped is
+  the proven-bad one (+15 fresh FP). FN19's true cause is the *mis-relocation* of the p19 titled signal onto p18 — a
+  relocation-grounding bug, not a keep/suppress choice. A′ (suppress) does not recover it.
+- ⚠️ **CORRECTION (settled by full-tests, STEP 4):** I predicted from the dev arrays that A′ was a **no-op** ≡ #2+#4 and
+  recommended skipping full-tests. **That prediction was WRONG.** Per human direction the full-tests were run, and they
+  show A′ is *dev/holdout-identical but fresh-DIVERGENT*: the `is_end=False` suppress changes downstream window state on
+  fresh files, **regressing fresh 88.44→88.14 and aggregate 89.10→88.89.** Lesson reaffirmed: read behavior from the
+  prediction arrays across ALL strata, don't extrapolate fresh from dev.
+
+**STEP 4 A′ FULL-TESTS — VERDICT: A′ NOT KEPT (fails aggregate gate); #2+#4 REMAINS CANDIDATE.**
+(`logs/round4_aprime_fulltests.*`, GT v3, score_full stratified.) `DUP-GUARD-SUPPRESS` fired **22×** (dev 6 / holdout 1
+/ fresh 15).
+
+| stratum | A′ STRICT | #2+#4 candidate (STRICT) | Δ |
+|---|--:|--:|--:|
+| dev (9) | 92.12 (TP76/FP6/FN7) | 92.12 | **=** |
+| holdout (3) | 81.48 (TP11/FP1/FN4) | 81.48 | **=** |
+| fresh (8) | **88.14** (TP197/FP33/FN20, **P 85.65**) | 88.44 (P 85.41) | **−0.30** |
+| **aggregate (20)** | **88.89** (TP284/FP40/FN31) | **89.10** | **−0.21** |
+| aggregate WAIVED | **89.03** (FP39) | 89.24 | −0.21 |
+| fresh WAIVED | 88.34 (P 86.03) | — | |
+
+**Against the keep criteria (fresh P ≥ 85.41 AND aggregate ≥ 89.10):** fresh P **85.65 ✓** but aggregate **88.89 < 89.10 ✗**
+(WAIVED 89.03 < 89.10 ✗). Requires BOTH ⇒ **A′ FAILS ⇒ backlog; #2+#4 stays the production candidate.**
+- A′ is **identical to #2+#4 on dev AND holdout** (suppress is inert there) but **diverges on fresh**: same fresh FP count
+  as base (33, so it DID avoid keep-capped's +15 FP — `145428614` shows base-level FPs, none of keep-capped's
+  pp37/46/76/78/81/84/86), **but added fresh FN** — the suppress dropped real boundaries on fresh, lowering recall.
+- **Symmetric failure to keep-capped, proven on real data:** keep-capped over-KEEPS → +FP; A′ over-SUPPRESSES → +FN;
+  **base #2+#4's relocate-to-existing is the sweet spot.** The whole consumed-target dup-guard branch (either variant)
+  is net-negative vs simply letting base collapse the claim. → **dup-guard to backlog entirely (both forks dead).**
 
 ---
 
