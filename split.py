@@ -768,6 +768,30 @@ def _table_boundary_decision(last_row, first_row):
     return True, "row numbering unreadable — boundary stands (no proof of continuity)"
 
 
+def _table_boundary_decision_v3(last_row, first_row, start_cue):
+    """PURE table-boundary decision (Fix 11 v3 — GUARDED). v2 over-fired: a bare non-continuous
+    numbering gap inside one document (appendix / renumbered table) STOOD as a boundary
+    (FP35/FP37@163444215). v3 adds the guard from the round-5 isolation verdict:
+
+      • CONTINUOUS numbering (both int, first == last+1) ⇒ same table ⇒ NOT a boundary (suppress).
+        (Unchanged from v2 — proven-continuity suppression is safe and kills the rubber-stamp.)
+      • NON-CONTINUOUS or UNREADABLE numbering ⇒ boundary STANDS *only* if `start_cue` is True
+        (a corroborating start-side cue on page n+1). A bare numbering break with NO start cue is an
+        intra-document section break, NOT a boundary ⇒ suppress.
+
+    `start_cue` is an opaque bool supplied by the caller (its DEFINITION — fresh title vs
+    nomenclature/issuer CHANGE — is a separate, pre-registered query concern; this pure function is
+    agnostic to how it is computed). Returns (confirmed: bool, reason: str)."""
+    if isinstance(last_row, int) and isinstance(first_row, int) and first_row == last_row + 1:
+        return False, f"continuous numbering ({last_row}→{first_row}) — same table, not a boundary"
+    numbering = (f"non-continuous numbering ({last_row}→{first_row})"
+                 if isinstance(last_row, int) and isinstance(first_row, int)
+                 else "row numbering unreadable")
+    if start_cue:
+        return True, f"{numbering} + start-side cue on n+1 — boundary stands"
+    return False, f"{numbering} but NO start-side cue — intra-doc section break, not a boundary"
+
+
 def _query_confirm_table_boundary(img_n, img_n1, page_n, page_n1, model, processor, config, logger: logging.Logger) -> tuple:
     """Round-3 Commit C / Fix 11 v2 — EVIDENCE-FIRST table-boundary confirm. Replaces the generic
     confirm for table_end signals (which was 0-for-5 on consecutive table documents). The model must
