@@ -14,16 +14,35 @@ no eval until v3 probe expectations are pre-registered. Full probe reading (not 
 - **Verdict:** Fix 11 v2's **concept is validated** (it kills the rubber-stamp veto that base can't beat) but the bare
   mechanical "non-continuous numbering ⇒ stand" **over-fires** on intra-doc gaps. **Do NOT discard → Fix 11 v3.**
 
-### Fix 11 v3 SPEC (pod-less; pre-register probe expectations BEFORE any eval)
-- **(a) GUARD the numbering-break rule:** a non-continuous `last_row(n)`/`first_row(n+1)` STANDS as a boundary **only with
-  a corroborating start-side cue on n+1** (fresh title / letterhead / nomenclature MATCH). Bare numbering gaps inside a
-  document (pp35/37@163444215) must **NOT** cut. Continuous numbering still suppresses (same table).
-- **(b)** The p19-vs-p20 displacement on 082511233 is the **rotation-aware-localization backlog** (FN20/FN3 class), NOT a
-  Fix-11 bug — linked; the guard fixes over-firing, not placement.
-- **OPEN (flag for pre-registration):** the fingerprint trace shows `163444215 p37` self-reports a title
-  (`КОЛИЧЕСТВЕНА СМЕТКА`, one-page-check `self_contained=True`). So a naive "any fresh title" start-cue may **NOT** kill
-  FP37 — the cue likely must be stricter (nomenclature/issuer CHANGE, not merely a heading). Resolve when re-deriving the
-  guarded probe expected-sets.
+### Fix 11 v3 DESIGN — REFRAMED to the n-COMPLETION side (start-cue framing SUPERSEDED)
+**The start-side-cue framing is DEAD.** Human-directed re-analysis + page render killed it:
+- **КОЛИЧЕСТВЕНА СМЕТКА is nomenclature code 1002** — a real document-type heading. So `163444215 p37` is NOT an
+  appendix/renumbering gap (earlier hypothesis WRONG); it is a **nomenclature-MATCHING section heading that is not a
+  document boundary** — the **THIRD attested instance** of this class (prior: `143041245@51`, `145428614@66`, both
+  human-attested "has a heading, is a section, must NOT match").
+- **No n+1-only cue (title / nomenclature / letterhead) can separate** "Количествена сметка as a new document" from
+  "as the costing section of this document" — the text is identical. Options 2/3 dead; option 1 (nomenclature CHANGE)
+  better but insufficient (1002 is an architecture sub-type; "changed" can fire inside an architecture dossier).
+- **ATTESTED page facts — render `attestations/round5_163444215_pp34-38/` (pp34–37; PDF is 37pp, no p38):**
+  pp34–37 are **ONE document**: identical running header `КОЛИЧЕСТВЕНА СМЕТКА` + same `ОБЕКТ` on every page, and
+  **section numbering flows continuously 1‑2‑3 → 4‑5‑6‑7‑8 → 9‑10 → 11‑12** across the four pages. p37 ends with
+  **ОБЩО + Изготвил/Проектант signoff + stamp = document CLOSURE**; pp34–36 do NOT close (mid-table). True starts max at
+  p34 ⇒ FP35/FP37 are cuts INSIDE this doc.
+- **The model MISREAD the row numbers:** it reported `p34→35: 8→5` and `p36→37: 10→1` (the "breaks" that fired FP35/FP37),
+  but the sections are actually continuous (3→4, 10→11). ⇒ v2's mechanism is **doubly flawed: wrong logic AND unreliable
+  model row-extraction** on multi-level (section + lettered sub-row) tables.
+
+**REFRAMED v3 = the n-COMPLETION side (merges with the deferred next-page-gate rebuild — treat as ONE design):**
+suppress the numbering-break boundary when the table on n **CONTINUES** into n+1 (numbering flows across the seam)
+**regardless of any title on n+1**; a cut requires **BOTH** table-COMPLETE-on-n (closed / totalled / signoff) **AND**
+fresh-start-on-n+1. p37's КОЛИЧЕСТВЕНА СМЕТКА stays a non-boundary because the preceding pages flow into it; TP20@082511233
+cuts because p19 actually closes. This is a **relationship** (completion-on-n), not a one-page cue.
+- **(b)** The p19-vs-p20 displacement on 082511233 remains the **rotation-aware-localization backlog** (FN20/FN3 class),
+  NOT a Fix-11 bug — the completion guard fixes over-firing, not placement.
+- **`_table_boundary_decision_v3(last_row, first_row, start_cue)` (committed for the explored start-cue path) is
+  SUPERSEDED** by this completion-side reframe; retained only as a record of the dead branch.
+- **NEXT (pod-less, no eval until pre-registered):** design the completion-side guard against the ATTESTED page facts
+  above (+ the 3 section-heading instances); pre-register probe expected-sets BEFORE any pod run. **Pod held idle.**
 
 **ROUND 5 build retained for reference (commit `88b3232`, split.py md5 below); dev/full-tests NOT run (stopped at probe).**
 
