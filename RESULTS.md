@@ -1,5 +1,39 @@
 # Boundary / Rotation Eval Results
 
+## ☀☀☀ ROUND 3 MORNING SUMMARY (new-pod redeploy + A–D eval, 2026-06-13)
+
+**Bottom line: #2+#4 REMAINS the production candidate. The round-3 stack did NOT beat it on the real metric.**
+New RTX 5090 pod (`213.173.103.193`); env reinstalled from `requirements-lock.txt` + model re-downloaded.
+**FINGERPRINT PASS** — run8 on 163444215 byte-identical to historical ⇒ env reproduces run-8, all anchors valid.
+
+**What happened (two corrections, both caught by the pre-registered falsifiers):**
+1. **C (Fix 11 v2, table-numbering confirm) — REVERTED.** Stacked probe triggered its falsifier: FP35/37@163444215 +
+   FP19@082511233. Mechanical "non-continuous numbering ⇒ stand" can't tell a real boundary from an intra-doc section
+   break (FP37 `10→1` and TP20 `6→1` are both resets). → backlog **Fix 11 v3** (needs corroborating heading/issuer).
+2. **A+B+D — KEPT on dev (93.33 ≥ 92.12) but REGRESSED the full-tests → NOT adopted.** The dev keep-gate was
+   misleading: A (FN19 dup-guard) + D (FP31 #1-lite-v2) are dev-specific wins, but **B (next-page-gate rebuild)
+   overfits** — on unseen data its 31 vetoes added fresh +5 FP/+3 FN + holdout +1 FN.
+
+| build (GT v3, STRICT) | dev | holdout | fresh | **aggregate** |
+|---|--:|--:|--:|--:|
+| **#2+#4 (CANDIDATE)** | 92.12 | **81.48** | **88.44** | **89.10** |
+| A+B+D (round-3) | **93.33** | 76.92 | 86.92 | 88.16 (−0.94) |
+
+**Verdict & top morning action:** A+D are real dev wins; B is the isolated regression. **Recommended next: revert B
+cleanly, run A+D full-tests** — hypothesis: A+D keeps the dev gain (FN19 + FP31) WITHOUT B's unseen-data damage, beating
+#2+#4. (I aborted an autonomous B-revert overnight — it's a 3-way interleaved conflict; safer to resolve carefully with
+you than risk a miscomposed build on a 3–4h run.) Gate-event counts: dev DUP-GUARD-KEEP 2 (A active), fresh
+titled_suppress 15/capped 29 (#4), NEXT-PAGE-GATE 172 true / 31 veto (B).
+
+**OPEN QUESTIONS / BACKLOG:** ① **A+D isolation run** (top — needs the pod). ② **B (next-page rebuild)**: must not
+over-veto signature boundaries on unseen docs (re-spec or drop). ③ **Fix 11 v3** (table numbering + corroboration).
+④ FP6@163444215 (pp5–7 seam) unattested. ⑤ quiet-seam round-4 (3 holdout detection-gap FNs).
+
+**POD:** idle and billing; all planned GPU work done. I can't stop RunPod billing from the CLI — **terminate it in the
+console**, OR keep it for the A+D run (redeploy is cheap: fingerprint validated the protocol). All artifacts committed/pushed.
+
+---
+
 ## ☀☀ ROUND 2 MORNING SUMMARY (overnight #2+#4 chain complete, 2026-06-13)
 
 **NEW CANDIDATE = #2 (window-range validation) + #4 (transcribe-then-judge titled gate, localizer + one-of-two).**
