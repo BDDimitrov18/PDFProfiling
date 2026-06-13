@@ -109,6 +109,16 @@ one-page-check claimed "clear title at top of p21" (conf 95) on 082511233; human
 is not just a framing fallacy (4th-instance) but the model *inventing* page content to justify a verdict — the
 strongest argument yet that confirm-style queries must TRANSCRIBE before judging (the #4 pattern), never free-judge.
 
+### ⚠️ ROUND 3 A+B+D FULL-TESTS — REGRESSES unseen data (B overfits) → revert B, test A+D
+`logs/round3_abd_fulltests.*`. STRICT stratified (GT v3): dev **93.33** / holdout **76.92** / fresh **86.92** /
+**aggregate 88.16**. vs round-2 #2+#4 GTv3 (dev 92.12 / holdout 81.48 / fresh 88.44 / **agg 89.10**): dev +1.21 but
+**holdout −4.56, fresh −1.52, AGGREGATE −0.94**. The dev-only keep-gate was MISLEADING — A (FN19) + D (FP31) are
+dev-specific wins; **B (next-page-gate rebuild) generalises badly**: its 31 NEXT-PAGE-GATE vetoes added fresh +5 FP /
++3 FN and holdout +1 FN (FN10@084837699). **A+B+D does NOT beat #2+#4 on the real (full-tests) metric** → not adopted.
+DECISION: revert B (the isolated regression cause), run A+D full-tests — hypothesis: A+D keeps the dev gain without B's
+unseen-data damage, beating #2+#4. #2+#4 remains the production candidate until A+D confirms. B → backlog (next-page
+rebuild needs to not over-veto signature boundaries on unseen docs).
+
 ### ✅✅ ROUND 3 A+B+D DEV (keep-gate) — KEEP (dev 92.12 → 93.33, +1.21)
 `logs/round3_abd_dev.*`. tol0 **F1 93.33** (TP77/FP5/FN6, P93.90/R92.77) vs #2+#4 GT-v3 keep gate **92.12**
 (TP76/FP6/FN7) → **KEEP A+B+D** (≥92.12). Composition: **+1 TP** FN19@142044854 recovered (A dup-guard, DUP-GUARD-KEEP
