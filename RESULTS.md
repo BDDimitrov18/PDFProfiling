@@ -13,6 +13,8 @@ wins: FN19→TP, FP31 dead), holdout ~81.48 (B's holdout FN10 gone), fresh ~88.4
 > 89.10**. Falsifier: aggregate ≤ 89.10 ⇒ A+D doesn't beat #2+#4 either ⇒ #2+#4 stays and A/D go to backlog individually.
 Chain: fingerprint → A+D probe → dev (keep gate 92.12) → full-tests stratified (STRICT+WAIVED). Results logged below.
 
+**STEP 1 FINGERPRINT (new pod 213.173.103.213): PASS** — run8 163444215 pred=[3,4,5,6,8,10,11,12,13,15,22,23,24,25,26,31,32,34] == historical (byte-identical) ⇒ env reproduces run-8, anchors valid. → A+D probe.
+
 ## ☀☀☀ ROUND 3 MORNING SUMMARY (new-pod redeploy + A–D eval, 2026-06-13)
 
 **Bottom line: #2+#4 REMAINS the production candidate. The round-3 stack did NOT beat it on the real metric.**
