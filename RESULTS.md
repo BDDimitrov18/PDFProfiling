@@ -1,5 +1,22 @@
 # Boundary / Rotation Eval Results
 
+## 🧪 ROUND 4 — A′ ISOLATION (suppress-flag dup-guard alone, from #2+#4 base) — IN PROGRESS
+**Pod:** RTX 5090 `213.173.105.167:34471` (4th pod). Fresh: env reinstalled from `requirements-lock.txt` (torch
+2.8.0+cu128 / transformers 5.11.0 / bitsandbytes 0.49.2 / accelerate 1.14.0), eval data rsynced (deref symlinks:
+eval_probe 4 / eval_dev 9 / eval_full 20 PDFs), model re-downloaded to `/hf_cache`. **Build = `a059335`** (A′ =
+#2+#4 + SUPPRESS-WITH-FLAG dup-guard; NOT D, NOT B). Chain: fingerprint → probe → dev → full-tests.
+
+**STEP 1 FINGERPRINT: PASS** — run8 code on 163444215 → pred `[3,4,5,6,8,10,11,12,13,15,22,23,24,25,26,31,32,34]`
+and FP `[6,11,13,31]` / FN `[7,9]` — **byte-identical** to the historical run-8 fingerprint ⇒ env reproduces run-8,
+all anchors valid. → A′ probe.
+
+**STEP 2 A′ PROBE: in progress** (`eval_boundaries.py eval_probe`, split.py A′). Pre-registered expectation:
+**`DUP-GUARD-SUPPRESS` fires 0×** (the dup-targets 142044854/083553577/142438096 are all OFF the probe set) ⇒ A′ is
+provably inert on probe and its probe pred = #2+#4 probe by construction. Validation = event-count 0 (not a noisy
+F1 byte-compare, since no clean committed #2+#4-only probe array exists). Results below when done.
+
+---
+
 ## 🧭 ROUND 3 CLOSE-OUT + A′ RE-SPEC — dup-guard fork REVERSED (2026-06-13, human-directed)
 
 **Round-3 batch outcome (final): candidate UNCHANGED.** Fable 5 reproduced all round-3 verdicts under GT v3 directly
