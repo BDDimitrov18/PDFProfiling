@@ -1,0 +1,430 @@
+23:49:17 [INFO] Loading Qwen/Qwen2.5-VL-32B-Instruct (4-bit NF4, first run downloads weights)…
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files: 100%|██████████| 18/18 [00:00<00:00, 81092.88it/s]
+Loading weights:   0%|          | 0/1161 [00:00<?, ?it/s]Loading weights:   0%|          | 1/1161 [00:00<04:16,  4.53it/s]Loading weights:   0%|          | 2/1161 [00:00<04:51,  3.98it/s]Loading weights:   0%|          | 5/1161 [00:00<01:56,  9.91it/s]Loading weights:   1%|▏         | 16/1161 [00:00<00:33, 34.05it/s]Loading weights:   2%|▏         | 22/1161 [00:00<00:28, 40.44it/s]Loading weights:   2%|▏         | 29/1161 [00:00<00:23, 48.06it/s]Loading weights:   3%|▎         | 40/1161 [00:01<00:18, 61.09it/s]Loading weights:   4%|▍         | 47/1161 [00:01<00:17, 63.18it/s]Loading weights:   5%|▍         | 54/1161 [00:01<00:19, 56.90it/s]Loading weights:   6%|▌         | 65/1161 [00:01<00:16, 68.22it/s]Loading weights:   7%|▋         | 76/1161 [00:01<00:14, 75.26it/s]Loading weights:   7%|▋         | 84/1161 [00:01<00:14, 73.78it/s]Loading weights:   8%|▊         | 92/1161 [00:01<00:15, 68.04it/s]Loading weights:   9%|▊         | 101/1161 [00:01<00:14, 70.83it/s]Loading weights:  10%|▉         | 112/1161 [00:02<00:13, 77.55it/s]Loading weights:  10%|█         | 120/1161 [00:02<00:13, 75.87it/s]Loading weights:  11%|█         | 128/1161 [00:02<00:15, 66.76it/s]Loading weights:  12%|█▏        | 137/1161 [00:02<00:14, 69.02it/s]Loading weights:  13%|█▎        | 148/1161 [00:02<00:12, 78.20it/s]Loading weights:  14%|█▎        | 158/1161 [00:02<00:11, 83.67it/s]Loading weights:  14%|█▍        | 167/1161 [00:02<00:12, 78.58it/s]Loading weights:  15%|█▌        | 176/1161 [00:02<00:13, 72.16it/s]Loading weights:  16%|█▌        | 185/1161 [00:03<00:13, 73.23it/s]Loading weights:  17%|█▋        | 196/1161 [00:03<00:12, 78.76it/s]Loading weights:  18%|█▊        | 205/1161 [00:03<00:12, 77.93it/s]Loading weights:  18%|█▊        | 213/1161 [00:03<00:13, 69.56it/s]Loading weights:  19%|█▉        | 221/1161 [00:03<00:13, 68.69it/s]Loading weights:  20%|█▉        | 232/1161 [00:03<00:12, 74.04it/s]Loading weights:  21%|██        | 240/1161 [00:03<00:12, 71.71it/s]Loading weights:  21%|██▏       | 248/1161 [00:03<00:14, 65.15it/s]Loading weights:  22%|██▏       | 257/1161 [00:04<00:13, 67.80it/s]Loading weights:  23%|██▎       | 268/1161 [00:04<00:12, 74.30it/s]Loading weights:  24%|██▍       | 276/1161 [00:04<00:12, 71.49it/s]Loading weights:  24%|██▍       | 284/1161 [00:04<00:13, 66.46it/s]Loading weights:  25%|██▌       | 293/1161 [00:04<00:12, 70.47it/s]Loading weights:  26%|██▌       | 304/1161 [00:04<00:10, 78.14it/s]Loading weights:  27%|██▋       | 312/1161 [00:04<00:11, 76.81it/s]Loading weights:  28%|██▊       | 320/1161 [00:04<00:12, 69.34it/s]Loading weights:  28%|██▊       | 329/1161 [00:05<00:11, 71.13it/s]Loading weights:  29%|██▉       | 340/1161 [00:05<00:10, 77.17it/s]Loading weights:  30%|██▉       | 348/1161 [00:05<00:10, 74.38it/s]Loading weights:  31%|███       | 356/1161 [00:05<00:11, 67.41it/s]Loading weights:  31%|███▏      | 365/1161 [00:05<00:11, 69.52it/s]Loading weights:  32%|███▏      | 376/1161 [00:05<00:10, 75.79it/s]Loading weights:  33%|███▎      | 384/1161 [00:05<00:10, 73.74it/s]Loading weights:  34%|███▍      | 392/1161 [00:06<00:17, 43.56it/s]Loading weights:  35%|███▍      | 401/1161 [00:06<00:21, 36.18it/s]Loading weights:  35%|███▌      | 412/1161 [00:06<00:16, 46.25it/s]Loading weights:  36%|███▌      | 419/1161 [00:06<00:15, 49.17it/s]Loading weights:  37%|███▋      | 426/1161 [00:06<00:15, 46.53it/s]Loading weights:  38%|███▊      | 437/1161 [00:07<00:13, 55.05it/s]Loading weights:  39%|███▊      | 448/1161 [00:07<00:11, 61.85it/s]Loading weights:  39%|███▉      | 455/1161 [00:07<00:11, 60.65it/s]Loading weights:  40%|███▉      | 462/1161 [00:07<00:13, 53.13it/s]Loading weights:  41%|████      | 473/1161 [00:07<00:11, 61.62it/s]Loading weights:  42%|████▏     | 484/1161 [00:07<00:09, 68.50it/s]Loading weights:  42%|████▏     | 492/1161 [00:07<00:09, 68.02it/s]Loading weights:  43%|████▎     | 500/1161 [00:08<00:10, 63.63it/s]Loading weights:  44%|████▍     | 509/1161 [00:08<00:09, 67.99it/s]Loading weights:  45%|████▍     | 520/1161 [00:08<00:08, 74.97it/s]Loading weights:  45%|████▌     | 528/1161 [00:08<00:08, 72.96it/s]Loading weights:  46%|████▌     | 536/1161 [00:08<00:09, 66.28it/s]Loading weights:  47%|████▋     | 544/1161 [00:08<00:08, 69.17it/s]Loading weights:  48%|████▊     | 552/1161 [00:08<00:08, 71.03it/s]Loading weights:  48%|████▊     | 560/1161 [00:08<00:10, 55.14it/s]Loading weights:  49%|████▉     | 568/1161 [00:09<00:09, 59.33it/s]Loading weights:  50%|████▉     | 575/1161 [00:09<00:10, 53.48it/s]Loading weights:  50%|█████     | 581/1161 [00:09<00:12, 48.00it/s]Loading weights:  51%|█████     | 588/1161 [00:09<00:10, 52.10it/s]Loading weights:  51%|█████     | 594/1161 [00:09<00:13, 41.71it/s]Loading weights:  52%|█████▏    | 604/1161 [00:09<00:10, 51.98it/s]Loading weights:  53%|█████▎    | 610/1161 [00:10<00:11, 46.31it/s]Loading weights:  53%|█████▎    | 617/1161 [00:10<00:11, 45.36it/s]Loading weights:  54%|█████▎    | 624/1161 [00:10<00:10, 50.08it/s]Loading weights:  54%|█████▍    | 630/1161 [00:10<00:13, 40.79it/s]Loading weights:  55%|█████▌    | 640/1161 [00:10<00:09, 52.23it/s]Loading weights:  56%|█████▌    | 647/1161 [00:10<00:10, 48.23it/s]Loading weights:  56%|█████▌    | 653/1161 [00:10<00:11, 44.81it/s]Loading weights:  57%|█████▋    | 660/1161 [00:11<00:10, 49.76it/s]Loading weights:  57%|█████▋    | 666/1161 [00:11<00:15, 32.74it/s]Loading weights:  58%|█████▊    | 676/1161 [00:11<00:12, 39.15it/s]Loading weights:  59%|█████▊    | 681/1161 [00:11<00:14, 32.53it/s]Loading weights:  59%|█████▉    | 688/1161 [00:11<00:13, 34.68it/s]Loading weights:  60%|█████▉    | 692/1161 [00:12<00:16, 28.52it/s]Loading weights:  60%|██████    | 700/1161 [00:12<00:13, 35.22it/s]Loading weights:  61%|██████    | 705/1161 [00:12<00:13, 35.00it/s]Loading weights:  61%|██████▏   | 712/1161 [00:12<00:11, 39.39it/s]Loading weights:  62%|██████▏   | 717/1161 [00:12<00:13, 32.00it/s]Loading weights:  62%|██████▏   | 724/1161 [00:13<00:12, 34.73it/s]Loading weights:  63%|██████▎   | 728/1161 [00:13<00:15, 28.25it/s]Loading weights:  63%|██████▎   | 736/1161 [00:13<00:12, 33.14it/s]Loading weights:  64%|██████▎   | 740/1161 [00:13<00:15, 27.46it/s]Loading weights:  64%|██████▍   | 748/1161 [00:13<00:11, 36.14it/s]Loading weights:  65%|██████▍   | 753/1161 [00:13<00:11, 34.31it/s]Loading weights:  66%|██████▌   | 761/1161 [00:14<00:10, 39.85it/s]Loading weights:  68%|██████▊   | 791/1161 [00:14<00:03, 93.49it/s]Loading weights:  76%|███████▌  | 885/1161 [00:14<00:00, 285.69it/s]Loading weights:  83%|████████▎ | 967/1161 [00:14<00:00, 414.05it/s]Loading weights:  91%|█████████ | 1053/1161 [00:14<00:00, 527.78it/s]Loading weights:  98%|█████████▊| 1141/1161 [00:14<00:00, 618.82it/s]Loading weights: 100%|██████████| 1161/1161 [00:14<00:00, 79.17it/s] 
+23:49:39 [INFO] Model ready
+23:49:39 [INFO]   Phase 1: end-of-document detection (37 pages)…
+23:49:45 [INFO]   Checking page 1 (context: [1, 2])
+23:49:50 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' includes handwritten signatures and dates, indicating the document's conclusion.
+23:49:50 [INFO]   p1: end=True, signal=signature_block, signal_on_page=1, conf=90%
+23:49:55 [INFO]   [NEXT-PAGE-GATE] p2: heading='' nom=NONE continuation=True verso=False -> starts_new=False (continuation cues and heading is not a document type (section header / mid-doc) — not a new document)
+23:49:55 [INFO]   Signature on p1 but next page does not start a new doc — suppressed
+23:50:00 [INFO]   Checking page 2 (context: [1, 2, 3])
+23:50:06 [INFO]   Reason: The labeled approval grid with 'Изготвил' and handwritten signatures is present at the bottom of page 2.
+23:50:06 [INFO]   p2: end=True, signal=signature_block, signal_on_page=2, conf=90%
+23:50:13 [INFO]   [NEXT-PAGE-GATE] p3: heading='СЪОБЩЕНИЕ' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:50:13 [INFO]   Signature on p2 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='СЪОБЩЕНИЕ']
+23:50:13 [INFO]   End at page 2 → doc starts at page 3 (conf=92%, signal=signature_block)
+23:50:22 [INFO]   Checking page 3 (context: [2, 3, 4])
+23:50:28 [INFO]   Reason: The labeled approval grid with 'Изготвил' contains a handwritten signature, indicating the document's conclusion.
+23:50:28 [INFO]   p3: end=True, signal=signature_block, signal_on_page=3, conf=90%
+23:50:34 [INFO]   [NEXT-PAGE-GATE] p4: heading='РАЗПИСЕН ПИСТ' nom=MATCH continuation=False verso=False -> starts_new=True (heading nomenclature-MATCHes a document type — new document)
+23:50:34 [INFO]   Signature on p3 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='РАЗПИСЕН ПИСТ']
+23:50:34 [INFO]   End at page 3 → doc starts at page 4 (conf=92%, signal=signature_block)
+23:50:39 [INFO]   Checking page 4 (context: [3, 4, 5])
+23:50:44 [INFO]   Reason: The labeled approval grid with 'Изготвил' and a handwritten signature is present.
+23:50:44 [INFO]   p4: end=True, signal=signature_block, signal_on_page=3, conf=90%
+23:50:44 [INFO]   Signal 'signature_block' is on p3, not p4 — adjusting boundary: doc ends at p3, next doc starts at p4
+23:50:44 [INFO]   End at page 3 → doc starts at page 4 (conf=90%, signal=signature_block)
+23:50:48 [INFO]   Checking page 5 (context: [4, 5, 6])
+23:50:54 [INFO]   Reason: The labeled approval grid with 'Изготвил' and a handwritten signature is present.
+23:50:54 [INFO]   p5: end=True, signal=signature_block, signal_on_page=5, conf=90%
+23:50:59 [INFO]   [NEXT-PAGE-GATE] p6: heading='' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:50:59 [INFO]   Signature on p5 confirmed as end — next page starts new doc (conf=92%)
+23:50:59 [INFO]   End at page 5 → doc starts at page 6 (conf=92%, signal=signature_block)
+23:51:03 [INFO]   [START-DETECT] p5 starts a new doc (conf=95%): Page 5 shows a different letterhead and issuing authority (Община Пловдив Район "Западен") compared to page 4.
+23:51:07 [INFO]   Checking page 6 (context: [5, 6, 7])
+23:51:13 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласували', and 'Одобрил' contains handwritten signatures and filled names/dates.
+23:51:13 [INFO]   p6: end=True, signal=signature_block, signal_on_page=6, conf=90%
+23:51:18 [INFO]   [NEXT-PAGE-GATE] p7: heading='ОБЩИНА ПЛОВДИВ\nЗАПОВЕД' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:51:18 [INFO]   Signature on p6 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='ОБЩИНА ПЛОВДИВ
+ЗАПОВЕД']
+23:51:18 [INFO]   End at page 6 → doc starts at page 7 (conf=95%, signal=signature_block)
+23:51:23 [INFO]   Checking page 7 (context: [6, 7, 8])
+23:51:28 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласували', and 'Одобрени' contains handwritten signatures and/or filled names/dates.
+23:51:28 [INFO]   p7: end=True, signal=signature_block, signal_on_page=7, conf=90%
+23:51:39 [WARNING]   No JSON: ```json
+{
+    "transcription": "ПОЛУЧАТЕЛ\nДОСТАВИЧК\nШИНКА ПЕТРОВА АЛЕКСИЕВА\nгр. Пловдив\nбул. \"Хаджи Димитър\" №22\nДДС N:\nЕГН/ЕИК/БУЛСТАТ: 5911054459\nМОЛ. ШИНКА ПЕТРОВА АЛЕКСИЕВА\nМясто на сдел
+23:51:39 [INFO]   [NEXT-PAGE-GATE] p8: heading='' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:51:39 [INFO]   Signature on p7 confirmed as end — next page starts new doc (conf=70%)
+23:51:41 [INFO]   Low-conf boundary at p7 confirmed — averaged conf=82%
+23:51:41 [INFO]   End at page 7 → doc starts at page 8 (conf=82%, signal=signature_block)
+23:51:45 [INFO]   Checking page 8 (context: [7, 8, 9])
+23:51:50 [INFO]   Reason: The table on page 8 includes a totals/summary row ('Сума за плащане') indicating the end of the table content.
+23:51:50 [INFO]   p8: end=True, signal=table_end, signal_on_page=8, conf=90%
+23:51:52 [INFO]   Low-conf boundary at p8 confirmed — averaged conf=80%
+23:51:52 [INFO]   End at page 8 → doc starts at page 9 (conf=80%, signal=table_end)
+23:51:56 [INFO]   Checking page 9 (context: [8, 9, 10])
+23:52:02 [INFO]   Reason: The next page begins with a document title 'СКИЦА НА ПОЗЕМЛЕН ИМОТ' and includes a document-level identifier '№ 15-158202-06.04.2017 г.', indicating the start of a new document.
+23:52:02 [INFO]   p9: end=True, signal=titled_id_header, signal_on_page=10, conf=90%
+23:52:02 [INFO]   Signal 'titled_id_header' is on p10, not p9 — adjusting boundary: doc ends at p9, next doc starts at p10
+23:52:05 [INFO]   [TITLE-GATE] p10: title='СКИЦА НА ПОЗЕМЛЕН ИМОТ' identifier='№ 15-158202-06.04.2017 г.' -> grounded=2/2
+23:52:05 [INFO]   End at page 9 → doc starts at page 10 (conf=90%, signal=titled_id_header)
+23:52:10 [INFO]   Checking page 10 (context: [9, 10, 11])
+23:52:15 [INFO]   Reason: The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document.
+23:52:15 [INFO]   p10: end=True, signal=titled_id_header, signal_on_page=11, conf=80%
+23:52:15 [INFO]   Signal 'titled_id_header' is on p11, not p10 — adjusting boundary: doc ends at p10, next doc starts at p11
+23:52:17 [INFO]   [TITLE-GATE] p11: title='none' identifier='none' -> grounded=0/2
+23:52:22 [INFO]   [TITLE-GATE] titled_id_header at p11 SUPPRESSED — neither grounded on claimed page and 2 grounded-title pages (ambiguous) in window [9, 10, 11]
+23:52:27 [INFO]   Checking page 11 (context: [10, 11, 12])
+23:52:34 [INFO]   Reason: The next page begins with a document title 'ПРЕПИС-ИЗВЛЕЧЕНИЕ' and includes a document-level identifier 'протокол № 5', indicating the start of a new document.
+23:52:34 [INFO]   p11: end=True, signal=titled_id_header, signal_on_page=12, conf=90%
+23:52:34 [INFO]   Signal 'titled_id_header' is on p12, not p11 — adjusting boundary: doc ends at p11, next doc starts at p12
+23:52:38 [INFO]   [TITLE-GATE] p12: title='РАЙОНЕН ЕКСПЕРТЕН СЪВЕТ ПО УСТРОЙСТВО НА ТЕРИТОРИЯТА НА ОБЩИНА ПЛОВДИВ - РАЙОН "ЗАПАДЕН"' identifier='протокол № 5' -> grounded=2/2
+23:52:38 [INFO]   End at page 11 → doc starts at page 12 (conf=90%, signal=titled_id_header)
+23:52:47 [INFO]   Checking page 12 (context: [11, 12, 13])
+23:52:54 [INFO]   Reason: The next page begins with a document title 'ЗАЯВЛЕНИЕ' and includes a document-level identifier 'Вх. № 2-94 00-304/27.02.2017 г.' indicating the start of a new document.
+23:52:54 [INFO]   p12: end=True, signal=titled_id_header, signal_on_page=13, conf=90%
+23:52:54 [INFO]   Signal 'titled_id_header' is on p13, not p12 — adjusting boundary: doc ends at p12, next doc starts at p13
+23:52:57 [INFO]   [TITLE-GATE] p13: title='ЗАЯВЛЕНИЕ' identifier='Вх. № 9900-507 от 27.02.2019 г.' -> grounded=2/2
+23:52:57 [INFO]   End at page 12 → doc starts at page 13 (conf=90%, signal=titled_id_header)
+23:53:01 [INFO]   Checking page 13 (context: [12, 13, 14])
+23:53:08 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures and filled names/dates.
+23:53:08 [INFO]   p13: end=True, signal=signature_block, signal_on_page=13, conf=90%
+23:53:20 [WARNING]   No JSON: ```json
+{
+    "transcription": "5.3 Електро - 3 бр.\n✓ 5.4 ВиК - 3 бр.\n✗ Съгласуване с ВИК/Становище от ВИК/ или др.\n5.5 ОВ - бр.\n✓ 5.6 Енергийна ефективност - 3 бр.\n✓ - Оценка на ЕЕ - 3 бр.\n~ До
+23:53:20 [INFO]   [NEXT-PAGE-GATE] p14: heading='' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:53:20 [INFO]   Signature on p13 confirmed as end — next page starts new doc (conf=70%)
+23:53:23 [INFO]   Low-conf boundary at p13 (70%) rejected by confirmation pass
+23:53:27 [INFO]   Checking page 14 (context: [13, 14, 15])
+23:53:32 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures.
+23:53:32 [INFO]   p14: end=True, signal=signature_block, signal_on_page=14, conf=90%
+23:53:39 [INFO]   [NEXT-PAGE-GATE] p15: heading='' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:53:39 [INFO]   Signature on p14 confirmed as end — next page starts new doc (conf=92%)
+23:53:39 [INFO]   End at page 14 → doc starts at page 15 (conf=92%, signal=signature_block)
+23:53:47 [INFO]   Checking page 15 (context: [14, 15, 16])
+23:53:52 [INFO]   Reason: The next page begins with a document title and an object identifier (обект №), indicating the start of a new document.
+23:53:52 [INFO]   p15: end=True, signal=titled_id_header, signal_on_page=15, conf=90%
+23:53:53 [INFO]   [TITLE-GATE] p15: title='none' identifier='none' -> grounded=0/2
+23:53:56 [INFO]   [TITLE-GATE] titled_id_header at p15 SUPPRESSED — neither grounded on claimed page and no grounded-title page in window [14, 15, 16]
+23:53:59 [INFO]   Checking page 16 (context: [15, 16, 17])
+23:54:03 [INFO]   Reason: No clear end or start signals are present on page 16; the content appears continuous with adjacent pages.
+23:54:03 [INFO]   p16: end=False, signal=none, signal_on_page=16, conf=90%
+23:54:07 [INFO]   Checking page 17 (context: [16, 17, 18])
+23:54:10 [INFO]   Reason: No clear end or start signals detected on page 17; content appears continuous.
+23:54:10 [INFO]   p17: end=False, signal=none, signal_on_page=17, conf=90%
+23:54:14 [INFO]   Checking page 18 (context: [17, 18, 19])
+23:54:18 [INFO]   Reason: The next page begins with a document title and a document-level identifier (РС №), indicating the start of a new document.
+23:54:18 [INFO]   p18: end=True, signal=titled_id_header, signal_on_page=19, conf=90%
+23:54:18 [INFO]   Signal 'titled_id_header' is on p19, not p18 — adjusting boundary: doc ends at p18, next doc starts at p19
+23:54:19 [INFO]   [TITLE-GATE] p19: title='none' identifier='none' -> grounded=0/2
+23:54:22 [INFO]   [TITLE-GATE] titled_id_header at p19 SUPPRESSED — neither grounded on claimed page and no grounded-title page in window [17, 18, 19]
+23:54:25 [INFO]   Checking page 19 (context: [18, 19, 20])
+23:54:29 [INFO]   Reason: No clear end or start signals are present on page 19 or the transition to page 20.
+23:54:29 [INFO]   p19: end=False, signal=none, signal_on_page=19, conf=100%
+23:54:33 [INFO]   Checking page 20 (context: [19, 20, 21])
+23:54:37 [INFO]   Reason: No clear end or start signals are present on page 20.
+23:54:37 [INFO]   p20: end=False, signal=none, signal_on_page=20, conf=100%
+23:54:41 [INFO]   Checking page 21 (context: [20, 21, 22])
+23:54:46 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', and 'Одобрил' contains handwritten signatures and dates.
+23:54:46 [INFO]   p21: end=True, signal=signature_block, signal_on_page=21, conf=90%
+23:54:53 [INFO]   [NEXT-PAGE-GATE] p22: heading='АТРИЯ-АРХ-ЕООД-КОМПЛЕКСНО ПРОЕКТИРАНЕ' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:54:53 [INFO]   Signature on p21 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='АТРИЯ-АРХ-ЕООД-КОМПЛЕКСНО ПРОЕКТИРАНЕ']
+23:54:53 [INFO]   End at page 21 → doc starts at page 22 (conf=92%, signal=signature_block)
+23:55:01 [INFO]   Checking page 22 (context: [21, 22, 23])
+23:55:07 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласували', and 'Одобрени' includes handwritten signatures and dates, indicating a completed approval process.
+23:55:07 [INFO]   p22: end=True, signal=signature_block, signal_on_page=22, conf=90%
+23:55:13 [INFO]   [NEXT-PAGE-GATE] p23: heading='УДОСТОВЕРЕНИЕ за пълна проектиантска правоспособност' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:55:13 [INFO]   Signature on p22 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='УДОСТОВЕРЕНИЕ за пълна проектиантска правоспособност']
+23:55:13 [INFO]   End at page 22 → doc starts at page 23 (conf=92%, signal=signature_block)
+23:55:18 [INFO]   Checking page 23 (context: [22, 23, 24])
+23:55:24 [INFO]   Reason: The page contains labeled fields 'Проектант' with a handwritten signature next to it, indicating a project sign-off.
+23:55:24 [INFO]   p23: end=True, signal=project_signoff, signal_on_page=23, conf=90%
+23:55:32 [INFO]   [NEXT-PAGE-GATE] p24: heading='ЗАСТРАХОВАТЕЛНА ПОЛИЦА № 16 465 1317 0000546808' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:55:32 [INFO]   Signature on p23 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ЗАСТРАХОВАТЕЛНА ПОЛИЦА № 16 465 1317 0000546808']
+23:55:32 [INFO]   End at page 23 → doc starts at page 24 (conf=92%, signal=project_signoff)
+23:55:37 [INFO]   Checking page 24 (context: [23, 24, 25])
+23:55:44 [INFO]   Reason: The next page begins with a document title 'СКИЦА НА ПОЗЕМЛЕН ИМОТ' and includes a document-level identifier '№ 15-525575-27.10.2016 г.', indicating the start of a new document.
+23:55:44 [INFO]   p24: end=True, signal=titled_id_header, signal_on_page=25, conf=90%
+23:55:44 [INFO]   Signal 'titled_id_header' is on p25, not p24 — adjusting boundary: doc ends at p24, next doc starts at p25
+23:55:47 [INFO]   [TITLE-GATE] p25: title='СКИЦА НА ПОЗЕМЛЕН ИМОТ' identifier='№ 15-525575-27.10.2016 г.' -> grounded=2/2
+23:55:47 [INFO]   End at page 24 → doc starts at page 25 (conf=90%, signal=titled_id_header)
+23:55:52 [INFO]   Checking page 25 (context: [24, 25, 26])
+23:56:00 [INFO]   Reason: The next page begins with a document title 'НОТАРИАЛЕН АКТ' and includes a document-level identifier 'N.....35.....том.....III.....рег. N.....3716.....дело N.....417...от 30.09.2016 година'.
+23:56:00 [INFO]   p25: end=True, signal=titled_id_header, signal_on_page=26, conf=90%
+23:56:00 [INFO]   Signal 'titled_id_header' is on p26, not p25 — adjusting boundary: doc ends at p25, next doc starts at p26
+23:56:02 [INFO]   [TITLE-GATE] p26: title='НОТАРИАЛЕН АКТ' identifier='№ 30705' -> grounded=2/2
+23:56:02 [INFO]   End at page 25 → doc starts at page 26 (conf=90%, signal=titled_id_header)
+23:56:07 [INFO]   Checking page 26 (context: [25, 26, 27])
+23:56:13 [INFO]   Reason: The next page begins with a document title and a numbered identifier, indicating the start of a new document.
+23:56:13 [INFO]   p26: end=True, signal=titled_id_header, signal_on_page=27, conf=90%
+23:56:13 [INFO]   Signal 'titled_id_header' is on p27, not p26 — adjusting boundary: doc ends at p26, next doc starts at p27
+23:56:15 [INFO]   [TITLE-GATE] p27: title='none' identifier='none' -> grounded=0/2
+23:56:20 [INFO]   [TITLE-GATE] titled_id_header at p27 SUPPRESSED — neither grounded on claimed page and 2 grounded-title pages (ambiguous) in window [25, 26, 27]
+23:56:25 [INFO]   Checking page 27 (context: [26, 27, 28])
+23:56:31 [INFO]   Reason: No clear end or start signals are present on page 27; the content appears to continue seamlessly into the next page.
+23:56:31 [INFO]   p27: end=False, signal=none, signal_on_page=27, conf=100%
+23:56:35 [INFO]   Checking page 28 (context: [27, 28, 29])
+23:56:41 [INFO]   Reason: No clear end or start signals are present on page 28; the content appears to continue seamlessly into the next page.
+23:56:41 [INFO]   p28: end=False, signal=none, signal_on_page=28, conf=100%
+23:56:46 [INFO]   Checking page 29 (context: [28, 29, 30])
+23:56:52 [INFO]   Reason: No clear end or start signals are present on page 29; the content appears to continue seamlessly into page 30.
+23:56:52 [INFO]   p29: end=False, signal=none, signal_on_page=29, conf=100%
+23:56:57 [INFO]   Checking page 30 (context: [29, 30, 31])
+23:57:03 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures and is located at the bottom of the page.
+23:57:03 [INFO]   p30: end=True, signal=signature_block, signal_on_page=31, conf=80%
+23:57:03 [INFO]   Signal 'signature_block' is on p31, not p30 — adjusting boundary: doc ends at p31, next doc starts at p32
+23:57:03 [INFO]   End at page 31 → doc starts at page 32 (conf=80%, signal=signature_block)
+23:57:12 [INFO]   Checking page 31 (context: [30, 31, 32])
+23:57:18 [INFO]   Reason: The page contains a labeled approval grid with 'Нотариус' as a printed label, and it includes a handwritten signature and a round organizational stamp.
+23:57:18 [INFO]   p31: end=True, signal=signature_block, signal_on_page=31, conf=90%
+23:57:24 [INFO]   [NEXT-PAGE-GATE] p32: heading='ОБ ЯСНИТЕЛНА ЗАПИСКА' nom=MATCH continuation=False verso=False -> starts_new=True (heading nomenclature-MATCHes a document type — new document)
+23:57:24 [INFO]   Signature on p31 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ОБ ЯСНИТЕЛНА ЗАПИСКА']
+23:57:24 [INFO]   End at page 31 → doc starts at page 32 (conf=92%, signal=signature_block)
+23:57:33 [INFO]   Checking page 32 (context: [31, 32, 33])
+23:57:39 [INFO]   Reason: The labeled approval grid with 'Изготвил' and other labels contains handwritten signatures and dates.
+23:57:39 [INFO]   p32: end=True, signal=signature_block, signal_on_page=32, conf=90%
+23:57:47 [INFO]   [NEXT-PAGE-GATE] p33: heading='' nom=NONE continuation=True verso=False -> starts_new=False (continuation cues and heading is not a document type (section header / mid-doc) — not a new document)
+23:57:47 [INFO]   Signature on p32 but next page does not start a new doc — suppressed
+23:57:51 [INFO]   Checking page 33 (context: [32, 33, 34])
+23:57:57 [INFO]   Reason: The page contains a labeled approval grid with 'Изготвил' and a handwritten signature next to it.
+23:57:57 [INFO]   p33: end=True, signal=signature_block, signal_on_page=33, conf=90%
+23:58:05 [INFO]   [NEXT-PAGE-GATE] p34: heading='КОЛИЧЕСТВЕНА СМЕТКА' nom=MATCH continuation=False verso=False -> starts_new=True (heading nomenclature-MATCHes a document type — new document)
+23:58:05 [INFO]   Signature on p33 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='КОЛИЧЕСТВЕНА СМЕТКА']
+23:58:05 [INFO]   End at page 33 → doc starts at page 34 (conf=92%, signal=signature_block)
+23:58:14 [INFO]   Checking page 34 (context: [33, 34, 35])
+23:58:20 [INFO]   Reason: The table on page 34 ends without a continuation arrow, indicating the conclusion of the current document.
+23:58:20 [INFO]   p34: end=True, signal=table_end, signal_on_page=34, conf=90%
+23:58:23 [INFO]   Low-conf boundary at p34 (60%) rejected by confirmation pass
+23:58:27 [INFO]   Checking page 35 (context: [34, 35, 36])
+23:58:33 [INFO]   Reason: No clear end or start signals are present on page 35; the table continues without totals or new identifiers.
+23:58:33 [INFO]   p35: end=False, signal=none, signal_on_page=35, conf=100%
+23:58:37 [INFO]   Checking page 36 (context: [35, 36, 37])
+23:58:43 [INFO]   Reason: The table on page 36 ends with a totals/summary row labeled 'ОБЩО:', indicating the conclusion of the table data.
+23:58:43 [INFO]   p36: end=True, signal=table_end, signal_on_page=36, conf=90%
+23:58:47 [INFO]   Low-conf boundary at p36 (60%) rejected by confirmation pass
+23:58:47 [INFO]   Phase 1 done — document start pages: [1, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 22, 23, 24, 25, 26, 32, 34]
+23:58:47 [INFO]   Skipping Phase 2 classification (classify=False)
+23:58:47 [INFO]   Boundaries: [(1, 0, ''), (3, 0, ''), (4, 0, ''), (5, 0, ''), (6, 0, ''), (7, 0, ''), (8, 0, ''), (9, 0, ''), (10, 0, ''), (12, 0, ''), (13, 0, ''), (15, 0, ''), (22, 0, ''), (23, 0, ''), (24, 0, ''), (25, 0, ''), (26, 0, ''), (32, 0, ''), (34, 0, '')]
+
+Image_00112022025163444215.pdf
+  pred=[3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 22, 23, 24, 25, 26, 32, 34]
+  true=[3, 4, 5, 7, 8, 9, 10, 12, 13, 15, 22, 23, 24, 25, 26, 32, 34]
+23:58:47 [INFO]   Phase 1: end-of-document detection (15 pages)…
+23:58:52 [INFO]   Checking page 1 (context: [1, 2])
+23:58:56 [INFO]   Reason: The labeled fields 'Проектант' and 'Подпис' have actual handwritten signatures next to them.
+23:58:56 [INFO]   p1: end=True, signal=project_signoff, signal_on_page=1, conf=90%
+23:59:04 [INFO]   [NEXT-PAGE-GATE] p2: heading='УДОСТОВЕРЕНИЕ\nЗА ПЪЛНА ПРОЕКТАНТСКА ПРАВОСПОСОБНОСТ' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+23:59:04 [INFO]   Signature on p1 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='УДОСТОВЕРЕНИЕ
+ЗА ПЪЛНА ПРОЕКТАНТСКА ПРАВОСПОСОБНОСТ']
+23:59:04 [INFO]   End at page 1 → doc starts at page 2 (conf=92%, signal=project_signoff)
+23:59:09 [INFO]   Checking page 2 (context: [1, 2, 3])
+23:59:16 [INFO]   Reason: The next page begins with a document title 'УДОСТОВЕРЕНИЕ' and includes a document-level identifier 'Регистрационен номер № 02944', indicating the start of a new document.
+23:59:16 [INFO]   p2: end=True, signal=titled_id_header, signal_on_page=2, conf=90%
+23:59:18 [INFO]   [TITLE-GATE] p2: title='УДОСТОВЕРЕНИЕ' identifier='Регистрационен номер № 02944' -> grounded=2/2
+23:59:18 [INFO]   End at page 1 → doc starts at page 2 (conf=90%, signal=titled_id_header)
+23:59:23 [INFO]   Checking page 3 (context: [2, 3, 4])
+23:59:30 [INFO]   Reason: The next page begins with a document title and a reference number (изх. № 6480458 -1 /24.02.2017г.), indicating the start of a new document.
+23:59:30 [INFO]   p3: end=True, signal=titled_id_header, signal_on_page=4, conf=90%
+23:59:30 [INFO]   Signal 'titled_id_header' is on p4, not p3 — adjusting boundary: doc ends at p3, next doc starts at p4
+23:59:32 [INFO]   [TITLE-GATE] p4: title='none' identifier='изх. № 6480458 -1 /24.02.2017г.' -> grounded=1/2
+23:59:32 [INFO]   [TITLE-GATE] p4 one-of-two (title XOR identifier) — accepted, conf capped to 0.60
+23:59:32 [INFO]   End at page 3 → doc starts at page 4 (conf=60%, signal=titled_id_header)
+23:59:36 [INFO]   [START-DETECT] p3 starts a new doc (conf=95%): Page 3 shows a different company/institution letterhead and logo ('Armeec' vs 'КИИП'), indicating a new document.
+23:59:41 [INFO]   Checking page 4 (context: [3, 4, 5])
+23:59:47 [INFO]   Reason: The next page begins with a document title 'Предварителен договор' and includes a document-level identifier '№ 4279762'.
+23:59:47 [INFO]   p4: end=True, signal=titled_id_header, signal_on_page=5, conf=90%
+23:59:47 [INFO]   Signal 'titled_id_header' is on p5, not p4 — adjusting boundary: doc ends at p4, next doc starts at p5
+23:59:50 [INFO]   [TITLE-GATE] p5: title='Предварителен договор' identifier='№ 4279762' -> grounded=2/2
+23:59:50 [INFO]   End at page 4 → doc starts at page 5 (conf=90%, signal=titled_id_header)
+23:59:54 [INFO]   Checking page 5 (context: [4, 5, 6])
+23:59:59 [INFO]   Reason: No clear end or start signals detected on page 5; content appears continuous.
+23:59:59 [INFO]   p5: end=False, signal=none, signal_on_page=5, conf=90%
+00:00:08 [INFO]   Checking page 6 (context: [5, 6, 7])
+00:00:14 [INFO]   Reason: No clear end or start signals are present on page 6 or page 7.
+00:00:14 [INFO]   p6: end=False, signal=none, signal_on_page=7, conf=90%
+00:00:18 [INFO]   Checking page 7 (context: [6, 7, 8])
+00:00:24 [INFO]   Reason: The labeled approval grid with signatures for 'За ЕВН ЕР' and 'За Клиента' is present.
+00:00:24 [INFO]   p7: end=True, signal=signature_block, signal_on_page=7, conf=90%
+00:00:31 [INFO]   [NEXT-PAGE-GATE] p8: heading='' nom=NONE continuation=True verso=False -> starts_new=False (continuation cues and heading is not a document type (section header / mid-doc) — not a new document)
+00:00:31 [INFO]   Signature on p7 but next page does not start a new doc — suppressed
+00:00:35 [INFO]   Checking page 8 (context: [7, 8, 9])
+00:00:42 [INFO]   Reason: The page contains a labeled approval grid with 'За Клиента' and 'За ЕВН ЕР' sections, including handwritten signatures.
+00:00:42 [INFO]   p8: end=True, signal=signature_block, signal_on_page=8, conf=90%
+00:00:50 [INFO]   [NEXT-PAGE-GATE] p9: heading='Търговски условия\nна предварителните договори за присъединяване на обект на Клиент към\nелектроразпределителната мрежа на "ЕВН България Електроразпределение" ЕАД' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+00:00:50 [INFO]   Signature on p8 confirmed as end — next page starts new doc (conf=95%) [next_page_heading='Търговски условия
+на предварителните договори за присъединяване на обект на Клиент към
+електроразпределителната мрежа на "ЕВН България Електроразпределение" ЕАД']
+00:00:50 [INFO]   End at page 8 → doc starts at page 9 (conf=95%, signal=signature_block)
+00:00:59 [INFO]   Checking page 9 (context: [8, 9, 10])
+00:01:05 [INFO]   Reason: No clear end or start signals are present on page 9 or the following page.
+00:01:05 [INFO]   p9: end=False, signal=none, signal_on_page=9, conf=100%
+00:01:09 [INFO]   Checking page 10 (context: [9, 10, 11])
+00:01:15 [INFO]   Reason: No clear end or start signals are present on page 10; the content continues seamlessly without any indication of a document boundary.
+00:01:15 [INFO]   p10: end=False, signal=none, signal_on_page=10, conf=100%
+00:01:20 [INFO]   Checking page 11 (context: [10, 11, 12])
+00:01:26 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' includes handwritten signatures and dates, indicating the completion of the document.
+00:01:26 [INFO]   p11: end=True, signal=signature_block, signal_on_page=12, conf=90%
+00:01:26 [INFO]   Signal 'signature_block' is on p12, not p11 — adjusting boundary: doc ends at p12, next doc starts at p13
+00:01:26 [INFO]   End at page 12 → doc starts at page 13 (conf=90%, signal=signature_block)
+00:01:34 [INFO]   Checking page 12 (context: [11, 12, 13])
+00:01:40 [INFO]   Reason: No clear end or start signals are present on page 12 or the beginning of page 13.
+00:01:40 [INFO]   p12: end=False, signal=none, signal_on_page=12, conf=90%
+00:01:46 [INFO]   Checking page 13 (context: [12, 13, 14])
+00:01:52 [INFO]   Reason: No clear end or start signals are present on page 13; the content continues seamlessly without any definitive indicators of a document boundary.
+00:01:52 [INFO]   p13: end=False, signal=none, signal_on_page=13, conf=100%
+00:01:57 [INFO]   Checking page 14 (context: [13, 14, 15])
+00:02:03 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures or filled names/dates.
+00:02:03 [INFO]   p14: end=True, signal=signature_block, signal_on_page=14, conf=90%
+00:02:12 [INFO]   [NEXT-PAGE-GATE] p15: heading='КОЛИЧЕСТВЕНА СМЕТКА' nom=MATCH continuation=False verso=False -> starts_new=True (heading nomenclature-MATCHes a document type — new document)
+00:02:12 [INFO]   Signature on p14 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='КОЛИЧЕСТВЕНА СМЕТКА']
+00:02:12 [INFO]   End at page 14 → doc starts at page 15 (conf=92%, signal=signature_block)
+00:02:18 [INFO]   [START-DETECT] p14 starts a new doc (conf=95%): Page 14 begins with a self-contained document header block titled 'ОБЯСНИТЕЛНА ЗАПИСКА ОТНОСНО ИЗИСКВАНИЯТА ЗА ЗДРАВОСЛОВНИ И БЕЗОПАСНИ УСЛОВИЯ НА ТРУД', indicating a new document.
+00:02:18 [INFO]   Phase 1 done — document start pages: [1, 2, 3, 4, 5, 9, 13, 14, 15]
+00:02:18 [INFO]   Skipping Phase 2 classification (classify=False)
+00:02:18 [INFO]   Boundaries: [(1, 0, ''), (2, 0, ''), (3, 0, ''), (4, 0, ''), (5, 0, ''), (9, 0, ''), (13, 0, ''), (14, 0, ''), (15, 0, '')]
+
+Image_00112022025164505881.pdf
+  pred=[2, 3, 4, 5, 9, 13, 14, 15]
+  true=[2, 3, 4, 5, 12, 14, 15]
+00:02:18 [INFO]   Phase 1: end-of-document detection (7 pages)…
+00:02:23 [INFO]   Checking page 1 (context: [1, 2])
+00:02:27 [INFO]   Reason: The labeled approval grid with 'Съгласували' contains handwritten signatures next to the names.
+00:02:27 [INFO]   p1: end=True, signal=signature_block, signal_on_page=1, conf=90%
+00:02:33 [INFO]   [NEXT-PAGE-GATE] p2: heading='ОБЯСНИТЕЛНА ЗАПИСКА' nom=MATCH continuation=False verso=False -> starts_new=True (heading nomenclature-MATCHes a document type — new document)
+00:02:33 [INFO]   Signature on p1 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ОБЯСНИТЕЛНА ЗАПИСКА']
+00:02:33 [INFO]   End at page 1 → doc starts at page 2 (conf=92%, signal=signature_block)
+00:02:38 [INFO]   Checking page 2 (context: [1, 2, 3])
+00:02:44 [INFO]   Reason: The next page begins with a document title 'ИЗХОДНИ ТОЧКИ' and includes a structured format typical of a new document.
+00:02:44 [WARNING]   p2: signal_on_page=4 outside window [1, 2, 3] — re-querying with explicit page labels (no silent substitution)
+00:02:48 [INFO]   [WINDOW-REQUERY] 'titled_id_header' re-placed on page 1 (window [1, 2, 3])
+00:02:48 [INFO]   p2: end=True, signal=titled_id_header, signal_on_page=1, conf=90%
+00:02:48 [INFO]   Signal 'titled_id_header' is on p1, not p2 — adjusting boundary: doc ends at p0, next doc starts at p1
+00:02:50 [INFO]   [TITLE-GATE] p1: title='Ч Е ЛЕН ЛИСТ' identifier='none' -> grounded=1/2
+00:02:50 [INFO]   [TITLE-GATE] p1 one-of-two (title XOR identifier) — accepted, conf capped to 0.60
+00:02:50 [INFO]   End at page 0 → doc starts at page 1 (conf=60%, signal=titled_id_header)
+00:02:54 [INFO]   Checking page 3 (context: [2, 3, 4])
+00:03:01 [INFO]   Reason: No clear end or start signals are present on page 3; the content appears to be a continuation of coordinate data without any conclusive indicators of document termination.
+00:03:01 [INFO]   p3: end=False, signal=none, signal_on_page=3, conf=90%
+00:03:09 [INFO]   Checking page 4 (context: [3, 4, 5])
+00:03:16 [INFO]   Reason: No clear end or start signals are present on page 4; the content appears to be a continuation of coordinate data without any conclusive indicators of document boundaries.
+00:03:16 [INFO]   p4: end=False, signal=none, signal_on_page=4, conf=100%
+00:03:20 [INFO]   Checking page 5 (context: [4, 5, 6])
+00:03:27 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', 'Одобрил' contains handwritten signatures or filled names/dates.
+00:03:27 [INFO]   p5: end=True, signal=signature_block, signal_on_page=5, conf=90%
+00:03:35 [INFO]   [NEXT-PAGE-GATE] p6: heading='ЗАСТРАХОВАТЕЛНА ПОЛИЦА' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+00:03:35 [INFO]   Signature on p5 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ЗАСТРАХОВАТЕЛНА ПОЛИЦА']
+00:03:35 [INFO]   End at page 5 → doc starts at page 6 (conf=92%, signal=signature_block)
+00:03:40 [INFO]   [START-DETECT] p5 starts a new doc (conf=95%): Page 5 shows a self-contained document header block titled 'УДОСТОВЕРЕНИЕ ЗА ПЪЛНА ПРОЕКТАНТСКА ПРАВОСПОСОБНОСТ' which resets the context, indicating a new document.
+00:03:45 [INFO]   Checking page 6 (context: [5, 6, 7])
+00:03:51 [INFO]   Reason: The next page begins with a document title and a document-level identifier (policy number) immediately following.
+00:03:51 [INFO]   p6: end=True, signal=titled_id_header, signal_on_page=6, conf=90%
+00:03:54 [INFO]   [TITLE-GATE] p6: title='ЗАСТРАХОВАТЕЛНА ПОЛИЦА' identifier='№ 212216151000190 / 29.07.2016' -> grounded=2/2
+00:03:54 [INFO]   End at page 5 → doc starts at page 6 (conf=90%, signal=titled_id_header)
+00:03:54 [INFO]   Phase 1 done — document start pages: [1, 2, 5, 6]
+00:03:54 [INFO]   Skipping Phase 2 classification (classify=False)
+00:03:54 [INFO]   Boundaries: [(1, 0, ''), (2, 0, ''), (5, 0, ''), (6, 0, '')]
+
+Image_00112022025165204533.pdf
+  pred=[2, 5, 6]
+  true=[2, 3, 4, 5, 6]
+00:03:54 [INFO]   Phase 1: end-of-document detection (21 pages)…
+00:03:59 [INFO]   Checking page 1 (context: [1, 2])
+00:04:04 [INFO]   Reason: The labeled fields 'Проектант' and 'Водещ Проектант' have actual handwritten signatures next to them.
+00:04:04 [INFO]   p1: end=True, signal=project_signoff, signal_on_page=1, conf=90%
+00:04:10 [INFO]   [NEXT-PAGE-GATE] p2: heading='УДОСТОВЕРЕНИЕ ЗА ПЪЛНА ПРОЕКТАНТСКА ПРАВОСПОСОБНОСТ' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+00:04:10 [INFO]   Signature on p1 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='УДОСТОВЕРЕНИЕ ЗА ПЪЛНА ПРОЕКТАНТСКА ПРАВОСПОСОБНОСТ']
+00:04:10 [INFO]   End at page 1 → doc starts at page 2 (conf=92%, signal=project_signoff)
+00:04:15 [INFO]   Checking page 2 (context: [1, 2, 3])
+00:04:21 [INFO]   Reason: The labeled fields 'Проектант' and 'Водещ Проектант' have actual handwritten signatures next to them.
+00:04:21 [INFO]   p2: end=True, signal=project_signoff, signal_on_page=1, conf=90%
+00:04:21 [INFO]   Signal 'project_signoff' is on p1, not p2 — adjusting boundary: doc ends at p1, next doc starts at p2
+00:04:21 [INFO]   End at page 1 → doc starts at page 2 (conf=90%, signal=project_signoff)
+00:04:26 [INFO]   Checking page 3 (context: [2, 3, 4])
+00:04:32 [INFO]   Reason: No clear end or start signals are present on page 3; the content appears continuous without any definitive conclusion or transition.
+00:04:32 [INFO]   p3: end=False, signal=none, signal_on_page=3, conf=90%
+00:04:36 [INFO]   [START-DETECT] p3 starts a new doc (conf=95%): Page 3 shows a different company/institution letterhead and a self-contained document header block indicating an insurance policy, which is a clear change from the certification document on page 2.
+00:04:41 [INFO]   Checking page 4 (context: [3, 4, 5])
+00:04:47 [INFO]   Reason: No clear end or start signals detected on page 4; content appears continuous.
+00:04:47 [INFO]   p4: end=False, signal=none, signal_on_page=4, conf=90%
+00:04:51 [INFO]   [START-DETECT] p4 starts a new doc (conf=95%): Page 4 begins with a new header 'ОБЕКТ' indicating a new document structure distinct from the insurance policy on page 3.
+00:04:56 [INFO]   Checking page 5 (context: [4, 5, 6])
+00:05:02 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Проверил', and 'Технически ръководител' includes handwritten signatures.
+00:05:02 [INFO]   p5: end=True, signal=signature_block, signal_on_page=6, conf=90%
+00:05:02 [INFO]   Signal 'signature_block' is on p6, not p5 — adjusting boundary: doc ends at p6, next doc starts at p7
+00:05:02 [INFO]   End at page 6 → doc starts at page 7 (conf=90%, signal=signature_block)
+00:05:11 [INFO]   Checking page 6 (context: [5, 6, 7])
+00:05:17 [INFO]   Reason: The labeled field 'Проектант' contains a handwritten signature next to it.
+00:05:17 [INFO]   p6: end=True, signal=project_signoff, signal_on_page=6, conf=90%
+00:05:23 [INFO]   [NEXT-PAGE-GATE] p7: heading='ТОПЛОСЪХРАНЕНИЕ И ИКОНОМИЯ НА ЕНЕРГИЯ В СГРАДИ' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+00:05:23 [INFO]   Signature on p6 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ТОПЛОСЪХРАНЕНИЕ И ИКОНОМИЯ НА ЕНЕРГИЯ В СГРАДИ']
+00:05:23 [INFO]   End at page 6 → doc starts at page 7 (conf=92%, signal=project_signoff)
+00:05:32 [INFO]   Checking page 7 (context: [6, 7, 8])
+00:05:38 [INFO]   Reason: No clear end or start signals detected on page 7; the content appears to be a continuous part of a larger document.
+00:05:38 [INFO]   p7: end=False, signal=none, signal_on_page=7, conf=90%
+00:05:43 [INFO]   Checking page 8 (context: [7, 8, 9])
+00:05:49 [INFO]   Reason: The labeled approval grid with 'Изготвил' and a handwritten signature is present.
+00:05:49 [INFO]   p8: end=True, signal=signature_block, signal_on_page=9, conf=90%
+00:05:49 [INFO]   Signal 'signature_block' is on p9, not p8 — adjusting boundary: doc ends at p9, next doc starts at p10
+00:05:49 [INFO]   End at page 9 → doc starts at page 10 (conf=90%, signal=signature_block)
+00:05:57 [INFO]   Checking page 9 (context: [8, 9, 10])
+00:06:03 [INFO]   Reason: The labeled approval grid with 'Изчислил' and a handwritten signature is present.
+00:06:03 [INFO]   p9: end=True, signal=signature_block, signal_on_page=9, conf=90%
+00:06:12 [INFO]   [NEXT-PAGE-GATE] p10: heading='ОБЕКТ: ЖИЛИЩНА СТРАДА В УПИ 265Л657 - жил. застройване ПНИ с идент. 56784.265.857 по КК/' nom=NONE continuation=False verso=False -> starts_new=True (model verdict (no decisive evidence cue))
+00:06:12 [INFO]   Signature on p9 confirmed as end — next page starts new doc (conf=92%) [next_page_heading='ОБЕКТ: ЖИЛИЩНА СТРАДА В УПИ 265Л657 - жил. застройване ПНИ с идент. 56784.265.857 по КК/']
+00:06:12 [INFO]   End at page 9 → doc starts at page 10 (conf=92%, signal=signature_block)
+00:06:20 [INFO]   Checking page 10 (context: [9, 10, 11])
+00:06:26 [INFO]   Reason: The labeled approval grid with 'Изчислил', 'Подпис', and handwritten signatures is visible.
+00:06:26 [INFO]   p10: end=True, signal=signature_block, signal_on_page=9, conf=80%
+00:06:26 [INFO]   Signal 'signature_block' is on p9, not p10 — adjusting boundary: doc ends at p9, next doc starts at p10
+00:06:26 [INFO]   End at page 9 → doc starts at page 10 (conf=80%, signal=signature_block)
+00:06:30 [INFO]   Checking page 11 (context: [10, 11, 12])
+00:06:36 [INFO]   Reason: No clear end or start signals detected on page 11; the table continues from the previous page without any conclusive indicators.
+00:06:36 [INFO]   p11: end=False, signal=none, signal_on_page=11, conf=100%
+00:06:41 [INFO]   Checking page 12 (context: [11, 12, 13])
+00:06:46 [INFO]   Reason: No clear end or start signals detected; tables continue across pages without interruption.
+00:06:46 [INFO]   p12: end=False, signal=none, signal_on_page=12, conf=100%
+00:06:50 [INFO]   Checking page 13 (context: [12, 13, 14])
+00:06:56 [INFO]   Reason: No clear end or start signals detected; tables continue across pages without interruption.
+00:06:56 [INFO]   p13: end=False, signal=none, signal_on_page=13, conf=100%
+00:07:00 [INFO]   Checking page 14 (context: [13, 14, 15])
+00:07:06 [INFO]   Reason: No clear end or start signals detected; tables continue across pages without interruption.
+00:07:06 [INFO]   p14: end=False, signal=none, signal_on_page=14, conf=100%
+00:07:10 [INFO]   Checking page 15 (context: [14, 15, 16])
+00:07:16 [INFO]   Reason: The table continues from the previous page without any visible end or start signals.
+00:07:16 [INFO]   p15: end=False, signal=none, signal_on_page=15, conf=100%
+00:07:20 [INFO]   Checking page 16 (context: [15, 16, 17])
+00:07:26 [INFO]   Reason: The table continues from the previous page without any clear end or start signals.
+00:07:26 [INFO]   p16: end=False, signal=none, signal_on_page=16, conf=100%
+00:07:30 [INFO]   Checking page 17 (context: [16, 17, 18])
+00:07:35 [INFO]   Reason: No clear end or start signals detected; tables continue across pages without interruption.
+00:07:35 [INFO]   p17: end=False, signal=none, signal_on_page=17, conf=100%
+00:07:40 [INFO]   Checking page 18 (context: [17, 18, 19])
+00:07:46 [INFO]   Reason: The table on page 18 ends with a totals/summary row, indicating the conclusion of the data presentation.
+00:07:46 [INFO]   p18: end=True, signal=table_end, signal_on_page=18, conf=90%
+00:07:49 [INFO]   Low-conf boundary at p18 (60%) rejected by confirmation pass
+00:07:54 [INFO]   Checking page 19 (context: [18, 19, 20])
+00:08:00 [INFO]   Reason: The table on page 19 ends with a summary row containing totals, indicating the conclusion of the data presentation.
+00:08:00 [INFO]   p19: end=True, signal=table_end, signal_on_page=19, conf=90%
+00:08:03 [INFO]   Low-conf boundary at p19 (60%) rejected by confirmation pass
+00:08:08 [INFO]   Checking page 20 (context: [19, 20, 21])
+00:08:14 [INFO]   Reason: The labeled approval grid with 'Изготвил', 'Съгласувал', and 'Одобрил' contains handwritten signatures or filled names/dates.
+00:08:14 [INFO]   p20: end=True, signal=signature_block, signal_on_page=21, conf=80%
+00:08:14 [INFO]   Signal 'signature_block' is on p21, not p20 — adjusting boundary: doc ends at p21, next doc starts at p22
+00:08:14 [INFO]   [OOB-PROJECTION] new_start=22 > total_pages=21 — re-evaluating
+00:08:14 [INFO]   [OOB-PROJECTION] p21 closing-page signal (signature_block) — no boundary (#1-lite v2)
+00:08:14 [INFO]   End at page 21 → doc starts at page 22 (conf=80%, signal=signature_block)
+00:08:19 [INFO]   Phase 1 done — document start pages: [1, 2, 3, 4, 7, 10]
+00:08:19 [INFO]   Skipping Phase 2 classification (classify=False)
+00:08:19 [INFO]   Boundaries: [(1, 0, ''), (2, 0, ''), (3, 0, ''), (4, 0, ''), (7, 0, ''), (10, 0, '')]
+
+Image_00112032025082511233.pdf
+  pred=[2, 3, 4, 7, 10]
+  true=[2, 3, 4, 7, 10, 20]
+
+=== Boundary score (tolerance=0) ===
+TP=31 FP=3 FN=4
+Precision=91.18%  Recall=88.57%  F1=89.86%
+  Image_00112022025163444215.pdf: FP=[6] FN=[]
+  Image_00112022025164505881.pdf: FP=[9, 13] FN=[12]
+  Image_00112022025165204533.pdf: FP=[] FN=[3, 4]
+  Image_00112032025082511233.pdf: FP=[] FN=[20]
+
+=== Boundary score (tolerance=1) ===
+TP=32 FP=2 FN=3
+Precision=94.12%  Recall=91.43%  F1=92.75%
+
+Documents exactly recovered: 31/39
+Written: /workspace/eval_probe/eval_results.json

@@ -109,6 +109,12 @@ one-page-check claimed "clear title at top of p21" (conf 95) on 082511233; human
 is not just a framing fallacy (4th-instance) but the model *inventing* page content to justify a verdict — the
 strongest argument yet that confirm-style queries must TRANSCRIBE before judging (the #4 pattern), never free-judge.
 
+### ✅ ROUND 3 A+B+D PROBE (C reverted) — CLEAN, beats #2+#4
+`logs/round3_abd_probe.*`. tol0 TP31/FP3/FN4 **F1 89.86** vs #2+#4 GT-v3 probe 88.57 (**+1.29**). Per-file: 163444215
+**FP=[6]** FN=[] (FP31 DEAD via D; no C FPs 35/37; p13 TP; FP6 unattested, B did not veto); 164505881 FP=[9,13] FN=[12];
+165204533 FN=[3,4]; 082511233 **FP=[] FN=[20]** (no FP19, C gone). Events: NEXT-PAGE-GATE 23 (all TPs preserved),
+DUP-GUARD/RELOC/TABLE-CONFIRM 0 (off-probe / reverted). Matches pre-registered D set exactly, zero new FP/FN. → dev keep-gate.
+
 ### 🖥 ROUND 3 REDEPLOY (new RTX 5090 pod, 2026-06-13)
 New pod `213.173.103.193:19724` (data migrated; pip env + `/hf_cache` did NOT migrate — reinstalled pinned
 `requirements-lock.txt` via `--break-system-packages`, re-downloaded model 64G). Pod split.py = round-3 A–D
