@@ -14,6 +14,15 @@ pod this session) ⇒ no new fingerprint. Chain: probe → dev (≥92.12 keep-ga
 - **full-tests (the gate):** keep **iff agg ≥ 89.10 AND fresh P ≥ 85.41** (STRICT + WAIVED, per-file FP/FN). **Flip check
   (pre-registered):** FN20@082511233, FN19@142044854, FN12@084837699 (holdout) must convert to TP; net must beat any new table FPs.
 
+**STEP 1 C PROBE: falsifier TRIGGERED (as in round 3), net-negative** (`logs/round5_c_probe.*`). `[TABLE-CONFIRM]` fired
+5×, **all "boundary stands"** (model reported non-continuous numbering every time). tol0 TP32/FP7/FN3 **F1 86.49** vs
+base #2+#4 **88.57** ⇒ net **+1 TP / +3 FP** (worse). Per-file (tol0, synced GT):
+- **082511233: FN20 → TP recovered ✓** (p19→20 `6→1` reset, stands) — but **+FP19** (p18→19 `31→2` also "stands", a false boundary).
+- **163444215: +FP35, +FP37** (p34→35 `8→5`, p36→37 `10→1` — both intra-doc, wrongly stand); FP=[6,31,35,37] vs base [6,31].
+- **Core defect, cleanly isolated:** `10→1` (FP37, intra-doc reset) and `6→1` (TP20, real boundary) are **mechanically
+  indistinguishable** — both resets that "stand." The numbering rule cannot tell a section break from a document break.
+→ dev (the keep-gate; not auto-reverting on probe — running the clean read through the pre-registered gate).
+
 ---
 
 ## 🧪 ROUND 4 — A′ ISOLATION (suppress-flag dup-guard alone, from #2+#4 base) — IN PROGRESS
