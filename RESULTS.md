@@ -10,21 +10,30 @@ eval_probe 4 / eval_dev 9 / eval_full 20 PDFs), model re-downloaded to `/hf_cach
 and FP `[6,11,13,31]` / FN `[7,9]` — **byte-identical** to the historical run-8 fingerprint ⇒ env reproduces run-8,
 all anchors valid. → A′ probe.
 
+**GT-v3 SUBSET SYNC + VERIFICATION (commit 2e1cd51):** eval_dev + eval_probe `ground_truth.json` were gitignored/
+untracked and stale (missing the attested GT-v3 163444215 **p13** that eval_full carries). Synced. **Assertions (all
+PASS):** (A) 163444215 start list **byte-identical across eval_full/eval_dev/eval_probe** =
+`[1,3,4,5,7,8,9,10,12,13,15,22,23,24,25,26,32,34]`, all contain p13. (B) **cross-file consistency** — every shared
+file in eval_dev (9) and eval_probe (4) equals eval_full's start list: **0 mismatches, 0 extras** ⇒ p13 was the ONLY
+gap, nothing else changed (this replaces a git before/after diff, impossible since the files were untracked). (C)
+`groundTruthHuman` is the **rotation** annotation file (abandoned per [[eval-ground-truth]], `/Rotate` is the rotation
+truth) — NOT a boundary-GT source; GT v3 lives in `eval_full/ground_truth.json`. So "groundTruthHuman reflects v3"
+does not apply by design (different axis). Re-scored A′ arrays vs synced GT below (p13 no longer a phantom FP).
+
 **STEP 2 A′ PROBE: PASS** (`logs/round4_aprime_probe.*`). **`DUP-GUARD-SUPPRESS` fired 0×** ⇒ A′ provably inert on
-probe, pred = #2+#4 by construction (pre-registration met). tol0 TP30/FP5/FN4 **F1 86.96** (P85.71/R88.24); tol1
-**F1 89.86**. Per-file (tol0): 163444215 FP=[6,13,31] FN=[]; 164505881 FP=[9,13] FN=[12]; 165204533 FN=[3,4];
-082511233 FN=[20]. NOTE: this is the **#2+#4 baseline** on probe — 163444215 carries FP13/FP31 because A′ has **no D**
-(D's one-page-check killed those two; correctly absent here). The dup-guard adds nothing on probe (targets off-probe),
-exactly as predicted. → A′ dev (FN19 recovery + 92.12 keep gate).
+probe, pred = #2+#4 by construction (pre-registration met). **Synced-GT tol0: TP31/FP4/FN4 F1 88.57** (was 86.96 on
+stale GT before p13 FP→TP). Per-file (tol0, synced): 163444215 FP=[6,31] FN=[]; 164505881 FP=[9,13] FN=[12];
+165204533 FN=[3,4]; 082511233 FN=[20]. NOTE: this is the **#2+#4 baseline** on probe — 163444215 still carries FP6/FP31
+because A′ has **no D** (D's one-page-check killed those; correctly absent here). The dup-guard adds nothing on probe
+(targets off-probe), exactly as predicted. → A′ dev.
 
 **STEP 3 A′ DEV: PREMISE DISCONFIRMED — FN19 NOT recovered; A′ ≡ #2+#4 on dev** (`logs/round4_aprime_dev.*`).
 `DUP-GUARD-SUPPRESS` fired 2× (p19@142044854 — the FN19 target; p4@another dev file). Raw tol0 on the **eval_dev GT
 as rsynced**: TP75/FP7/FN7 **F1 91.46** — **byte-identical to the #2+#4 baseline `dev_stage1.log`** (same aggregate;
 142044854 FP=[6,17] FN=[19,20] identical).
-- **DATA BUG found:** `eval_dev/ground_truth.json` and `eval_probe/ground_truth.json` are MISSING the GT-v3 correction
-  163444215 **p13** that `eval_full/ground_truth.json` has. So dev/probe scored p13 as a spurious FP. Re-derived under
-  GT v3 (only affected file 163444215; only diff p13 FP→TP): TP 75→76, FP 7→6 ⇒ **A′ dev = 92.12 = the #2+#4 candidate
-  gate exactly.** The eval-subset GTs need syncing to eval_full (human GT ruling — not touched autonomously).
+- **DATA BUG (now FIXED, commit 2e1cd51):** `eval_dev`/`eval_probe` GT were stale (missing 163444215 p13). Synced +
+  verified (see GT-v3 SUBSET SYNC block above). **Re-scored A′ dev vs synced GT (tol0): TP76/FP6/FN7 P92.68/R91.57
+  F1 92.12** (163444215 FP=[6,31], p13→TP). ⇒ **dev keep-gate ≥ 92.12 HOLDS (exactly = #2+#4 candidate).**
 - **FN19 is NOT recovered.** p19@142044854 is a TRUE boundary; A′'s suppress drops the claim, leaving FN=[19,20]. The
   user's premise ("A′ still recovers FN19 because its target-dup is the trigger") is **wrong**: suppressing a claim does
   not *create* a boundary. base #2+#4 already collapses that same claim onto the already-existing p18 (relocate-to-a-
