@@ -62,12 +62,17 @@ as rsynced**: TP75/FP7/FN7 **F1 91.46** — **byte-identical to the #2+#4 baseli
 
 **Against the keep criteria (fresh P ≥ 85.41 AND aggregate ≥ 89.10):** fresh P **85.65 ✓** but aggregate **88.89 < 89.10 ✗**
 (WAIVED 89.03 < 89.10 ✗). Requires BOTH ⇒ **A′ FAILS ⇒ backlog; #2+#4 stays the production candidate.**
-- A′ is **identical to #2+#4 on dev AND holdout** (suppress is inert there) but **diverges on fresh**: same fresh FP count
-  as base (33, so it DID avoid keep-capped's +15 FP — `145428614` shows base-level FPs, none of keep-capped's
-  pp37/46/76/78/81/84/86), **but added fresh FN** — the suppress dropped real boundaries on fresh, lowering recall.
-- **Symmetric failure to keep-capped, proven on real data:** keep-capped over-KEEPS → +FP; A′ over-SUPPRESSES → +FN;
-  **base #2+#4's relocate-to-existing is the sweet spot.** The whole consumed-target dup-guard branch (either variant)
-  is net-negative vs simply letting base collapse the claim. → **dup-guard to backlog entirely (both forks dead).**
+- A′ is **identical to #2+#4 on dev AND holdout** (suppress inert there). It DID avoid keep-capped's +15 FP
+  (`145428614` shows base-level FPs, none of keep-capped's pp37/46/76/78/81/84/86). Fresh divergence is **exactly two
+  spots** (verified array diff vs base, NOT a broad +FN over-suppression): **083553577 −TP@48 / −FP@33** and
+  **143041245 −TP@58** ⇒ net **−2 TP / −1 FP** (base fresh TP199/FP34 → A′ TP197/FP33).
+- **Characterisation (for backlog):** the consumed-target suppress **ate good boundaries** (−2 TP) for a **near-zero FP
+  payoff** (−1 FP). It is NOT a symmetric over-suppress/+FN failure — it specifically deleted 2 true boundaries while
+  removing only 1 spurious one. base #2+#4's relocate-to-existing remains the sweet spot. → **whole consumed-target
+  dup-guard branch to backlog (both forks dead): keep-capped over-KEEPS (+15 FP), A′ suppress eats TP (−2 TP/−1 FP).**
+- **FN19 re-attribution (verified):** FN19@142044854 **IS recovered in stacked A+D** but **NOT in A′ isolation**
+  (A′ array == base, both miss p19). ⇒ p19's recovery was a **dup-guard × D INTERACTION (D is the active ingredient)**,
+  not the dup-guard alone. Log **FN19 as a relocation-grounding bug for re-spec**, with D noted as the active ingredient.
 
 ---
 
