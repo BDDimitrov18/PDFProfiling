@@ -19,9 +19,29 @@ Chain: fingerprint → A+D probe → dev (keep gate 92.12) → full-tests strati
 
 **STEP 3 A+D DEV: F1 93.33** (`logs/round3_ad_dev.*`, tol0 TP77/FP5/FN6, P93.90/R92.77) ≥ 92.12 keep gate — IDENTICAL to A+B+D dev (B barely touched dev). FN19@142044854→TP (A), FP31@163444215 dead (D). → full-tests (the verdict).
 
+**STEP 4 A+D FULL-TESTS — VERDICT: hypothesis NOT confirmed; #2+#4 STAYS.** `logs/round3_ad_fulltests.*`. STRICT
+stratified (GT v3): dev **93.33** / holdout **81.48** / fresh **87.07** / **aggregate 88.41** (WAIVED 88.55). vs #2+#4
+(dev 92.12/holdout 81.48/fresh 88.44/**agg 89.10**, WAIVED 89.24) AND A+B+D (agg 88.16).
+- **A+D BEATS A+B+D (+0.25 agg; holdout fully recovered 76.92→81.48)** ⇒ confirms **B WAS a real regression** (removing it
+  restored holdout + lifted fresh from 86.92→87.07).
+- **BUT A+D < #2+#4 (−0.69 agg)** ⇒ **A+D does NOT beat the candidate.** Cause: A+D lifts fresh RECALL (TP 197→202,
+  FN 18→15 — A's dup-guard recovered fresh boundaries, DUP-GUARD-KEEP fired 22×) but ADDS **+12 fresh FP** (33→45),
+  crashing fresh precision 85.41→81.78. The kept-original-capped boundaries (A) + skipped one-page-checks (D) keep
+  some spurious fresh splits. Dev wins (FN19, FP31) are dev-specific and don't net-generalize.
+**CONCLUSION: NONE of round-3 (A/B/C/D) beats #2+#4 on the real aggregate. #2+#4 REMAINS the production candidate.
+A, B, C, D all → backlog.** Round-3 value = the GT v3 correction + the negative results (dev-tuned fixes overfit) +
+validated redeploy/fingerprint protocol. Backlog re-spec: A (dup-guard must not keep spurious capped claims on fresh),
+D (one-page-check skip over-keeps on fresh), B (next-page rebuild over-vetoes), C/Fix11v3 (numbering needs corroboration).
+
+
+
 ## ☀☀☀ ROUND 3 MORNING SUMMARY (new-pod redeploy + A–D eval, 2026-06-13)
 
-**Bottom line: #2+#4 REMAINS the production candidate. The round-3 stack did NOT beat it on the real metric.**
+**Bottom line: #2+#4 REMAINS the production candidate. NO round-3 fix (A/B/C/D, alone or stacked) beat it on the
+full-tests aggregate.** Tested to conclusion: A+B+C+D → C reverted (too permissive). A+B+D agg 88.16 (B overfits).
+**A+D agg 88.41 < #2+#4 89.10** (A/D win dev but add +12 fresh FP). All four → backlog. Round-3 yielded the GT v3
+correction + a clean negative result: dev-tuned fixes (every A/B/C/D target was a dev case) overfit and don't
+generalise to fresh/holdout. Redeploy + fingerprint protocol validated across 3 pods.
 New RTX 5090 pod (`213.173.103.193`); env reinstalled from `requirements-lock.txt` + model re-downloaded.
 **FINGERPRINT PASS** — run8 on 163444215 byte-identical to historical ⇒ env reproduces run-8, all anchors valid.
 
