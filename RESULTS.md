@@ -17,9 +17,25 @@ probe, pred = #2+#4 by construction (pre-registration met). tol0 TP30/FP5/FN4 **
 (D's one-page-check killed those two; correctly absent here). The dup-guard adds nothing on probe (targets off-probe),
 exactly as predicted. → A′ dev (FN19 recovery + 92.12 keep gate).
 
-**STEP 3 A′ DEV: in progress** (`eval_boundaries.py eval_dev`, 9 files incl 142044854). Pre-registered: `DUP-GUARD-SUPPRESS`
-SHOULD fire on 142044854 (its consumed-target p18 is the trigger); expect **FN19→TP** (the open pipeline-level claim)
-and **dev F1 ≥ 92.12** keep gate. Results below.
+**STEP 3 A′ DEV: PREMISE DISCONFIRMED — FN19 NOT recovered; A′ ≡ #2+#4 on dev** (`logs/round4_aprime_dev.*`).
+`DUP-GUARD-SUPPRESS` fired 2× (p19@142044854 — the FN19 target; p4@another dev file). Raw tol0 on the **eval_dev GT
+as rsynced**: TP75/FP7/FN7 **F1 91.46** — **byte-identical to the #2+#4 baseline `dev_stage1.log`** (same aggregate;
+142044854 FP=[6,17] FN=[19,20] identical).
+- **DATA BUG found:** `eval_dev/ground_truth.json` and `eval_probe/ground_truth.json` are MISSING the GT-v3 correction
+  163444215 **p13** that `eval_full/ground_truth.json` has. So dev/probe scored p13 as a spurious FP. Re-derived under
+  GT v3 (only affected file 163444215; only diff p13 FP→TP): TP 75→76, FP 7→6 ⇒ **A′ dev = 92.12 = the #2+#4 candidate
+  gate exactly.** The eval-subset GTs need syncing to eval_full (human GT ruling — not touched autonomously).
+- **FN19 is NOT recovered.** p19@142044854 is a TRUE boundary; A′'s suppress drops the claim, leaving FN=[19,20]. The
+  user's premise ("A′ still recovers FN19 because its target-dup is the trigger") is **wrong**: suppressing a claim does
+  not *create* a boundary. base #2+#4 already collapses that same claim onto the already-existing p18 (relocate-to-a-
+  boundary that's deduped), so **A′ ≡ #2+#4 on dev** — it only makes base's implicit collapse explicit + logs it.
+- **Consequence (the real dilemma, now proven):** the ONLY dup-guard variant that recovers FN19 is **keep-capped**
+  (it KEEPS p19), and keep-capped is the proven-bad one (+15 fresh FP, since the same "keep the ungrounded original"
+  mechanism overfires on fresh). A′ (suppress) avoids those FPs but recovers nothing → **behaviorally a no-op vs the
+  candidate.** FN19 is therefore **unrecoverable via the dup-guard branch**: its true cause is the *mis-relocation* of
+  the p19 titled signal onto p18 — a relocation-grounding bug, not a keep/suppress choice.
+- **STOPPED before full-tests** (pre-registered gate is "exceed 92.12"; A′ only *ties* it, and is provably ≡ candidate).
+  Surfaced to human rather than auto-deciding. See decision block below.
 
 ---
 
