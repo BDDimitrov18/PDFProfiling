@@ -15,6 +15,8 @@ Chain: fingerprint → A+D probe → dev (keep gate 92.12) → full-tests strati
 
 **STEP 1 FINGERPRINT (new pod 213.173.103.213): PASS** — run8 163444215 pred=[3,4,5,6,8,10,11,12,13,15,22,23,24,25,26,31,32,34] == historical (byte-identical) ⇒ env reproduces run-8, anchors valid. → A+D probe.
 
+**STEP 2 A+D PROBE: F1 89.86** (`logs/round3_ad_probe.*`, tol0 TP31/FP3/FN4) — IDENTICAL to A+B+D probe (163444215 FP=[6] FN=[]; 164505881 FP=[9,13] FN=[12]; 165204533 FN=[3,4]; 082511233 FP=[] FN=[20]). NEXT-PAGE-GATE=0 confirms B reverted; FP31 dead (D). Beats #2+#4 probe (88.57). Confirms B was probe-neutral (its regression is fresh/holdout-only). → dev.
+
 ## ☀☀☀ ROUND 3 MORNING SUMMARY (new-pod redeploy + A–D eval, 2026-06-13)
 
 **Bottom line: #2+#4 REMAINS the production candidate. The round-3 stack did NOT beat it on the real metric.**
