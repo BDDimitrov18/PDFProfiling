@@ -1,6 +1,35 @@
 # Boundary / Rotation Eval Results
 
-## 🧪 ROUND 5 — C ISOLATION (Fix 11 v2 mechanical table-numbering, alone, from #2+#4 base) — IN PROGRESS
+## 🧪 ROUND 5 — C ISOLATION (Fix 11 v2 mechanical table-numbering) — VERDICT: CONCEPT-VALIDATED, OVER-FIRES → v3
+**STOP-AT-PROBE (human-accepted).** Dev cancelled, pod idled — next step is **Fix 11 v3 design + unit tests POD-LESS**;
+no eval until v3 probe expectations are pre-registered. Full probe reading (not just "net-negative"):
+- **082511233 — MECHANISM VALIDATED.** Base #2+#4 had **FN[20]** (the generic confirm rubber-stamped the table_end veto,
+  0-for-5). Fix 11 v2 **defeated the veto and forced the table cut through** → **TP20 recovered.** The accompanying
+  **FP19 is NOT a Fix-11 defect** — it's a **rotation-displacement localization artifact** (the table's last numbered row
+  sits on p19, which carries the rotated signatures per human attestation), i.e. the existing **rotation-aware-localization
+  backlog item (FN20/FN3 class)**. The v3 guard below won't fix placement — only over-firing. → link to that backlog.
+- **163444215 — THE NET-NEGATIVE.** Added **two clean FPs at pp35/37** by firing on **intra-document numbering gaps**
+  (appendix / renumbered tables: p34→35 `8→5`, p36→37 `10→1`). These are real boundaries to the mechanical rule but
+  section breaks to a human. This is the over-fire to kill.
+- **Verdict:** Fix 11 v2's **concept is validated** (it kills the rubber-stamp veto that base can't beat) but the bare
+  mechanical "non-continuous numbering ⇒ stand" **over-fires** on intra-doc gaps. **Do NOT discard → Fix 11 v3.**
+
+### Fix 11 v3 SPEC (pod-less; pre-register probe expectations BEFORE any eval)
+- **(a) GUARD the numbering-break rule:** a non-continuous `last_row(n)`/`first_row(n+1)` STANDS as a boundary **only with
+  a corroborating start-side cue on n+1** (fresh title / letterhead / nomenclature MATCH). Bare numbering gaps inside a
+  document (pp35/37@163444215) must **NOT** cut. Continuous numbering still suppresses (same table).
+- **(b)** The p19-vs-p20 displacement on 082511233 is the **rotation-aware-localization backlog** (FN20/FN3 class), NOT a
+  Fix-11 bug — linked; the guard fixes over-firing, not placement.
+- **OPEN (flag for pre-registration):** the fingerprint trace shows `163444215 p37` self-reports a title
+  (`КОЛИЧЕСТВЕНА СМЕТКА`, one-page-check `self_contained=True`). So a naive "any fresh title" start-cue may **NOT** kill
+  FP37 — the cue likely must be stricter (nomenclature/issuer CHANGE, not merely a heading). Resolve when re-deriving the
+  guarded probe expected-sets.
+
+**ROUND 5 build retained for reference (commit `88b3232`, split.py md5 below); dev/full-tests NOT run (stopped at probe).**
+
+---
+
+## 🧪 ROUND 5 — C ISOLATION (Fix 11 v2 mechanical table-numbering, alone, from #2+#4 base) — PROBE-ONLY DETAIL
 **Build:** #2+#4 base (`9fee964`, split.py md5 `63da033`) + C's two changes re-applied from `2656b84` (NOT stacked on
 A/B/D): pure `_table_boundary_decision` + `_query_confirm_table_boundary`, routed for `signal==table_end` in the
 low-conf (<0.75) confirm pass. Verified clean: C present (2 fns), A′/B/D ABSENT (DUP-GUARD-SUPPRESS=0, _next_page_decision=0,
