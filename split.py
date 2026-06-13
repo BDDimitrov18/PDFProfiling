@@ -603,39 +603,6 @@ def _query_transcribe_title(img, page_num: int, model, processor, config, logger
     return title, ident
 
 
-def _titled_gate_decision(gcnt, signal_page, effective_end, conf, n, reloc, doc_starts):
-    """PURE decision for the TITLE-GATE (one-of-two + relocation + Round-3 dup-guard). Separated
-    from the model I/O so it is unit-testable without a GPU.
-
-    gcnt        : grounded count on the claimed page (0/1/2).
-    reloc       : list of (wp, title, ident, idg) — window pages (excl. claimed) with a grounded
-                  title; idg = 1 if that page's identifier is also grounded else 0.
-    doc_starts  : committed boundary start pages from PRIOR iterations.
-
-    Returns (signal_page, effective_end, conf, is_end, action) where action[0] is a log tag.
-
-    Round-3 Commit A' — DUPLICATE-GUARD (SUPPRESS-WITH-FLAG): when the claimed page is NEITHER-grounded
-    and the UNIQUE grounded relocation target is a page ALREADY opened by a prior boundary, the relocation
-    is a no-op. The ORIGINAL keep-original-capped variant (Round-3 A) was REVERTED on evidence: it
-    resurrected ungrounded claims and added +15 fresh FP / −1 fresh TP (full-tests gate). A' instead
-    SUPPRESSES the claimed boundary on the consumed-target case ([DUP-GUARD-SUPPRESS]) and does NOT keep
-    the original; FN19@142044854 still recovers (verify on isolation dev). Never keep an ungrounded claim.
-    """
-    if gcnt == 2:
-        return signal_page, effective_end, conf, True, ("KEEP-BOTH",)
-    if gcnt == 1:
-        return signal_page, effective_end, min(conf, 0.60), True, ("KEEP-ONE-OF-TWO",)
-    # gcnt == 0 — NEITHER grounded on the claimed page.
-    if len(reloc) == 1:
-        wp, _t, _i, idg = reloc[0]
-        if wp in doc_starts:
-            # A' fork reversal: consumed target → SUPPRESS the claim (do NOT keep the ungrounded original).
-            return signal_page, n, conf, False, ("DUP-GUARD-SUPPRESS", signal_page, wp)
-        cap = (idg == 0)
-        return wp, wp - 1, (min(conf, 0.60) if cap else conf), True, ("RELOC", wp, idg, cap)
-    return signal_page, n, conf, False, ("SUPPRESS", len(reloc))
-
-
 # ---------------------------------------------------------------------------
 # Phase 1b — appendix standalone check
 # ---------------------------------------------------------------------------
@@ -784,6 +751,53 @@ def _query_confirm_boundary(img_n, img_n1, page_n, page_n1, model, processor, co
     different = bool(data.get("different_documents", True))
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
     return different, conf
+
+
+def _table_boundary_decision(last_row, first_row):
+    """PURE mechanical table-boundary decision (Round-3 Commit C / Fix 11 v2). Given the last row
+    number on page n and the first row number on page n+1, decide whether the boundary STANDS.
+    CONTINUOUS numbering (both present and first == last+1) ⇒ same table ⇒ NOT a boundary
+    (confirmed=False). Any other case — reset (first=1), jump, or unreadable numbering — ⇒ the
+    boundary STANDS mechanically (confirmed=True). No free-form yes/no; this only ever SUPPRESSES
+    on proven continuity, so it cannot reject a real table boundary (the generic confirm's 0-for-5
+    failure). Returns (confirmed: bool, reason: str)."""
+    if isinstance(last_row, int) and isinstance(first_row, int) and first_row == last_row + 1:
+        return False, f"continuous numbering ({last_row}→{first_row}) — same table, not a boundary"
+    if isinstance(last_row, int) and isinstance(first_row, int):
+        return True, f"non-continuous numbering ({last_row}→{first_row}) — boundary stands"
+    return True, "row numbering unreadable — boundary stands (no proof of continuity)"
+
+
+def _query_confirm_table_boundary(img_n, img_n1, page_n, page_n1, model, processor, config, logger: logging.Logger) -> tuple:
+    """Round-3 Commit C / Fix 11 v2 — EVIDENCE-FIRST table-boundary confirm. Replaces the generic
+    confirm for table_end signals (which was 0-for-5 on consecutive table documents). The model must
+    REPORT the row numbers BEFORE any verdict; _table_boundary_decision then decides MECHANICALLY.
+    Returns (confirmed: bool, confidence: float)."""
+    prompt = (
+        f"Page {page_n} ends a table; page {page_n1} continues with a table. Report the ROW NUMBERS "
+        "only — do NOT judge whether they are the same document.\n\n"
+        f"  - 'last_row_number': the number of the LAST numbered data row on page {page_n} (the № / "
+        "row index in the leftmost column; ignore a totals/summary row). Use null if rows are not numbered.\n"
+        f"  - 'first_row_number': the number of the FIRST numbered data row at the top of page {page_n1}. "
+        "Use null if not numbered.\n\n"
+        "Respond ONLY with JSON:\n"
+        '{"last_row_number": <int or null>, "first_row_number": <int or null>}'
+    )
+    raw = _infer(prompt, [img_n, img_n1], model, processor, config, logger, max_tokens=60)
+    logger.debug(f"  Confirm table boundary p{page_n}→{page_n1}: {repr((raw or '')[:200])}")
+    data = _parse_json(raw or "", logger)
+    def _int_or_none(v):
+        try:
+            return int(v)
+        except (TypeError, ValueError):
+            return None
+    last_row = _int_or_none(data.get("last_row_number"))
+    first_row = _int_or_none(data.get("first_row_number"))
+    confirmed, reason = _table_boundary_decision(last_row, first_row)
+    logger.info(f"  [TABLE-CONFIRM] p{page_n}→{page_n1}: last_row={last_row} first_row={first_row} -> {reason}")
+    # Mechanical: full confidence when continuity is proven either way; modest when unreadable.
+    conf = 0.90 if (isinstance(last_row, int) and isinstance(first_row, int)) else 0.60
+    return confirmed, conf
 
 
 # ---------------------------------------------------------------------------
@@ -1027,9 +1041,14 @@ def detect_boundaries(
             logger.info(
                 f"  [TITLE-GATE] p{signal_page}: title={t_title!r} identifier={t_ident!r} -> grounded={gcnt}/2"
             )
-            # Build the relocation candidate list (model READs) only when NEITHER grounded.
-            reloc = []
-            if gcnt == 0:
+            if gcnt == 2:
+                pass  # BOTH grounded — accept, boundary stays at signal_page, full confidence
+            elif gcnt == 1:
+                conf = min(conf, 0.60)
+                logger.info(f"  [TITLE-GATE] p{signal_page} one-of-two (title XOR identifier) — accepted, conf capped to 0.60")
+            else:
+                # NEITHER on the claimed page — try to relocate within the window.
+                reloc = []
                 for wp in context_pages:
                     if wp == signal_page or wp not in page_buffer:
                         continue
@@ -1038,31 +1057,26 @@ def detect_boundaries(
                     )
                     if _grounded(w_title):
                         reloc.append((wp, w_title, w_ident, int(_grounded(w_ident))))
-            # PURE decision (incl. Round-3 dup-guard); see _titled_gate_decision.
-            signal_page, effective_end, conf, is_end, action = _titled_gate_decision(
-                gcnt, signal_page, effective_end, conf, n, reloc, doc_starts
-            )
-            tag = action[0]
-            if tag == "KEEP-ONE-OF-TWO":
-                logger.info(f"  [TITLE-GATE] p{signal_page} one-of-two (title XOR identifier) — accepted, conf capped to 0.60")
-            elif tag == "DUP-GUARD-SUPPRESS":
-                logger.info(
-                    f"  [DUP-GUARD-SUPPRESS] claim p{action[1]} suppressed (grounded target p{action[2]} already a "
-                    f"boundary; A' does not keep the ungrounded original)"
-                )
-            elif tag == "RELOC":
-                wp, w_title, w_ident, w_idg = reloc[0]
-                logger.info(
-                    f"  [TITLE-GATE-RELOC] grounded title on p{wp} (title={w_title!r} id={w_ident!r}, "
-                    f"grounded={1 + w_idg}/2) — boundary relocated, new doc starts at p{wp}"
-                    + ("; conf capped to 0.60" if action[3] else "")
-                )
-            elif tag == "SUPPRESS":
-                why = "no grounded-title page" if action[1] == 0 else f"{action[1]} grounded-title pages (ambiguous)"
-                logger.info(
-                    f"  [TITLE-GATE] titled_id_header at p{signal_page} SUPPRESSED "
-                    f"— neither grounded on claimed page and {why} in window {context_pages}"
-                )
+                if len(reloc) == 1:
+                    wp, w_title, w_ident, w_idg = reloc[0]
+                    signal_page = wp
+                    effective_end = wp - 1
+                    capped = (w_idg == 0)
+                    if capped:
+                        conf = min(conf, 0.60)
+                    logger.info(
+                        f"  [TITLE-GATE-RELOC] grounded title on p{wp} (title={w_title!r} id={w_ident!r}, "
+                        f"grounded={1 + w_idg}/2) — boundary relocated, new doc starts at p{wp}"
+                        + ("; conf capped to 0.60" if capped else "")
+                    )
+                else:
+                    is_end = False
+                    effective_end = n
+                    why = "no grounded-title page" if not reloc else f"{len(reloc)} grounded-title pages (ambiguous)"
+                    logger.info(
+                        f"  [TITLE-GATE] titled_id_header at p{signal_page} SUPPRESSED "
+                        f"— neither grounded on claimed page and {why} in window {context_pages}"
+                    )
 
         # One-page-check: when an END-on-page signal was projected forward to n+1,
         # disambiguate whether n+1 is self-contained (boundary at n) or a closing
@@ -1160,10 +1174,17 @@ def detect_boundaries(
         # Low-confidence confirmation pass — skip for strong visual signals that
         # don't need corroboration (fresh letterhead and header resets are visually unambiguous)
         if is_end and conf < 0.75 and signal not in ("fresh_letterhead", "header_block_reset", "titled_id_header"):
-            confirmed, confirm_conf = _query_confirm_boundary(
-                page_buffer[n], page_buffer[n + 1], n, n + 1,
-                model, processor, config, logger,
-            )
+            # Round-3 Commit C / Fix 11 v2: route table_end through the evidence-first numbering
+            # confirm (the generic confirm was 0-for-5 on consecutive table documents).
+            if signal == "table_end":
+                confirmed, confirm_conf = _query_confirm_table_boundary(
+                    page_buffer[n], page_buffer[n + 1], n, n + 1, model, processor, config, logger,
+                )
+            else:
+                confirmed, confirm_conf = _query_confirm_boundary(
+                    page_buffer[n], page_buffer[n + 1], n, n + 1,
+                    model, processor, config, logger,
+                )
             if not confirmed:
                 is_end = False
                 logger.info(f"  Low-conf boundary at p{n} ({conf:.0%}) rejected by confirmation pass")

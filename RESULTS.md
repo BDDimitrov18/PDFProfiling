@@ -1,5 +1,21 @@
 # Boundary / Rotation Eval Results
 
+## 🧪 ROUND 5 — C ISOLATION (Fix 11 v2 mechanical table-numbering, alone, from #2+#4 base) — IN PROGRESS
+**Build:** #2+#4 base (`9fee964`, split.py md5 `63da033`) + C's two changes re-applied from `2656b84` (NOT stacked on
+A/B/D): pure `_table_boundary_decision` + `_query_confirm_table_boundary`, routed for `signal==table_end` in the
+low-conf (<0.75) confirm pass. Verified clean: C present (2 fns), A′/B/D ABSENT (DUP-GUARD-SUPPRESS=0, _next_page_decision=0,
+_one_page_check_applies=0); `test_table_confirm` 6 + nomenclature 17 pass; `test_dup_guard` removed (A′ not in build).
+**Env:** unchanged since `efbdace` (requirements-lock identical; run8 fingerprint already PASSED byte-identical on THIS
+pod this session) ⇒ no new fingerprint. Chain: probe → dev (≥92.12 keep-gate) → full-tests.
+**Pre-registered (vs #2+#4 GTv3 STRICT dev 92.12/holdout 81.48/fresh 88.44 P85.41/agg 89.10, WAIVED 89.24):**
+- **probe:** C is a recall play on table_end docs — expect **FN20@082511233 → TP**; RISK = mechanical "non-continuous
+  numbering ⇒ stand" over-fires (round-3 stacked falsifier was FP35/37@163444215 + FP19@082511233). Watch 163444215 p34/36.
+- **dev:** keep-gate **≥ 92.12**.
+- **full-tests (the gate):** keep **iff agg ≥ 89.10 AND fresh P ≥ 85.41** (STRICT + WAIVED, per-file FP/FN). **Flip check
+  (pre-registered):** FN20@082511233, FN19@142044854, FN12@084837699 (holdout) must convert to TP; net must beat any new table FPs.
+
+---
+
 ## 🧪 ROUND 4 — A′ ISOLATION (suppress-flag dup-guard alone, from #2+#4 base) — IN PROGRESS
 **Pod:** RTX 5090 `213.173.105.167:34471` (4th pod). Fresh: env reinstalled from `requirements-lock.txt` (torch
 2.8.0+cu128 / transformers 5.11.0 / bitsandbytes 0.49.2 / accelerate 1.14.0), eval data rsynced (deref symlinks:
