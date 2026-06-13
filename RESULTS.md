@@ -109,6 +109,13 @@ one-page-check claimed "clear title at top of p21" (conf 95) on 082511233; human
 is not just a framing fallacy (4th-instance) but the model *inventing* page content to justify a verdict — the
 strongest argument yet that confirm-style queries must TRANSCRIBE before judging (the #4 pattern), never free-judge.
 
+### ✅✅ ROUND 3 A+B+D DEV (keep-gate) — KEEP (dev 92.12 → 93.33, +1.21)
+`logs/round3_abd_dev.*`. tol0 **F1 93.33** (TP77/FP5/FN6, P93.90/R92.77) vs #2+#4 GT-v3 keep gate **92.12**
+(TP76/FP6/FN7) → **KEEP A+B+D** (≥92.12). Composition: **+1 TP** FN19@142044854 recovered (A dup-guard, DUP-GUARD-KEEP
+fired 2×); **−1 FP** FP31@163444215 dead (D); B's 50 NEXT-PAGE-GATE calls preserved all (no regression). Per-file:
+163444215 FP[6] FN[]; 164505881 FP[9,13] FN[12]; 142044854 FP[6,17] FN[20] (was FN[19,20]); 165204533 FN[3,4];
+082511233 FN[20]; 084303475 FN[16]. → full-tests stratified launched.
+
 ### ✅ ROUND 3 A+B+D PROBE (C reverted) — CLEAN, beats #2+#4
 `logs/round3_abd_probe.*`. tol0 TP31/FP3/FN4 **F1 89.86** vs #2+#4 GT-v3 probe 88.57 (**+1.29**). Per-file: 163444215
 **FP=[6]** FN=[] (FP31 DEAD via D; no C FPs 35/37; p13 TP; FP6 unattested, B did not veto); 164505881 FP=[9,13] FN=[12];
