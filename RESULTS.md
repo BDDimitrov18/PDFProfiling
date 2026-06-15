@@ -1,5 +1,47 @@
 # Boundary / Rotation Eval Results
 
+## ⚠️ BUILD OF RECORD vs HEAD (working-tree hygiene — read first)
+- **CANDIDATE OF RECORD = the last MEASURED build: #2+#4, commit `9fee964` (split.py md5 `63da033`), F1 89.10 (GT v3,
+  `logs/fulltests_stage2.log`).** This is the production reference for every comparison.
+- **HEAD is NOT the candidate.** HEAD's `split.py` is an **experimental Fix-11-v2-WIRED tree** —
+  `_query_confirm_table_boundary` is live in `detect_boundaries` (split.py:1204, `if signal == "table_end"`), plus an
+  unused `_table_boundary_decision_v3` helper. **It is UNMEASURED on full-tests.** The ONLY Fix-11 eval to date was the
+  round-5 **probe** on the prior C build, which **FAILED net-negative** (+1 TP / +3 FP). ⇒ HEAD must NOT be represented
+  as the candidate or as a measured result anywhere.
+- The **92.52** human-reviewed figure below is a **HEADROOM ESTIMATE** (model's defensible splits accepted by human
+  review), **not an achieved/measured score**. The only measured score is **89.10**.
+- (Hygiene note: the failed Fix-11-v2 routing is still active in HEAD's tree; it can be unwired on request — left in
+  place for now as the v3 design baseline. No behavior change made this turn.)
+
+## 🗂️ ROUND 6 PRIORITY (re-prioritized from the MEASURED class tally in `candidate_mistakes.md`, NOT the Fix-11 thread)
+Measured FP/FN class counts (kept, human-reviewed set): **[NO-SIGNAL] ~20 · [SIG-OVERCUT] 16 · [SECTION-FP] 12 ·
+[TABLE-VETO] 5** (+ WEAK-TITLE 4, LOCALIZE 5, DOUBLE-FIRE 2). Priority by measured impact:
+1. **[NO-SIGNAL] (~20) — LARGEST, NO current fix.** → spec stub (1) below.
+2. **Sig/section family: [SIG-OVERCUT] 16 + [SECTION-FP] 12 = 28** — context-dependent: the SAME heading class is a FP
+   in one place and a FN in another (`145428614`: КОЛИЧЕСТВЕНА СМЕТКА section FP@88 vs missed start FN@64). ⇒ needs an
+   **n-completion RELATIONSHIP**, NOT a heading-type allow/deny list. → spec stub (2) below.
+3. **[TABLE-VETO] (5) — Fix 11's actual target, real but 5th-largest.** **Fix 11 v3 design continues but is explicitly
+   DEMOTED below the [NO-SIGNAL] and sig/section work.**
+
+### Spec stub (1) — DRAWING-RUN START DETECTION for [NO-SIGNAL]  *(pod-less, design-only — NO code, NO eval)*
+Direction only. [NO-SIGNAL] FNs are real document starts buried in unheadered scanned drawing/table runs (the model
+emits end=False because there is no letterhead/title cue). **BLOCKED awaiting a HUMAN DOMAIN RULE:** what marks a new
+document inside an unheadered drawing/table run? candidate cues to be ruled on by the human — **sheet stamp? drawing
+border/frame? corner titleblock (щемпел)? sheet-number reset?** No design past this until the human supplies the rule.
+(NB: also covers the rotated-page sub-case, e.g. 142438096 p8 sideways ФАКТУРА — perception, separate from the rule.)
+
+### Spec stub (2) — n-COMPLETION GATE for the sig/section family  *(pod-less, design-only — NO code, NO eval)*
+Direction: **suppress a signature/section cut unless page n shows TRUE document closure** (totals/signoff/signatures
+that complete a document), i.e. decide on the **completion-on-n relationship**, not on what heading appears on n+1.
+**Transcribe-first** (C-tracking law: read the page before judging — no free-form yes/no). Informed by the attested
+section-heading instances that must NOT cut: **163444215@37, 143041245@51, 145428614@66, 162710373@14** (see
+[[section-heading-not-boundary]]). This is the same design surface as the deferred next-page-gate rebuild + Fix 11 v3
+— treat as one. No code, no probe until pre-registered expectations exist.
+
+**POD STAYS DOWN. No eval until a spec has pre-registered probe expectations AND the human domain rule (stub 1) is in.**
+
+---
+
 ## 🔎 CANDIDATE (#2+#4) MISTAKE AUDIT + HUMAN REVIEW (2026-06-15)
 Full per-mistake table written to **`candidate_mistakes.md`** (source `logs/fulltests_stage2.log`, GT v3).
 Raw scored aggregate: **TP=286 / FP=41 / FN=29 → F1 89.10** (dev 92.12 / holdout 81.48 / fresh 88.44).
