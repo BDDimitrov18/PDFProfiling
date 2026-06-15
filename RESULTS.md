@@ -40,6 +40,27 @@ section-heading instances that must NOT cut: **163444215@37, 143041245@51, 14542
 
 **POD STAYS DOWN. No eval until a spec has pre-registered probe expectations AND the human domain rule (stub 1) is in.**
 
+### 📐 DOMAIN-RULE LAYER landed (staged, NOT wired) — `domain_rules.py` + `RULES.md` + `test_domain_rules.py`
+Human + colleague hand-extracted 8 verbatim ground-truth splitting rules from manual segmentation of
+this dataset (preserved exactly in `RULES.md` + the `domain_rules.py` docstring). Implemented as a
+**post-processing layer** over boundary candidates, auditable rule-by-rule, **PURE & NOT wired into
+split.py** (same staging as Fix-11). 16 unit tests pass. Two rule kinds implemented distinctly:
+- **(A) CLOSURE** (rules 1/2/4): no boundary after a named-type doc until its closing marker is READ
+  (notary signature / длъжностно лице / Проектант|Съставил); pre-marker candidates suppressed;
+  **abstains if the marker is never read** (never manufactures a merge from a dropped scan).
+- **(B) NORMALISE/MERGE/SECTION/ADJACENCY** (rules 3/6/7/8): type-collapse → Координатен регистър;
+  consecutive Известие→Обратна разписка; EVN Търговски условия section-suppress (issuer-specific);
+  Инвестиционен-проект→съдържание do-not-split.
+- **SOFT PRIOR** (rule 5, РС 2-page): weak conf nudge only — never adds/removes a boundary, tolerates
+  a 1-page scan, never forces on page-count. (Directly addresses the round-6 sig/section family via the
+  n-completion CLOSURE mechanism — the closure marker IS the "page n shows true closure" signal.)
+- Nomenclature wired where entries exist (1001/8014/19061/19019/19005/1010); types the rules ADD are
+  absent from the table (Нотариален акт, Известие, съдържание, Търговски условия) — noted.
+- **OVERFIT GUARD recorded**: rules came FROM this set's mistakes → any rule helping dev/probe but not
+  held-out gets FLAGGED, not kept; rule 7 (EVN) + rule 8 are the top expansion-overfit risks.
+- **NEXT (pod-less):** pre-register per-rule probe expectations (which exact candidates each rule flips)
+  BEFORE any eval. Pod stays down.
+
 ---
 
 ## 🔎 CANDIDATE (#2+#4) MISTAKE AUDIT + HUMAN REVIEW (2026-06-15)
