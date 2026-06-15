@@ -1,5 +1,37 @@
 # Boundary / Rotation Eval Results
 
+## 🔎 CANDIDATE (#2+#4) MISTAKE AUDIT + HUMAN REVIEW (2026-06-15)
+Full per-mistake table written to **`candidate_mistakes.md`** (source `logs/fulltests_stage2.log`, GT v3).
+Raw scored aggregate: **TP=286 / FP=41 / FN=29 → F1 89.10** (dev 92.12 / holdout 81.48 / fresh 88.44).
+
+**FP adjacency analysis (programmatic, authoritative — supersedes the inferred per-row labels):**
+- **29 / 41 FPs are DOUBLE-FIRE / adjacent** to a real start that was ALSO cut (extra cut wedged next to a true
+  boundary — signoff-seam smear, or extra cut among closely-spaced short docs). **Dominant FP mode (~71%).**
+- **11 / 41 isolated phantom over-cuts** (genuine [SECTION-FP]/[SIG-OVERCUT]): `164052657@35 164505881@9 084031203@6
+  142438096@88 143041245@{7,8,51} 145428614@{7,35,65,66}`.
+- **1 / 41 pure localization** (`142438096@7`, would be TP@tol1).
+- ⇒ biggest precision lever = **dedup adjacent boundaries (collapse cuts ≤1 page apart)**, NOT better section detection.
+
+**HUMAN REVIEW of `candidate_mistakes.md` (user-attested):** of the 70 flagged mistakes, the human judged **21
+(17 FP + 4 FN)** to be **valid-but-alternative splits / two-sided seams — the model's split is *correct*, just not how
+the human segmented**. Kept as real: **24 FP + 25 FN**. Recompute crediting the accepted splits as TP (FP→TP +17) and
+dropping the two-sided FNs (−4): **TP=303 / FP=24 / FN=25 → human-reviewed F1 = 92.52%** (P 92.66 / R 92.38).
+- Variant if those 21 are treated as *ignore/waive* (no TP credit): **F1 = 92.11%** (TP=286/FP=24/FN=25).
+- This is "**F1 with the model's defensible splits accepted**" — distinct from the raw GT-scored **89.10**.
+
+**FN class is mislabeled "[NO-SIGNAL]" — it conflates TWO non-hallucination misses (render-verified):**
+- **Perceived-but-misjudged (same-issuer merge):** `143041245 p20` — the model DID see the СНИК ЕООД letterhead +
+  "ДОКЛАД ЗА ОЦЕНКА" title + p19 signoff, but judged "same issuer → continuation" and emitted no boundary. A **judgment
+  error**, not blindness. (Evidence: `attestations/candidate_audit/143041245_p19_ISKANE_signoff.png`, `…p20_DOKLAD_…png`.)
+- **Didn't-perceive:** `142438096 p8` — a **rotated/sideways invoice (ФАКТУРА)**; header unreadable → no signal.
+  (Evidence: `…/142438096_p08_rotated-invoice_FN.png`.)
+- **NOT hallucination.** Hallucination = inventing a cue that isn't there (the #4-gate target, opposite direction).
+  These are recall/judgment misses. **Fix direction (opposite of anti-hallucination):** a **signoff on n + new heading
+  on n+1 should cut even when the issuer/letterhead does NOT change** — would recover the same-issuer-merge FN class.
+- Double-fire FP exemplar render: `…/084837699_p07_double-fire_signoff.png` (signoff page wrongly cut) + `…_p08_new-doc.png` (the real TP).
+
+---
+
 ## 🧪 ROUND 5 — C ISOLATION (Fix 11 v2 mechanical table-numbering) — VERDICT: CONCEPT-VALIDATED, OVER-FIRES → v3
 **STOP-AT-PROBE (human-accepted).** Dev cancelled, pod idled — next step is **Fix 11 v3 design + unit tests POD-LESS**;
 no eval until v3 probe expectations are pre-registered. Full probe reading (not just "net-negative"):
