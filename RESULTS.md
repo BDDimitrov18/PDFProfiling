@@ -119,6 +119,42 @@ query types.)
 `extract_markers.py eval_full` → markers log → replay rules over real markers → probe (expect inert + rule-4 p9) →
 stratified full-tests with the per-rule attribution + rule-1 must-stay-TP guard.
 
+### ✅ RESULT — marker extraction RUN + domain-rule scoring over REAL markers (2026-06-16, 5090 pod)
+Extraction: **733/733 pages** in **~2.4 h** (11.7 s/page — see corrected cost note). Markers: `logs/markers_eval_full.json`
+(proektant 150p / sastavil 73p / notary 16p / **official_signoff(длъжностно лице) 0p** / issuer=EVN 26p / 535 titled).
+Scored pod-less: rules over committed candidate boundaries (`fulltests_stage2`) + real markers (`score_domain_rules.py`
+→ `logs/domain_rules_score.md`).
+
+| variant (STRICT, GT v3) | dev | holdout | fresh | **AGG** | Δ vs 89.10 |
+|---|--:|--:|--:|--:|--:|
+| candidate (baseline) | 92.12 | 81.48 | 88.44 | **89.10** | — |
+| **ALL domain rules** | 93.25 | 76.92 | 88.04 | **88.92** | **−0.17** |
+| **R4 dropped** | 93.25 | 81.48 | 88.79 | **89.62** | **+0.52** |
+
+**Per-rule attribution (TP-fix / FP-harm):**
+- **R1 notary-closure: 1 fix / 0 harm — and the rule-1 GUARD PASSED.** 142044854 p38/p39 and 083553577 p20/p21 ALL
+  stayed TP (not suppressed). ⇒ **the transcribe-first real notary marker fixed the stand-in over-suppression that
+  produced 4 FP-harms in the approximate replay.** Validates the whole transcribe-first approach. (TP-fix: 163444215 p31.)
+- **R7 EVN-trade-terms: 2 fix / 0 harm** — 145428614 p66, 164505881 p9. Clean wins; the EVN issuer channel works.
+- **R8 invest→съдържание: 2 fix / 1 harm** (145428614 p71/p151 fix; p13 harm) — net +1, keep-but-watch.
+- **R4 Обяснителна-записка-closure: 0 fix / 4 HARM → NET-NEGATIVE, the sole regressor.** Over-suppresses real boundaries
+  (085002901 p8 holdout; 145428614 p138/p139, 164959043 p8 fresh) because proektant/sastavil are very common (223 pages)
+  so the "first marker after start" swallows a later document's start. **Drives holdout −4.56.** OVERFIT/HARM GUARD ⇒
+  **R4 FLAGGED — drop now (+0.52 agg) or revise with a proximity bound (close at the NEAREST signoff, not swallow far ones).**
+- **R2/R3/R6 never fired** (no длъжностно лице marker → 0; no coord-register candidate boundary; no consecutive Известие
+  in candidate set) → value UNMEASURED on this set.
+- **R5 (РС soft prior): 4 conf-nudges, 0 boundary change** — harmless, as designed.
+
+**Pre-registration verdicts:** (a) **rule-1 guard PASS** (all 4 pages stayed TP). (b) **rule-4 probe p9@164505881
+suppressed** as predicted — but by **R7** (EVN), not R4 (attribution differed; outcome matched, TP-fix). (c) **probe NOT
+fully inert** — R1@163444215 p31 + R7@164505881 p9 fired, but both **TP-fixes**, and **NO true boundary suppressed on
+probe** (regression guard HELD). My "inert except rule-4" prediction was off, but in the safe direction.
+
+**VERDICT:** the domain-rule layer (minus R4) is **net-positive, +0.52 agg (89.10→89.62)**, gaining dev (+1.13) and
+fresh (+0.35) with holdout neutral — and the transcribe-first markers are validated (R1 guard + R7). **R4 must be dropped
+or revised (proximity-bounded closure).** Decision to ADOPT/WIRE is the human's (cost: markers add ~1.5–2× per new doc;
+overfit watch: R7 is EVN-specific, gains are concentrated on a few docs). Not auto-adopted — surfaced.
+
 ---
 
 ## 🔎 CANDIDATE (#2+#4) MISTAKE AUDIT + HUMAN REVIEW (2026-06-15)
