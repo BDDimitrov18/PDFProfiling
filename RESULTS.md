@@ -76,6 +76,48 @@ Result on all 20 files:
 - ⇒ **Confirms the gating decision: build real per-page title + closure-marker + issuer EXTRACTION first**, then
   pre-register probe expectations, then pod. Do NOT infer rule quality from this replay.
 
+### 🧱 MARKER EXTRACTION — 4 channels, TRANSCRIBE-FIRST (built UNWIRED) + PRE-REGISTERED expectations
+`marker_extraction.py` (pure matchers + transcribe-first prompts) · `test_marker_extraction.py` (16 tests incl.
+**negative controls** — a cue-less page yields NO marker) · `extract_markers.py` (pod-only emit-and-log driver).
+**NOT wired into split.py's live boundary path.** **Load-bearing constraint: TRANSCRIBE-FIRST, NEVER JUDGE** — every
+channel (a) asks the model to TRANSCRIBE a page region VERBATIM (no yes/no), (b) OUR CODE matches the marker string
+via the nomenclature normaliser. Channels: `closure_signoff` (проектант|съставил / нотариус / длъжностно лице →
+rules 4/1/2), `issuer` (EVN → rule 7), `title` (top heading EVERY page → rules 3/8 + nomenclature), `titleblock_fields`
+(изх.№ / рег.№ / лист X от Y → [NO-SIGNAL] identity-change).
+
+**PRE-REGISTERED PROBE EXPECTATIONS (written BEFORE any pod run — gate not fit to results).** Probe files'
+transcribed content (verified from the log): 163444215 = УДОСТОВЕРЕНИЕ/Общо застраховане; 164505881 = p5 Обяснителна
+записка + p8 КОЛИЧЕСТВЕНА СМЕТКА; 165204533 = drawings (no titles); 082511233 = УДОСТОВЕРЕНИЕ. ⇒
+- **Rules 1, 2, 3, 5, 6, 7, 8 have NO trigger in the probe set → the layer must be INERT (zero firing) on probe;
+  their gate is the stratified full-tests.**
+- **Rule 4 is the ONLY possible probe trigger:** IF p5@164505881 transcribes as Обяснителна записка AND a
+  Проектант/Съставил marker is read AFTER p9, then intra-doc FP **p9@164505881 must be SUPPRESSED (TP-fix, −1 FP)**.
+  (p13 depends on p12's unread type → NOT pre-committed.)
+- **PROBE REGRESSION GUARD: the layer must suppress NO true boundary on the 4 probe files (zero FP-harm).**
+
+**PRE-REGISTERED FULL-TESTS EXPECTATIONS (the real gate, stratified STRICT+WAIVED, per-rule attribution):**
+- **Rule 1 MUST close at the ACTUAL notary signature, not a generic signature_block.** The replay's stand-in FP-harms
+  must NOT recur: **142044854 p38 & p39, and 083553577 p20 & p21, MUST remain TP (NOT suppressed).** The Нотариален акт
+  (142044854 p37; 083553577 p19) closes at its own notary signature BEFORE those pages.
+- **Rule 4:** suppress intra-Обяснителна-записка FP candidates where a Проектант/Съставил closure follows (164505881 p9; + fresh cases).
+- **Rule 7 (EVN, issuer-specific):** suppress Търговски условия candidates **IFF** issuer transcribes as EVN —
+  candidates 142438096 p48/p53, 143041245 p51 (if issuer≠EVN, rule MUST NOT fire).
+- **Rule 6:** merge consecutive Известие за доставяне → Обратна разписка where they occur.
+- **Rule 8:** do-not-split Заглавна-страница-"Инвестиционен проект" → "съдържание" (143041245 region).
+- **Rules 2, 3, 5:** fire only where their type/marker appears. **OVERFIT GUARD:** any rule helping dev/probe but not
+  holdout+fresh is FLAGGED, not kept.
+
+**COST / PERF (record before launch):** eval_full = **733 pages / 20 files**. 4 transcription queries/page (all-pages,
+incl. the mandatory all-pages `title` channel) ≈ **~2,930 extra queries** → at ~15–25 s/query on the 5090, a full
+marker pass is **~12–20 h of pod time ON ITS OWN**, separate from boundary detection. **Budget a dedicated pod
+session**; record exact timing on the first run. *Optional cost cut:* scope `closure_signoff`/`issuer`/`titleblock`
+to candidate-boundary ±window (the `title` channel must stay all-pages) — trades completeness for ~½–⅔ fewer queries;
+decide before launch.
+
+**STATUS:** built + unit-tested (16) + pre-registered. **POD STILL DOWN.** Next pod session (when approved):
+`extract_markers.py eval_full` → markers log → replay rules over real markers → probe (expect inert + rule-4 p9) →
+stratified full-tests with the per-rule attribution + rule-1 must-stay-TP guard.
+
 ---
 
 ## 🔎 CANDIDATE (#2+#4) MISTAKE AUDIT + HUMAN REVIEW (2026-06-15)
