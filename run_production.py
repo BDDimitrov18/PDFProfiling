@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """run_production.py — batch PRODUCTION split over a nested folder tree, ONE model load.
 
-Recursively finds PDFs under <root>, runs split.process_pdf on each (full pipeline: boundary
-detection + Phase-2 classification + writes named split PDFs), output to <pdf.parent>/split/.
+Recursively finds PDFs under <root>, splits each into documents by BOUNDARY DETECTION ONLY
+(classify=False — NO Phase-2 classification), output to <pdf.parent>/split/ as
+<stem>_NNN_00000_.pdf (code 00000 / no class name, since classification is skipped).
 No ground truth — production output only. Per-PDF RESUME: skips a PDF whose split output already
 exists, so a re-launch after an SSH/pod drop continues where it left off.
 
@@ -35,7 +36,10 @@ def main():
             continue
         print(f"[{i}/{len(pdfs)}] {pdf.relative_to(root)}", flush=True)
         try:
-            split.process_pdf(pdf, out, model, processor, config, dpi, logger)
+            total = len(split.PdfReader(str(pdf)).pages)
+            # BOUNDARY-ONLY: classify=False (no Phase-2 classification)
+            boundaries, _rot = split.detect_boundaries(pdf, total, model, processor, config, dpi, logger, classify=False)
+            split.split_pdf(pdf, boundaries, out, logger)
             done += 1
         except Exception as e:
             logger.error(f"FAILED {pdf}: {e}", exc_info=True)
