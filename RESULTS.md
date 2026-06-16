@@ -107,12 +107,13 @@ transcribed content (verified from the log): 163444215 = УДОСТОВЕРЕН�
 - **Rules 2, 3, 5:** fire only where their type/marker appears. **OVERFIT GUARD:** any rule helping dev/probe but not
   holdout+fresh is FLAGGED, not kept.
 
-**COST / PERF (record before launch):** eval_full = **733 pages / 20 files**. 4 transcription queries/page (all-pages,
-incl. the mandatory all-pages `title` channel) ≈ **~2,930 extra queries** → at ~15–25 s/query on the 5090, a full
-marker pass is **~12–20 h of pod time ON ITS OWN**, separate from boundary detection. **Budget a dedicated pod
-session**; record exact timing on the first run. *Optional cost cut:* scope `closure_signoff`/`issuer`/`titleblock`
-to candidate-boundary ±window (the `title` channel must stay all-pages) — trades completeness for ~½–⅔ fewer queries;
-decide before launch.
+**COST / PERF — MEASURED (corrects the pre-run estimate):** eval_full = **733 pages / 20 files**, 4 transcription
+queries/page ≈ ~2,930 queries. **Measured rate on the 5090: 11.7 s/page (~2.9 s/query) → full pass ≈ ~2.4 h**
+(36 pages / 421 s on 142044854; may drift up on big drawing-heavy files). ⚠ The **pre-run estimate of ~12–20 h was
+WRONG — ~6× too conservative** (it assumed ~15–25 s/query, extrapolated from boundary detection's heavier ~40 s/page;
+these single-image 160-token greedy transcriptions are far lighter). So the scoped-channel cut is **unnecessary** —
+the full all-pages pass is only ~2–3 h. (Lesson: query-time estimates must be measured, not extrapolated across
+query types.)
 
 **STATUS:** built + unit-tested (16) + pre-registered. **POD STILL DOWN.** Next pod session (when approved):
 `extract_markers.py eval_full` → markers log → replay rules over real markers → probe (expect inert + rule-4 p9) →
