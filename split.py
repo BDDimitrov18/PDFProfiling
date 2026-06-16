@@ -753,77 +753,6 @@ def _query_confirm_boundary(img_n, img_n1, page_n, page_n1, model, processor, co
     return different, conf
 
 
-def _table_boundary_decision(last_row, first_row):
-    """PURE mechanical table-boundary decision (Round-3 Commit C / Fix 11 v2). Given the last row
-    number on page n and the first row number on page n+1, decide whether the boundary STANDS.
-    CONTINUOUS numbering (both present and first == last+1) ⇒ same table ⇒ NOT a boundary
-    (confirmed=False). Any other case — reset (first=1), jump, or unreadable numbering — ⇒ the
-    boundary STANDS mechanically (confirmed=True). No free-form yes/no; this only ever SUPPRESSES
-    on proven continuity, so it cannot reject a real table boundary (the generic confirm's 0-for-5
-    failure). Returns (confirmed: bool, reason: str)."""
-    if isinstance(last_row, int) and isinstance(first_row, int) and first_row == last_row + 1:
-        return False, f"continuous numbering ({last_row}→{first_row}) — same table, not a boundary"
-    if isinstance(last_row, int) and isinstance(first_row, int):
-        return True, f"non-continuous numbering ({last_row}→{first_row}) — boundary stands"
-    return True, "row numbering unreadable — boundary stands (no proof of continuity)"
-
-
-def _table_boundary_decision_v3(last_row, first_row, start_cue):
-    """PURE table-boundary decision (Fix 11 v3 — GUARDED). v2 over-fired: a bare non-continuous
-    numbering gap inside one document (appendix / renumbered table) STOOD as a boundary
-    (FP35/FP37@163444215). v3 adds the guard from the round-5 isolation verdict:
-
-      • CONTINUOUS numbering (both int, first == last+1) ⇒ same table ⇒ NOT a boundary (suppress).
-        (Unchanged from v2 — proven-continuity suppression is safe and kills the rubber-stamp.)
-      • NON-CONTINUOUS or UNREADABLE numbering ⇒ boundary STANDS *only* if `start_cue` is True
-        (a corroborating start-side cue on page n+1). A bare numbering break with NO start cue is an
-        intra-document section break, NOT a boundary ⇒ suppress.
-
-    `start_cue` is an opaque bool supplied by the caller (its DEFINITION — fresh title vs
-    nomenclature/issuer CHANGE — is a separate, pre-registered query concern; this pure function is
-    agnostic to how it is computed). Returns (confirmed: bool, reason: str)."""
-    if isinstance(last_row, int) and isinstance(first_row, int) and first_row == last_row + 1:
-        return False, f"continuous numbering ({last_row}→{first_row}) — same table, not a boundary"
-    numbering = (f"non-continuous numbering ({last_row}→{first_row})"
-                 if isinstance(last_row, int) and isinstance(first_row, int)
-                 else "row numbering unreadable")
-    if start_cue:
-        return True, f"{numbering} + start-side cue on n+1 — boundary stands"
-    return False, f"{numbering} but NO start-side cue — intra-doc section break, not a boundary"
-
-
-def _query_confirm_table_boundary(img_n, img_n1, page_n, page_n1, model, processor, config, logger: logging.Logger) -> tuple:
-    """Round-3 Commit C / Fix 11 v2 — EVIDENCE-FIRST table-boundary confirm. Replaces the generic
-    confirm for table_end signals (which was 0-for-5 on consecutive table documents). The model must
-    REPORT the row numbers BEFORE any verdict; _table_boundary_decision then decides MECHANICALLY.
-    Returns (confirmed: bool, confidence: float)."""
-    prompt = (
-        f"Page {page_n} ends a table; page {page_n1} continues with a table. Report the ROW NUMBERS "
-        "only — do NOT judge whether they are the same document.\n\n"
-        f"  - 'last_row_number': the number of the LAST numbered data row on page {page_n} (the № / "
-        "row index in the leftmost column; ignore a totals/summary row). Use null if rows are not numbered.\n"
-        f"  - 'first_row_number': the number of the FIRST numbered data row at the top of page {page_n1}. "
-        "Use null if not numbered.\n\n"
-        "Respond ONLY with JSON:\n"
-        '{"last_row_number": <int or null>, "first_row_number": <int or null>}'
-    )
-    raw = _infer(prompt, [img_n, img_n1], model, processor, config, logger, max_tokens=60)
-    logger.debug(f"  Confirm table boundary p{page_n}→{page_n1}: {repr((raw or '')[:200])}")
-    data = _parse_json(raw or "", logger)
-    def _int_or_none(v):
-        try:
-            return int(v)
-        except (TypeError, ValueError):
-            return None
-    last_row = _int_or_none(data.get("last_row_number"))
-    first_row = _int_or_none(data.get("first_row_number"))
-    confirmed, reason = _table_boundary_decision(last_row, first_row)
-    logger.info(f"  [TABLE-CONFIRM] p{page_n}→{page_n1}: last_row={last_row} first_row={first_row} -> {reason}")
-    # Mechanical: full confidence when continuity is proven either way; modest when unreadable.
-    conf = 0.90 if (isinstance(last_row, int) and isinstance(first_row, int)) else 0.60
-    return confirmed, conf
-
-
 # ---------------------------------------------------------------------------
 # Phase 1e — style continuity detection
 # ---------------------------------------------------------------------------
@@ -1198,17 +1127,10 @@ def detect_boundaries(
         # Low-confidence confirmation pass — skip for strong visual signals that
         # don't need corroboration (fresh letterhead and header resets are visually unambiguous)
         if is_end and conf < 0.75 and signal not in ("fresh_letterhead", "header_block_reset", "titled_id_header"):
-            # Round-3 Commit C / Fix 11 v2: route table_end through the evidence-first numbering
-            # confirm (the generic confirm was 0-for-5 on consecutive table documents).
-            if signal == "table_end":
-                confirmed, confirm_conf = _query_confirm_table_boundary(
-                    page_buffer[n], page_buffer[n + 1], n, n + 1, model, processor, config, logger,
-                )
-            else:
-                confirmed, confirm_conf = _query_confirm_boundary(
-                    page_buffer[n], page_buffer[n + 1], n, n + 1,
-                    model, processor, config, logger,
-                )
+            confirmed, confirm_conf = _query_confirm_boundary(
+                page_buffer[n], page_buffer[n + 1], n, n + 1,
+                model, processor, config, logger,
+            )
             if not confirmed:
                 is_end = False
                 logger.info(f"  Low-conf boundary at p{n} ({conf:.0%}) rejected by confirmation pass")
