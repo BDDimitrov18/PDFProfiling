@@ -18,7 +18,7 @@ def main():
     folder = Path(sys.argv[1])
     import split  # lazy: heavy (transformers + weights) — pod-only
     logger = split.setup_logging(Path("logs"))
-    model, processor = split.load_model(split.MODEL_PATH, logger)
+    model, processor, config = split.load_model(split.MODEL_PATH, logger)
     dest = Path("logs") / f"markers_{folder.name}.json"
     # RESUME: reload any existing checkpoint so a re-launch after an SSH drop skips done pages.
     out = {}
@@ -38,7 +38,7 @@ def main():
             img = split._load_page(pdf, p, getattr(split, "DEFAULT_DPI", 150))
             trans = {}
             for ch in CHANNELS:
-                raw = split._infer(PROMPTS[ch], [img], model, processor, {}, logger, max_tokens=160)
+                raw = split._infer(PROMPTS[ch], [img], model, processor, config, logger, max_tokens=160)
                 trans[ch] = (raw or "").strip()
             rec = extract_from_transcriptions(trans)
             rec["markers"] = sorted(rec["markers"])           # JSON-serialisable
