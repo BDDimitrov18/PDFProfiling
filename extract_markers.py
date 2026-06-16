@@ -19,12 +19,22 @@ def main():
     import split  # lazy: heavy (transformers + weights) — pod-only
     logger = split.setup_logging(Path("logs"))
     model, processor = split.load_model(split.MODEL_PATH, logger)
+    dest = Path("logs") / f"markers_{folder.name}.json"
+    # RESUME: reload any existing checkpoint so a re-launch after an SSH drop skips done pages.
     out = {}
+    if dest.exists():
+        try:
+            out = json.loads(dest.read_text(encoding="utf-8"))
+            print(f"resume: loaded checkpoint with {sum(len(v) for v in out.values())} pages")
+        except Exception:
+            out = {}
+    from pypdf import PdfReader
     for pdf in sorted(folder.glob("*.pdf")):
-        from pypdf import PdfReader
         n_pages = len(PdfReader(str(pdf)).pages)
-        out[pdf.name] = {}
+        out.setdefault(pdf.name, {})
         for p in range(1, n_pages + 1):
+            if str(p) in out[pdf.name]:        # already extracted (resume)
+                continue
             img = split._load_page(pdf, p, getattr(split, "DEFAULT_DPI", 150))
             trans = {}
             for ch in CHANNELS:
@@ -33,11 +43,10 @@ def main():
             rec = extract_from_transcriptions(trans)
             rec["markers"] = sorted(rec["markers"])           # JSON-serialisable
             rec["transcriptions"] = trans                     # keep raw for audit
-            out[pdf.name][p] = rec
+            out[pdf.name][str(p)] = rec
+            dest.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")  # per-page checkpoint
             print(f"{pdf.name} p{p}: markers={rec['markers']} issuer={rec['issuer']} title={rec['title']!r}")
-    dest = Path("logs") / f"markers_{folder.name}.json"
-    dest.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"wrote {dest}")
+    print(f"MARKERS_DONE wrote {dest}")
 
 
 if __name__ == "__main__":
