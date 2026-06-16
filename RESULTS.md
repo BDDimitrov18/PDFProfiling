@@ -61,6 +61,21 @@ split.py** (same staging as Fix-11). 16 unit tests pass. Two rule kinds implemen
 - **NEXT (pod-less):** pre-register per-rule probe expectations (which exact candidates each rule flips)
   BEFORE any eval. Pod stays down.
 
+#### Replay sanity check (pod-less, `replay_domain_rules.py` → `logs/domain_rules_replay.md`)
+**PLUMBING + DIRECTION ONLY — validates NO rule's correctness** (closure markers are GENERIC stand-ins:
+`signature_block`/`project_signoff` from the same log the rules were written against; circular by construction).
+Result on all 20 files:
+- **Plumbing CONFIRMED** — orchestrator + audit + per-rule×per-file classification run; rules 1 & 5 fire and route.
+- **Rule 1: 4 firings, all FP-harm — but STAND-IN ARTIFACTS, not a rule defect.** The generic marker lands the
+  Нотариален акт closure on the wrong far page → over-suppresses adjacent REAL starts (142044854 p38/39,
+  083553577 p20/21); the real notary-signature marker would close at the act's own signature. Neither validation
+  nor condemnation — it IS the marker-extraction gap.
+- **Rules 2,3,4,6,7,8 NEVER EXERCISED** — the log only title-tags `titled_id_header` pages, so the candidates these
+  rules target weren't tagged; the EVN issuer channel doesn't exist in the log. Value UNKNOWN.
+- **Rule 5: 4 prior no-ops** (conf nudge only, zero boundary change) — harmless, as designed.
+- ⇒ **Confirms the gating decision: build real per-page title + closure-marker + issuer EXTRACTION first**, then
+  pre-register probe expectations, then pod. Do NOT infer rule quality from this replay.
+
 ---
 
 ## 🔎 CANDIDATE (#2+#4) MISTAKE AUDIT + HUMAN REVIEW (2026-06-15)
