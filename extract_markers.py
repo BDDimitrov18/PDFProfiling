@@ -17,8 +17,8 @@ from marker_extraction import PROMPTS, CHANNELS, extract_from_transcriptions
 def main():
     folder = Path(sys.argv[1])
     import split  # lazy: heavy (transformers + weights) — pod-only
-    model, processor = split.load_model(split.MODEL_PATH)
-    logger = split.setup_logging() if hasattr(split, "setup_logging") else None
+    logger = split.setup_logging(Path("logs"))
+    model, processor = split.load_model(split.MODEL_PATH, logger)
     out = {}
     for pdf in sorted(folder.glob("*.pdf")):
         from pypdf import PdfReader
