@@ -1,5 +1,42 @@
 # Boundary / Rotation Eval Results
 
+## 🏭 PRODUCTION RUN — GIS_Pv (boundary-only split, no GT) — 2026-06-17
+First real production batch on a NEW dataset (`/Users/.../tests/GIS_Pv`, NOT the eval set). Build = the
+validated candidate **#2+#4 (`9fee964`, split.py md5 `63da033`)** — the domain-rule layer + Fix-11 wiring were
+reverted first (`9629ed4`). Driver `run_production.py` (boundary-only, `classify=False` → outputs `<stem>_NNN_00000_.pdf`).
+
+**Scope:** 134 PDFs / **4,138 pages** across 17 РС-case folders. Boundary detection only (no Phase-2 classification).
+**Result:** completed all 134; **0 failures, 0 skipped pages** (verified: for every PDF, Σ split-page-counts == source
+page count). ~1,500 split documents produced. Outputs named `<stem>_NNN_00000_.pdf` in each `<case>/<n>/split/`.
+
+**Output locations:**
+- Pod **persistent** volume: `/workspace/GIS_Pv/<case>/<n>/split/` + log `/workspace/prod.log`.
+- Local mirror (pulled): `…/tests/GIS_Pv/<case>/<n>/split/`.
+- Reorganised deliverable for human review: `…/tests/done/<case>/<n>/<pdf-stem>/<split PDFs>` (per-PDF leaf folder).
+- **Completeness: 129/134 pulled locally** before the pod stopped; the final **5 (`РС-59-4-2017/1–5`)** completed on the
+  pod and remain on persistent `/workspace` — retrievable when a pod remounts that volume.
+
+**INFRA LESSONS (cost-relevant):**
+- **First attempt CRASHED at 104/134** — outputs were written to the **ephemeral 5 GB `/root`**, which filled up and
+  took the pod down ("connection refused"); **all work + logs lost** (re-run from scratch). 
+- **Fix:** run everything on the **persistent `/workspace`** network volume (source + outputs + log) + per-PDF resume
+  + periodic local pulls + a self-healing `supervisor.sh` (auto-relaunch on process death). A pod death now loses nothing.
+- **Recurring trap:** `pgrep -f <name>` / `ps|grep <name>` self-match the checking command — use `[n]ame` bracket trick
+  or a PID/marker file; and detach launches with `setsid` so they survive SSH drops.
+
+**COST (at user-confirmed $1/hr RTX 5090):**
+| | pod-time | cost |
+|---|--:|--:|
+| Successful run (final pod) | ~15 h | ~$15 |
+| Failed first attempt (disk-full crash) | ~12–13 h | ~$12–13 |
+| **Total billed for the job** | **~27–28 h** | **~$27–28** |
+Useful work ≈ $15; the crash roughly doubled it. Exact figure in RunPod billing console.
+
+Artifacts: `run_production.py`, `supervisor.sh` (this commit). Detailed per-page log was on `/workspace/prod.log`
+(persistent; not in repo — it's data on the pod volume).
+
+---
+
 ## ⚠️ BUILD OF RECORD vs HEAD (working-tree hygiene — read first)
 - **CANDIDATE OF RECORD = the last MEASURED build: #2+#4, commit `9fee964` (split.py md5 `63da033`), F1 89.10 (GT v3,
   `logs/fulltests_stage2.log`).** This is the production reference for every comparison.
