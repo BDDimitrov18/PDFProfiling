@@ -8,7 +8,7 @@ from pathlib import Path
 gt = json.load(open("eval_full/ground_truth.json", encoding="utf-8"))
 strata = json.load(open("eval_full/strata.json", encoding="utf-8"))
 masked = json.load(open("eval_full/masked.json", encoding="utf-8"))  # now {}
-waiv = {(w["file"], w["fp_page"]) for w in json.load(open("waivers.json"))["waivers"]}
+waiv = {(w["file"], w["fp_page"]) for w in json.load(open(Path(__file__).parent / "data" / "waivers.json"))["waivers"]}
 
 def load_preds(log):
     preds, cur = {}, None

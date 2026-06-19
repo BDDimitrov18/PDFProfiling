@@ -26,6 +26,9 @@ from pathlib import Path
 from pdf2image import convert_from_path
 from pypdf import PdfReader, PdfWriter
 
+# Archived historical fork: live modules (rotation.py) live in the repo root, one level up.
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from rotation import query_rotation as _query_rotation_impl, smooth_rotation_log, corroborate_aspect
 
 

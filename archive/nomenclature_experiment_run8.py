@@ -18,8 +18,12 @@ import argparse
 import json
 import re
 import statistics
+import sys
 from collections import defaultdict
+from pathlib import Path
 
+# Archived historical fork: live modules (nomenclature_match.py) live in the repo root, one level up.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import nomenclature_match as nm
 
 FNAME = re.compile(r"^(Image_\w+\.pdf)$")

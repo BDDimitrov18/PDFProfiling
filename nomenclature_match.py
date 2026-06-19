@@ -27,11 +27,12 @@ whitespace removed, defeats letter-spaced scans like 'Н А К Л О Н Е Н') 
 Transcribed titles additionally have identifier tails stripped (tokens bearing digits/№ — permit
 numbers, dates, slash-codes) so 'СКИЦА № 15-158202' reduces to the type 'скица'.
 """
+import os
 import re
 import unicodedata
 import difflib
 
-XLS_DEFAULT = "номенклатура_цяла.xls"
+XLS_DEFAULT = os.path.join(os.path.dirname(__file__), "data", "номенклатура_цяла.xls")
 
 # Latin→Cyrillic homoglyph fold. Applied AFTER lowercasing; the uppercase entries from the spec
 # (B→В, H→Н, T→Т, M→М, K→К, P→Р, C→С, E→Е, A→А, O→О, X→Х) are folded to their lowercase forms.
