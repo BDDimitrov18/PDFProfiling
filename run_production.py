@@ -17,6 +17,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("root")
     ap.add_argument("--dpi", type=int, default=None)
+    ap.add_argument("--files", default=None,
+                    help="path to a text file of PDF paths (relative to root, or absolute); "
+                         "process ONLY these. Used to shard the workload across pods.")
     a = ap.parse_args()
     root = Path(a.root).resolve()
 
@@ -26,6 +29,11 @@ def main():
     dpi = a.dpi or split.DEFAULT_DPI
 
     pdfs = sorted(p for p in root.rglob("*.pdf") if "split" not in p.parts)
+    if a.files:
+        wanted = {ln.strip() for ln in Path(a.files).read_text().splitlines() if ln.strip()}
+        before = len(pdfs)
+        pdfs = [p for p in pdfs if str(p.relative_to(root)) in wanted or str(p) in wanted]
+        logger.info(f"--files {a.files}: sharded to {len(pdfs)} of {before} PDFs")
     logger.info(f"PRODUCTION: {len(pdfs)} PDFs under {root} @ {dpi} DPI")
     done = 0
     for i, pdf in enumerate(pdfs, 1):
