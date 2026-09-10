@@ -1,5 +1,37 @@
 # Boundary / Rotation Eval Results
 
+## Best validated release: V15 — 2026-09-10
+
+The `best-v15` tag identifies the exact saved V15 runtime and its validation
+summary in [releases/v15](releases/v15/README.md). On the original 94 PDFs,
+V15 recovered **1,221/1,377** exact documents versus V14's **1,216/1,377**.
+On the additional 82 PDFs, a fresh V15 run recovered **708/845** versus
+**705/845**, with **93.21% boundary F1** (TP714, FP52, FN52) and **37/82**
+whole PDFs exactly grouped. All these labeled cohorts have been exposed during
+development; the sealed holdout remains unused.
+
+The September 10 production batch completed **74 originals / 1,792 pages**,
+producing **784 PDFs** at **7.30 seconds/page**. Exported content, orientation
+and coverage were verified for every page; no accuracy score is available for
+that unlabeled batch. Later experiments have not established a better fully
+validated replacement. Earlier entries below describe their dated state.
+
+## Qwen3.8 error analysis and improvements — 2026-09-06
+
+The original Qwen3.8 OFF detector scored 88.69% strict F1 on the 733-page historical
+reference. The conservative V11 stage replay reaches 97.32%, with 314/335 exact
+documents. A fresh integrated run on the 84-page Gergana review scores 95.08%,
+31/35 exact, against unchanged labels. On a reserved 50-page case check, both new
+methods score 97.96%, 25/26 exact, versus the original detector's 92.00%, 24/26.
+The fast version takes 3m40s versus 5m47s for conservative on that small check;
+its full 733-page run scored 96.42%, 311/335 exact and failed the accuracy gate. A final receipt-heading reconciliation raises that recorded result to 96.57%, 312/335. `archive-context` remains recommended. See [the current results and limitations](docs/QWEN38_RESULTS.md)
+and [the experiment log](docs/QWEN38_IMPROVEMENT_LOG.md). Historical and Gergana
+sets have contributed development evidence; their scores are not unseen estimates.
+
+## Current working changes — 2026-09-05
+
+The reliability/evaluation pass is documented in [docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md), with usage in [README.md](README.md). Production now validates completion and retries failures; evaluation preserves human corrections and resumes per PDF. The default detector routing is retained. The opt-in aligned-confirmation candidate has no new GPU result and no mismatched confirmation pairs in the saved full-benchmark logs. The measured reference remains **89.10% strict F1, 252/335 exact documents on GT v3**. Entries below describe their dated historical state.
+
 ## 🏭 PRODUCTION RUN — GIS_Pv (boundary-only split, no GT) — 2026-06-17
 First real production batch on a NEW dataset (`/Users/.../tests/GIS_Pv`, NOT the eval set). Build = the
 validated candidate **#2+#4 (`9fee964`, split.py md5 `63da033`)** — the domain-rule layer + Fix-11 wiring were
@@ -37,18 +69,11 @@ Artifacts: `run_production.py`, `supervisor.sh` (this commit). Detailed per-page
 
 ---
 
-## ⚠️ BUILD OF RECORD vs HEAD (working-tree hygiene — read first)
-- **CANDIDATE OF RECORD = the last MEASURED build: #2+#4, commit `9fee964` (split.py md5 `63da033`), F1 89.10 (GT v3,
-  `logs/fulltests_stage2.log`).** This is the production reference for every comparison.
-- **HEAD is NOT the candidate.** HEAD's `split.py` is an **experimental Fix-11-v2-WIRED tree** —
-  `_query_confirm_table_boundary` is live in `detect_boundaries` (split.py:1204, `if signal == "table_end"`), plus an
-  unused `_table_boundary_decision_v3` helper. **It is UNMEASURED on full-tests.** The ONLY Fix-11 eval to date was the
-  round-5 **probe** on the prior C build, which **FAILED net-negative** (+1 TP / +3 FP). ⇒ HEAD must NOT be represented
-  as the candidate or as a measured result anywhere.
-- The **92.52** human-reviewed figure below is a **HEADROOM ESTIMATE** (model's defensible splits accepted by human
-  review), **not an achieved/measured score**. The only measured score is **89.10**.
-- (Hygiene note: the failed Fix-11-v2 routing is still active in HEAD's tree; it can be unwired on request — left in
-  place for now as the v3 design baseline. No behavior change made this turn.)
+## Build of record
+
+- **Last measured reference:** #2+#4, commit `9fee964` (split.py MD5 `63da033`), strict F1 **89.10%** on GT v3, from `logs/fulltests_stage2.log`.
+- The experimental Fix-11/domain-rule wiring described in older entries was reverted by `9629ed4` on June 16. At the start of the September review, `f56c0e9` used the measured detector verbatim. The current branch adds reliability/evaluation changes and an off-by-default confirmation candidate; it has not been newly measured on a GPU.
+- The **92.52%** human-reviewed figure below uses alternative accepted labels. It is not a measured model improvement over the strict 89.10% result.
 
 ## 🗂️ ROUND 6 PRIORITY (re-prioritized from the MEASURED class tally in `candidate_mistakes.md`, NOT the Fix-11 thread)
 Measured FP/FN class counts (kept, human-reviewed set): **[NO-SIGNAL] ~20 · [SIG-OVERCUT] 16 · [SECTION-FP] 12 ·

@@ -2,7 +2,7 @@
 """Build flat eval folders (dev + holdout) from the nested tests/ tree.
 
 Boundary truth  : derived from the N_PDFsam_<stem>.pdf split files in each case.
-Rotation truth  : derived from groundTruthHuman (page lists; tests/ pages are all 90 deg).
+Rotation truth  : derived from per-page /Rotate deltas in the PDFsam reference files.
 
 Produces, under --out:
     eval_dev/      <symlinks to originals> + ground_truth.json + rotation_truth.json
@@ -14,9 +14,10 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
 import re
 from pathlib import Path
+from eval_data import derive_starts, corrected_reference, link_original
+from production_state import atomic_json
 
 # Case paths (relative to tests/) selected for each split. Both PDFs in a case
 # are included if the case holds more than one original.
@@ -38,40 +39,8 @@ HOLDOUT_CASES = [
 
 
 def parse_boundary_starts(case_dir: Path, original_name: str) -> list[int]:
-    """Document start pages from the PDFsam reference split files, using actual page
-    COVERAGE — not just start prefixes.
-
-    A boundary is the start of each filed piece AND the first page of each run of pages
-    covered by NO file. Uncovered ('gap') pages are real documents the human filed
-    elsewhere or isolated (e.g. a СКИЦА, or a part's cover/contents sheet).
-
-    Earlier bug: only the start prefixes were used and piece page-counts were ignored, so
-    gap pages were silently absorbed into the preceding document, dropping real boundaries
-    (e.g. 163444215 p10 = СКИЦА after the isolated p9 invoice; 084303475 p4 = electrical
-    part cover between the [2,3] and [5] pieces). Authorized correction 2026-06-11.
-    """
-    from pypdf import PdfReader
-    stem = Path(original_name).stem
-    tag = f"_PDFsam_{stem}"
-    total = len(PdfReader(str(case_dir / original_name)).pages)
-    starts: set[int] = set()
-    covered: set[int] = set()
-    for f in case_dir.iterdir():
-        if f.suffix.lower() != ".pdf" or tag not in f.stem:
-            continue
-        m = re.search(r"(\d+)$", f.stem.split(tag)[0])
-        if not m:
-            continue
-        start = int(m.group(1))
-        npages = len(PdfReader(str(f)).pages)
-        starts.add(start)
-        covered.update(range(start, start + npages))
-    # first page of every uncovered run is the start of a (separately-filed) document
-    for p in range(1, total + 1):
-        if p not in covered and (p == 1 or (p - 1) in covered):
-            starts.add(p)
-    starts.add(1)
-    return sorted(starts)
+    """Coverage-derived starts. Human corrections are applied by the builders."""
+    return derive_starts(case_dir / original_name)
 
 
 def derive_rotation_truth(case_dir: Path, original_name: str) -> dict[str, int]:
@@ -123,28 +92,22 @@ def build_split(name: str, cases: list[str], tests_dir: Path, out_root: Path) ->
     for case_rel in cases:
         case_dir = tests_dir / case_rel
         if not case_dir.is_dir():
-            print(f"  WARN: missing case {case_rel}")
-            continue
+            raise ValueError(f"Missing required evaluation case: {case_rel}")
         for orig in originals_in_case(case_dir):
             starts = parse_boundary_starts(case_dir, orig.name)
-            if len(starts) <= 1:
+            if not starts:
                 print(f"  WARN: no boundary splits for {case_rel}/{orig.name} — skipping")
                 continue
+            starts, _ = corrected_reference(orig, starts)
             ground_truth[orig.name] = starts
             rot = derive_rotation_truth(case_dir, orig.name)
-            if rot:
-                rotation_truth[orig.name] = rot
-            link = out_dir / orig.name
-            if link.exists() or link.is_symlink():
-                link.unlink()
-            link.symlink_to(orig.resolve())
+            rotation_truth[orig.name] = rot
+            link_original(orig, out_dir)
             from pypdf import PdfReader
             total_pages += len(PdfReader(str(orig)).pages)
 
-    (out_dir / "ground_truth.json").write_text(
-        json.dumps(ground_truth, indent=2, ensure_ascii=False), encoding="utf-8")
-    (out_dir / "rotation_truth.json").write_text(
-        json.dumps(rotation_truth, indent=2, ensure_ascii=False), encoding="utf-8")
+    atomic_json(out_dir / "ground_truth.json", ground_truth)
+    atomic_json(out_dir / "rotation_truth.json", rotation_truth)
 
     print(f"{name}: {len(ground_truth)} files, ~{total_pages} pages, "
           f"{len(rotation_truth)} files with rotation truth -> {out_dir}")

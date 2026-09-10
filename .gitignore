@@ -29,3 +29,16 @@ eval_full/
 fable5_run/pages_cache/
 fable5_run/queries/
 eval_probe/
+eval_expanded/
+eval_tests2/
+experiments/
+review_batches/
+eval_gergana/
+eval_tests2_pilot_v1/
+eval_tests2_final_v1/
+
+# Local generated reports, exports, and additional evaluation fixtures
+output/
+tmp/
+eval_reserved65_v1/
+eval_tests2_remaining_v1/

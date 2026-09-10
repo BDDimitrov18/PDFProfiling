@@ -1,0 +1,153 @@
+{
+  "by_stratum": {
+    "external_review": {
+      "files": 5,
+      "TP": 28,
+      "FP": 4,
+      "FN": 2,
+      "precision": 0.875,
+      "recall": 0.9333333333333333,
+      "f1": 0.9032258064516129,
+      "docs_exact": 28,
+      "docs_total": 35,
+      "docs_excluded": 0,
+      "source_exact": 2,
+      "errors": [
+        {
+          "file": "Image_00102102026105903855.pdf",
+          "fp": [
+            7
+          ],
+          "fn": [
+            9,
+            11
+          ]
+        },
+        {
+          "file": "Image_00102102026135512148.pdf",
+          "fp": [],
+          "fn": []
+        },
+        {
+          "file": "Image_00102102026145806506.pdf",
+          "fp": [
+            13,
+            14
+          ],
+          "fn": []
+        },
+        {
+          "file": "Image_00102112026090126620.pdf",
+          "fp": [
+            14
+          ],
+          "fn": []
+        },
+        {
+          "file": "Image_00102112026095941278.pdf",
+          "fp": [],
+          "fn": []
+        }
+      ]
+    },
+    "aggregate": {
+      "files": 5,
+      "TP": 28,
+      "FP": 4,
+      "FN": 2,
+      "precision": 0.875,
+      "recall": 0.9333333333333333,
+      "f1": 0.9032258064516129,
+      "docs_exact": 28,
+      "docs_total": 35,
+      "docs_excluded": 0,
+      "source_exact": 2,
+      "errors": [
+        {
+          "file": "Image_00102102026105903855.pdf",
+          "fp": [
+            7
+          ],
+          "fn": [
+            9,
+            11
+          ]
+        },
+        {
+          "file": "Image_00102102026135512148.pdf",
+          "fp": [],
+          "fn": []
+        },
+        {
+          "file": "Image_00102102026145806506.pdf",
+          "fp": [
+            13,
+            14
+          ],
+          "fn": []
+        },
+        {
+          "file": "Image_00102112026090126620.pdf",
+          "fp": [
+            14
+          ],
+          "fn": []
+        },
+        {
+          "file": "Image_00102112026095941278.pdf",
+          "fp": [],
+          "fn": []
+        }
+      ]
+    }
+  },
+  "per_file": [
+    {
+      "file": "Image_00102102026135512148.pdf",
+      "stratum": "external_review",
+      "docs_exact": 5,
+      "docs_total": 5,
+      "docs_excluded": 0,
+      "source_exact": true
+    },
+    {
+      "file": "Image_00102102026105903855.pdf",
+      "stratum": "external_review",
+      "docs_exact": 1,
+      "docs_total": 6,
+      "docs_excluded": 0,
+      "source_exact": false
+    },
+    {
+      "file": "Image_00102112026090126620.pdf",
+      "stratum": "external_review",
+      "docs_exact": 8,
+      "docs_total": 9,
+      "docs_excluded": 0,
+      "source_exact": false
+    },
+    {
+      "file": "Image_00102102026145806506.pdf",
+      "stratum": "external_review",
+      "docs_exact": 9,
+      "docs_total": 10,
+      "docs_excluded": 0,
+      "source_exact": false
+    },
+    {
+      "file": "Image_00102112026095941278.pdf",
+      "stratum": "external_review",
+      "docs_exact": 5,
+      "docs_total": 5,
+      "docs_excluded": 0,
+      "source_exact": true
+    }
+  ],
+  "provenance": {
+    "kind": "rescore_existing_user_supplied_automatic_outputs",
+    "model_code_runtime": "unknown",
+    "new_inference": false,
+    "human_reference_id": "gergana-2026-07-02-reviewed-v1",
+    "human_reference_sha256": "c807061ebdaf52b59b37b5f81caa00104f8243af86c0380d49127bab8a39e582"
+  }
+}

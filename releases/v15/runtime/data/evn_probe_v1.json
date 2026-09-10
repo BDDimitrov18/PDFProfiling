@@ -1,0 +1,826 @@
+{
+  "version": 1,
+  "id": "evn-selective-probe-v1",
+  "created_date": "2026-09-05",
+  "purpose": "Freeze a small extraction and suppression probe before a fresh CUDA run. This is an old-benchmark diagnostic, not an independent accuracy test.",
+  "provenance": {
+    "dataset_id": "gt-v3-20",
+    "scope": "Only the historical 20-source, 733-page benchmark was used to select these cases. No new external validation batch was inspected or used.",
+    "review_basis": "The EVN section rule was supplied by the human and colleague in the existing RULES.md history. Start-page truth is the current reviewed GTv3. Cached model transcriptions are evidence to test, not new human verification of every visible word.",
+    "rule_reference": {
+      "commit": "6bc669b97e7c4e907e2d7836b303c231a049a0a5",
+      "path": "RULES.md",
+      "sha256": "f0c66a7c6e6c18bd6efcdd275e64ea41017c7f2a3cacb46832a77ded70e27169",
+      "rule_number": 7,
+      "text": "EVN documents carry \"Търговски условия\" as SECTION headings (not boundaries)."
+    },
+    "legacy_implementation_reference": {
+      "commit": "6bc669b97e7c4e907e2d7836b303c231a049a0a5",
+      "path": "domain_rules.py",
+      "sha256": "5dc4cb0924e688fa8f4215b8424802ab999364f3647ee60179a2191dc887713b",
+      "function": "rule7_evn_trade_terms"
+    },
+    "ground_truth": {
+      "path": "eval_full/ground_truth.json",
+      "sha256": "6d5d1214e7117e867275fb2706fa3b8e82c10c61149c902657f592281b171250",
+      "canonical_sha256": "4b67817db1e0a50b3f4f3a92e66ab8bf4bd38c2d8d6693b1f8da9299a462ffab"
+    },
+    "strata": {
+      "path": "eval_full/strata.json",
+      "sha256": "28b8a22eac2ce9dfb57c2168880c3e9cc4d5826a7a7c2d7dc3a3443073f9e31a"
+    },
+    "masked": {
+      "path": "eval_full/masked.json",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "ranges": {}
+    },
+    "cached_markers": {
+      "path": "logs/markers_eval_full.json",
+      "sha256": "24dbe0950865b9b22cea504a20fdb9162faef011c2b251cfadb410622469c360",
+      "warning": "Historical full-page extraction; not equivalent to the new selective single-page extraction prompt."
+    },
+    "baseline_predictions": {
+      "path": "logs/fulltests_stage2.log",
+      "sha256": "f7faf7f42b97f850223e8189fb460e050de78b1010733302ee5fbecfaa4ad60b"
+    },
+    "historical_score": {
+      "path": "logs/domain_rules_score.md",
+      "sha256": "f66b227254ede4f318a10e07275e207679ef4f440da8bc69212be235b6aa3f78"
+    }
+  },
+  "matching_contract": {
+    "scope": "Apply only to existing candidate starts after page 1.",
+    "heading": "Exact Търговски условия after case/whitespace normalization, with only an optional numbered-section prefix and terminal period or colon.",
+    "issuer": "A separate nonempty literal same-page issuer field containing a whole EVN or ЕВН token.",
+    "no_evidence": "Keep the boundary if either field is absent, unclear, malformed, or fails the fixed matcher. Never inherit issuer identity from another page.",
+    "long_title": "Longer titles and company names embedded only in the title do not satisfy this fixed heading-and-issuer gate."
+  },
+  "probe": {
+    "page_calls": 12,
+    "mandatory_suppressions": 2,
+    "mandatory_keeps": 9,
+    "observations": 1,
+    "page_numbers": "One-based source pages. Reuse these fixed baseline candidates; do not re-run boundary detection for this diagnostic.",
+    "hard_gate": "Both suppress targets must fire, all nine keep controls must remain, and all 12 extraction calls must complete without errors. The observe case is recorded but does not determine the gate."
+  },
+  "cases": [
+    {
+      "file": "Image_00112022025164505881.pdf",
+      "page": 2,
+      "role": "one_page_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 2,
+        "end": 2
+      },
+      "cached_marker": {
+        "title": "КАМАРА НА ИНЖЕНЕРИТЕ В ИНВЕСТИЦИОННОТО ПРОЕКТИРАНЕ",
+        "issuer": null,
+        "issuer_raw": "КАМАРА НА ИНЖЕНЕРИТЕ В ИНВЕСТИЦИОННОТО ПРОЕКТИРАНЕ  \nKIIP"
+      },
+      "reason": "A true one-page document with a different title and no EVN issuer."
+    },
+    {
+      "file": "Image_00112022025164505881.pdf",
+      "page": 4,
+      "role": "evn_one_page_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 4,
+        "end": 4
+      },
+      "cached_marker": {
+        "title": "EVN",
+        "issuer": "EVN",
+        "issuer_raw": "EVN"
+      },
+      "reason": "A true one-page EVN document; issuer identity alone must not remove its start."
+    },
+    {
+      "file": "Image_00112022025164505881.pdf",
+      "page": 5,
+      "role": "evn_contract_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 5,
+        "end": 11
+      },
+      "cached_marker": {
+        "title": "Предварителен договор",
+        "issuer": "EVN",
+        "issuer_raw": "The letterhead / issuer field at the top of the page contains the following:\n\n- Logo text: **EVN**\n- Company name: **\"ЕВН БЪЛГАРИЯ ЕЛЕКТРОРАЗПРЕДЕЛЕНИЕ\" ЕАД**"
+      },
+      "reason": "The true start of the EVN contract containing target page 9."
+    },
+    {
+      "file": "Image_00112022025164505881.pdf",
+      "page": 9,
+      "role": "known_false_cut",
+      "expected_action": "suppress",
+      "baseline_candidate": true,
+      "ground_truth_start": false,
+      "ground_truth_document": {
+        "start": 5,
+        "end": 11
+      },
+      "cached_marker": {
+        "title": "Търговски условия",
+        "issuer": "EVN",
+        "issuer_raw": "The letterhead / issuer field at the top of the page contains the following verbatim text:\n\n```\nТЪРГОВСКИ УСЛОВИЯ\nНА ПРЕДВАРИТЕЛНИТЕ ДОГОВОРИ ЗА ПРИСЪЕДИНЯВАНЕ НА ОБЪЕКТ НА КЛИЕНТ КЪМ\nЕЛЕКТРОРАЗПРЕДЕЛITELНА МРЖА НА \"ЕВН БЪЛГАРИЯ ЕЛЕКТРОРАЗПРЕДЕЛЕНИЕ\" ЕАД\n```\n\nThere is no visible logo text in the provided image. The seal appears to be from an official entity but does not include any"
+      },
+      "reason": "An EVN trade-terms section inside the human-labelled document spanning pages 5–11."
+    },
+    {
+      "file": "Image_00112022025145428614.pdf",
+      "page": 42,
+      "role": "near_match_one_page_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 42,
+        "end": 42
+      },
+      "cached_marker": {
+        "title": "Търговски регистър",
+        "issuer": null,
+        "issuer_raw": "MINISTERSTVO NA PRAVOSDIETO  \nAGENCIЯ PO VPISVANIЯTA  \n\nТЪРГОВСКИ РЕГИСТЪР"
+      },
+      "reason": "A true one-page Търговски регистър document; a partial word match must not remove it."
+    },
+    {
+      "file": "Image_00112022025145428614.pdf",
+      "page": 62,
+      "role": "evn_contract_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 62,
+        "end": 68
+      },
+      "cached_marker": {
+        "title": "Предварителен договор",
+        "issuer": "EVN",
+        "issuer_raw": "The letterhead / issuer field at the top of the page contains the following:\n\n- **Logo Text**: EVN\n- **Company Name**: \"ЕВН България Електроразпределение\" ЕАД\n\nThe verbatim transcription is:\n\n**EVN**\n**\"ЕВН България Електроразпределение\" ЕАД**"
+      },
+      "reason": "The true start of the EVN contract containing target page 66."
+    },
+    {
+      "file": "Image_00112022025145428614.pdf",
+      "page": 65,
+      "role": "out_of_scope_false_cut_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": false,
+      "ground_truth_document": {
+        "start": 62,
+        "end": 68
+      },
+      "cached_marker": {
+        "title": "Член 9. Общи текстове",
+        "issuer": "EVN",
+        "issuer_raw": "The letterhead / issuer field at the top of the page contains the following information:\n\n- **Seal/Stamp Text**: The seal contains the text \"ЕВН БЪЛГАРИЯ ЕЛЕКТРОРАЗПРЕДЕЛЕНИЕ ЕАД\" and \"ПЛОВДИВ\".\n\nThere is no additional company or institution name printed above the seal. Therefore, the response is:\n\n**NONE**"
+      },
+      "reason": "An existing false cut titled Член 9. Общи текстове is outside the fixed trade-terms rule; this experiment must not broaden to suppress it."
+    },
+    {
+      "file": "Image_00112022025145428614.pdf",
+      "page": 66,
+      "role": "known_false_cut",
+      "expected_action": "suppress",
+      "baseline_candidate": true,
+      "ground_truth_start": false,
+      "ground_truth_document": {
+        "start": 62,
+        "end": 68
+      },
+      "cached_marker": {
+        "title": "Търговски условия",
+        "issuer": "EVN",
+        "issuer_raw": "The letterhead / issuer field at the top of the page contains the following verbatim text:\n\n```\nЕВН БЪЛГАРИЯ ЕЛЕКТРОРАЗПРЕДЕЛЕНИЕ ЕАД\n``` \n\nThere is no visible logo text in the provided image. The seal appears to be an official stamp but does not contain any legible text that can be transcribed as part of the letterhead. Therefore, the response for the letterhead / issuer field is:\n\n```\nЕВН БЪЛГАРИЯ ЕЛЕКТРОРАЗПРЕДЕЛЕНИЕ ЕАД\n```"
+      },
+      "reason": "An EVN trade-terms section inside the human-labelled document spanning pages 62–68."
+    },
+    {
+      "file": "Image_00112022025143041245.pdf",
+      "page": 32,
+      "role": "evn_one_page_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 32,
+        "end": 32
+      },
+      "cached_marker": {
+        "title": "\"ЗАДАНИЕ ЗА ПРОЕКТИРАНЕ\"",
+        "issuer": "EVN",
+        "issuer_raw": "\"ЕВН БЪЛГАРИЯ ЕЛЕКТРОРАЗПРЕДЕЛЕНИЕ\" ЕАД\n\nEVN\n\nKEC Пловдив Север"
+      },
+      "reason": "A true one-page EVN ЗАДАНИЕ ЗА ПРОЕКТИРАНЕ document."
+    },
+    {
+      "file": "Image_00112022025143041245.pdf",
+      "page": 46,
+      "role": "evn_contract_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 46,
+        "end": 54
+      },
+      "cached_marker": {
+        "title": "Договор",
+        "issuer": "EVN",
+        "issuer_raw": "The letterhead / issuer field at the top of the page contains the following:\n\n- Logo: \"EVN\"\n- Text: \"Договор за присъединяване обекти на клиенти към електроразпределителната мрежа на \"ЕВН България Електроразпределение\" ЕАД\"\n\nThis is transcribed verbatim as it appears in the image."
+      },
+      "reason": "A true EVN Договор start; its title is not the trade-terms heading."
+    },
+    {
+      "file": "Image_00112022025143041245.pdf",
+      "page": 51,
+      "role": "missing_issuer_observation",
+      "expected_action": "observe",
+      "baseline_candidate": true,
+      "ground_truth_start": false,
+      "ground_truth_document": {
+        "start": 46,
+        "end": 54
+      },
+      "cached_marker": {
+        "title": "Търговски условия на договорите за присъединяване на обект на Клиент към електроразпределителната мрежа на \"ЕВН България Електроразпределение\" ЕАД",
+        "issuer": null,
+        "issuer_raw": "NONE"
+      },
+      "reason": "An existing false cut with a long EVN trade-terms title but a missing cached issuer. This is not a non-EVN example. Record fresh evidence and the fixed-rule result without making it a pass/fail gate."
+    },
+    {
+      "file": "Image_00112032025084303475.pdf",
+      "page": 2,
+      "role": "evn_protocol_control",
+      "expected_action": "keep",
+      "baseline_candidate": true,
+      "ground_truth_start": true,
+      "ground_truth_document": {
+        "start": 2,
+        "end": 3
+      },
+      "cached_marker": {
+        "title": "Протокол",
+        "issuer": "EVN",
+        "issuer_raw": "EVN\n\nПротокол\nза съгласуване на проекти от \"ЕВН България Електроразпределение\" ЕАД"
+      },
+      "reason": "A true EVN Протокол start on an additional old-benchmark source; issuer identity alone must not remove it."
+    }
+  ],
+  "sources": {
+    "Image_00112022025143041245.pdf": {
+      "sha256": "14ea9304682afca42002d6daad9edb5bae756288ec413a9478820e06437f2beb",
+      "total_pages": 75,
+      "stratum": "fresh",
+      "source_relative_path": "tests/РС-35-2017/1/Image_00112022025143041245.pdf",
+      "ground_truth_starts": [
+        1,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12,
+        13,
+        15,
+        17,
+        18,
+        19,
+        20,
+        25,
+        26,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        38,
+        39,
+        44,
+        46,
+        55,
+        57,
+        58,
+        59,
+        68,
+        69,
+        70,
+        71,
+        72,
+        74
+      ],
+      "baseline_candidate_starts": [
+        1,
+        3,
+        4,
+        5,
+        7,
+        8,
+        11,
+        12,
+        13,
+        15,
+        19,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39,
+        43,
+        44,
+        46,
+        51,
+        55,
+        57,
+        58,
+        66,
+        69,
+        70,
+        71,
+        72,
+        74
+      ],
+      "target_source": false
+    },
+    "Image_00112022025145428614.pdf": {
+      "sha256": "eb019811f1f291ef1a23bff013c1d0ab8c3052ca1bcd6d7ac4c1851a760f132c",
+      "total_pages": 170,
+      "stratum": "fresh",
+      "source_relative_path": "tests/РС-36-2017/1/Image_00112022025145428614.pdf",
+      "ground_truth_starts": [
+        1,
+        3,
+        5,
+        10,
+        12,
+        13,
+        23,
+        24,
+        25,
+        27,
+        28,
+        29,
+        31,
+        33,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        49,
+        55,
+        56,
+        58,
+        60,
+        62,
+        69,
+        70,
+        72,
+        73,
+        75,
+        77,
+        80,
+        83,
+        85,
+        87,
+        88,
+        90,
+        92,
+        93,
+        94,
+        95,
+        96,
+        98,
+        99,
+        100,
+        103,
+        104,
+        105,
+        118,
+        119,
+        120,
+        121,
+        125,
+        126,
+        127,
+        137,
+        138,
+        139,
+        140,
+        141,
+        143,
+        144,
+        145,
+        147,
+        150,
+        152,
+        153,
+        154,
+        155,
+        157,
+        159,
+        160,
+        161,
+        162,
+        164
+      ],
+      "baseline_candidate_starts": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        10,
+        12,
+        13,
+        23,
+        24,
+        25,
+        27,
+        28,
+        29,
+        30,
+        31,
+        33,
+        34,
+        35,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        49,
+        55,
+        58,
+        60,
+        62,
+        65,
+        66,
+        69,
+        70,
+        71,
+        72,
+        73,
+        75,
+        77,
+        80,
+        83,
+        85,
+        87,
+        88,
+        90,
+        92,
+        93,
+        94,
+        95,
+        96,
+        98,
+        99,
+        100,
+        102,
+        103,
+        105,
+        118,
+        119,
+        120,
+        121,
+        125,
+        126,
+        127,
+        137,
+        138,
+        139,
+        140,
+        141,
+        143,
+        144,
+        145,
+        147,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        157,
+        160,
+        161,
+        162,
+        164
+      ],
+      "target_source": true
+    },
+    "Image_00112022025164505881.pdf": {
+      "sha256": "234936c4e053a2e558785d0fc420adcb6c26624f76f8906f7ad33ba29d78abda",
+      "total_pages": 15,
+      "stratum": "dev",
+      "source_relative_path": "tests/РС-31-2017/4/Image_00112022025164505881.pdf",
+      "ground_truth_starts": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12,
+        14,
+        15
+      ],
+      "baseline_candidate_starts": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        13,
+        14,
+        15
+      ],
+      "target_source": true
+    },
+    "Image_00112032025084303475.pdf": {
+      "sha256": "85db2918ef0f74c8fde6d031a09a30560b0a72a90917a5ca342aed885194cf91",
+      "total_pages": 28,
+      "stratum": "dev",
+      "source_relative_path": "tests/РС-33-2017/3/Image_00112032025084303475.pdf",
+      "ground_truth_starts": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        12,
+        14,
+        15,
+        16
+      ],
+      "baseline_candidate_starts": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        12,
+        14,
+        15
+      ],
+      "target_source": false
+    }
+  },
+  "cached_nearby_page_context": {
+    "Image_00112022025164505881.pdf": [
+      {
+        "page": 8,
+        "title": null,
+        "issuer": null,
+        "baseline_candidate": false,
+        "ground_truth_start": false
+      },
+      {
+        "page": 9,
+        "title": "Търговски условия",
+        "issuer": "EVN",
+        "baseline_candidate": true,
+        "ground_truth_start": false
+      },
+      {
+        "page": 10,
+        "title": null,
+        "issuer": null,
+        "baseline_candidate": false,
+        "ground_truth_start": false
+      }
+    ],
+    "Image_00112022025145428614.pdf": [
+      {
+        "page": 65,
+        "title": "Член 9. Общи текстове",
+        "issuer": "EVN",
+        "baseline_candidate": true,
+        "ground_truth_start": false
+      },
+      {
+        "page": 66,
+        "title": "Търговски условия",
+        "issuer": "EVN",
+        "baseline_candidate": true,
+        "ground_truth_start": false
+      },
+      {
+        "page": 67,
+        "title": null,
+        "issuer": null,
+        "baseline_candidate": false,
+        "ground_truth_start": false
+      }
+    ],
+    "Image_00112022025143041245.pdf": [
+      {
+        "page": 50,
+        "title": null,
+        "issuer": null,
+        "baseline_candidate": false,
+        "ground_truth_start": false
+      },
+      {
+        "page": 51,
+        "title": "Търговски условия на договорите за присъединяване на обект на Клиент към електроразпределителната мрежа на \"ЕВН България Електроразпределение\" ЕАД",
+        "issuer": null,
+        "baseline_candidate": true,
+        "ground_truth_start": false
+      },
+      {
+        "page": 52,
+        "title": null,
+        "issuer": null,
+        "baseline_candidate": false,
+        "ground_truth_start": false
+      }
+    ]
+  },
+  "candidate_context_stage": {
+    "files": [
+      "Image_00112022025164505881.pdf",
+      "Image_00112022025145428614.pdf"
+    ],
+    "candidate_pages_excluding_page_1": 92,
+    "instruction": "Optional diagnostic after the 12-page probe passes: extract on every historical baseline candidate start after page 1 in these two source PDFs. The current runner does not implement this fixed 92-page mode. If needed, prepare it separately without changing the prompt or matcher, and record all suppressions and keeps. Otherwise proceed to the required fresh same-environment baseline and paired full evaluation.",
+    "expected_suppressions": [
+      {
+        "file": "Image_00112022025164505881.pdf",
+        "page": 9
+      },
+      {
+        "file": "Image_00112022025145428614.pdf",
+        "page": 66
+      }
+    ],
+    "expected_other_actions": "Keep every other baseline candidate. Any new suppression is a failure of the frozen narrow expectation and requires a separately versioned experiment.",
+    "page_1": "Always preserve; not queried."
+  },
+  "retrospective_r7_only": {
+    "removed": [
+      {
+        "file": "Image_00112022025164505881.pdf",
+        "page": 9,
+        "was_true_start": false
+      },
+      {
+        "file": "Image_00112022025145428614.pdf",
+        "page": 66,
+        "was_true_start": false
+      }
+    ],
+    "baseline": {
+      "dev": {
+        "files": 9,
+        "TP": 76,
+        "FP": 6,
+        "FN": 7,
+        "precision": 0.926829268292683,
+        "recall": 0.9156626506024096,
+        "f1": 0.9212121212121213,
+        "docs_exact": 76,
+        "docs_total": 92,
+        "docs_excluded": 0,
+        "source_exact": 3
+      },
+      "fresh": {
+        "files": 8,
+        "TP": 199,
+        "FP": 34,
+        "FN": 18,
+        "precision": 0.8540772532188842,
+        "recall": 0.9170506912442397,
+        "f1": 0.8844444444444445,
+        "docs_exact": 166,
+        "docs_total": 225,
+        "docs_excluded": 0,
+        "source_exact": 1
+      },
+      "holdout": {
+        "files": 3,
+        "TP": 11,
+        "FP": 1,
+        "FN": 4,
+        "precision": 0.9166666666666666,
+        "recall": 0.7333333333333333,
+        "f1": 0.8148148148148148,
+        "docs_exact": 10,
+        "docs_total": 18,
+        "docs_excluded": 0,
+        "source_exact": 0
+      },
+      "aggregate": {
+        "files": 20,
+        "TP": 286,
+        "FP": 41,
+        "FN": 29,
+        "precision": 0.8746177370030581,
+        "recall": 0.9079365079365079,
+        "f1": 0.8909657320872274,
+        "docs_exact": 252,
+        "docs_total": 335,
+        "docs_excluded": 0,
+        "source_exact": 4
+      }
+    },
+    "adjusted": {
+      "dev": {
+        "files": 9,
+        "TP": 76,
+        "FP": 5,
+        "FN": 7,
+        "precision": 0.9382716049382716,
+        "recall": 0.9156626506024096,
+        "f1": 0.9268292682926829,
+        "docs_exact": 76,
+        "docs_total": 92,
+        "docs_excluded": 0,
+        "source_exact": 3
+      },
+      "fresh": {
+        "files": 8,
+        "TP": 199,
+        "FP": 33,
+        "FN": 18,
+        "precision": 0.8577586206896551,
+        "recall": 0.9170506912442397,
+        "f1": 0.8864142538975501,
+        "docs_exact": 166,
+        "docs_total": 225,
+        "docs_excluded": 0,
+        "source_exact": 1
+      },
+      "holdout": {
+        "files": 3,
+        "TP": 11,
+        "FP": 1,
+        "FN": 4,
+        "precision": 0.9166666666666666,
+        "recall": 0.7333333333333333,
+        "f1": 0.8148148148148148,
+        "docs_exact": 10,
+        "docs_total": 18,
+        "docs_excluded": 0,
+        "source_exact": 0
+      },
+      "aggregate": {
+        "files": 20,
+        "TP": 286,
+        "FP": 39,
+        "FN": 29,
+        "precision": 0.88,
+        "recall": 0.9079365079365079,
+        "f1": 0.89375,
+        "docs_exact": 252,
+        "docs_total": 335,
+        "docs_excluded": 0,
+        "source_exact": 4
+      }
+    },
+    "limitations": [
+      "This replay uses cached historical markers and the historical R7 containment predicate; it is not a measured result for the new exact-heading extractor and rule.",
+      "The rule and targets were selected from errors in this old benchmark, including its nominal fresh stratum. These gains cannot demonstrate generalization.",
+      "Exact-document recovery stays 252/335: the dev contract still ends at predicted page 13 rather than true page 12, and the fresh contract retains its extra cut at page 65.",
+      "Page 51 in Image_00112022025143041245.pdf was not removed in the historical replay because issuer was missing.",
+      "No verified non-EVN trade-terms heading was found in this cached benchmark; a synthetic matcher test can check abstention but cannot fill this real-data coverage gap."
+    ]
+  },
+  "acceptance_after_probe": [
+    "Do not promote this change from a successful diagnostic alone. Freeze the exact source, prompt, parser, and rule revisions for the next evaluation.",
+    "Evaluate all baseline candidate starts across the old 20-source benchmark and report every changed boundary plus strict and exact-document scores by stratum.",
+    "Compare a fresh full pipeline baseline with the candidate in the same pinned CUDA environment before claiming end-to-end accuracy or runtime effects.",
+    "Run a separately held validation batch without using its labels to select pages, tune prompts, or change matcher thresholds."
+  ]
+}

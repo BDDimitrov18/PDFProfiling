@@ -1,0 +1,392 @@
+{
+  "date": "2026-09-05",
+  "kind": "historical-prediction-rescore-and-log-audit",
+  "new_gpu_inference": false,
+  "gt_v3_sha256": "4b67817db1e0a50b3f4f3a92e66ab8bf4bd38c2d8d6693b1f8da9299a462ffab",
+  "runs": {
+    "round1_candidate": {
+      "log_sha256": "8e72ce71dd4b8e2814cac8247433278f01950ba55b585219901ed8a71b8113f4",
+      "scores": {
+        "dev": {
+          "files": 9,
+          "TP": 77,
+          "FP": 10,
+          "FN": 6,
+          "precision": 0.8850574712643678,
+          "recall": 0.927710843373494,
+          "f1": 0.9058823529411766,
+          "docs_exact": 74,
+          "docs_total": 92,
+          "docs_excluded": 0,
+          "source_exact": 3
+        },
+        "fresh": {
+          "files": 8,
+          "TP": 203,
+          "FP": 61,
+          "FN": 14,
+          "precision": 0.7689393939393939,
+          "recall": 0.9354838709677419,
+          "f1": 0.844074844074844,
+          "docs_exact": 149,
+          "docs_total": 225,
+          "docs_excluded": 0,
+          "source_exact": 1
+        },
+        "holdout": {
+          "files": 3,
+          "TP": 11,
+          "FP": 1,
+          "FN": 4,
+          "precision": 0.9166666666666666,
+          "recall": 0.7333333333333333,
+          "f1": 0.8148148148148148,
+          "docs_exact": 10,
+          "docs_total": 18,
+          "docs_excluded": 0,
+          "source_exact": 0
+        },
+        "aggregate": {
+          "files": 20,
+          "TP": 291,
+          "FP": 72,
+          "FN": 24,
+          "precision": 0.8016528925619835,
+          "recall": 0.9238095238095239,
+          "f1": 0.8584070796460178,
+          "docs_exact": 233,
+          "docs_total": 335,
+          "docs_excluded": 0,
+          "source_exact": 4
+        }
+      },
+      "confirmation_audit": {
+        "files": 20,
+        "confirmations": 33,
+        "same_pair": 33,
+        "relocated_in_range": 0,
+        "out_of_range": 0
+      }
+    },
+    "run8_stage3": {
+      "log_sha256": "53654497a648a1519517104bc362077debe98659602cee1fff1e4593610367d6",
+      "scores": {
+        "dev": {
+          "files": 9,
+          "TP": 75,
+          "FP": 9,
+          "FN": 8,
+          "precision": 0.8928571428571429,
+          "recall": 0.9036144578313253,
+          "f1": 0.8982035928143712,
+          "docs_exact": 71,
+          "docs_total": 92,
+          "docs_excluded": 0,
+          "source_exact": 3
+        },
+        "fresh": {
+          "files": 8,
+          "TP": 200,
+          "FP": 42,
+          "FN": 17,
+          "precision": 0.8264462809917356,
+          "recall": 0.9216589861751152,
+          "f1": 0.8714596949891068,
+          "docs_exact": 163,
+          "docs_total": 225,
+          "docs_excluded": 0,
+          "source_exact": 1
+        },
+        "holdout": {
+          "files": 3,
+          "TP": 10,
+          "FP": 1,
+          "FN": 5,
+          "precision": 0.9090909090909091,
+          "recall": 0.6666666666666666,
+          "f1": 0.7692307692307692,
+          "docs_exact": 9,
+          "docs_total": 18,
+          "docs_excluded": 0,
+          "source_exact": 0
+        },
+        "aggregate": {
+          "files": 20,
+          "TP": 285,
+          "FP": 52,
+          "FN": 30,
+          "precision": 0.8456973293768546,
+          "recall": 0.9047619047619048,
+          "f1": 0.8742331288343559,
+          "docs_exact": 243,
+          "docs_total": 335,
+          "docs_excluded": 0,
+          "source_exact": 4
+        }
+      },
+      "confirmation_audit": {
+        "files": 20,
+        "confirmations": 44,
+        "same_pair": 44,
+        "relocated_in_range": 0,
+        "out_of_range": 0
+      }
+    },
+    "fulltests_stage2": {
+      "log_sha256": "f7faf7f42b97f850223e8189fb460e050de78b1010733302ee5fbecfaa4ad60b",
+      "scores": {
+        "dev": {
+          "files": 9,
+          "TP": 76,
+          "FP": 6,
+          "FN": 7,
+          "precision": 0.926829268292683,
+          "recall": 0.9156626506024096,
+          "f1": 0.9212121212121213,
+          "docs_exact": 76,
+          "docs_total": 92,
+          "docs_excluded": 0,
+          "source_exact": 3
+        },
+        "fresh": {
+          "files": 8,
+          "TP": 199,
+          "FP": 34,
+          "FN": 18,
+          "precision": 0.8540772532188842,
+          "recall": 0.9170506912442397,
+          "f1": 0.8844444444444445,
+          "docs_exact": 166,
+          "docs_total": 225,
+          "docs_excluded": 0,
+          "source_exact": 1
+        },
+        "holdout": {
+          "files": 3,
+          "TP": 11,
+          "FP": 1,
+          "FN": 4,
+          "precision": 0.9166666666666666,
+          "recall": 0.7333333333333333,
+          "f1": 0.8148148148148148,
+          "docs_exact": 10,
+          "docs_total": 18,
+          "docs_excluded": 0,
+          "source_exact": 0
+        },
+        "aggregate": {
+          "files": 20,
+          "TP": 286,
+          "FP": 41,
+          "FN": 29,
+          "precision": 0.8746177370030581,
+          "recall": 0.9079365079365079,
+          "f1": 0.8909657320872274,
+          "docs_exact": 252,
+          "docs_total": 335,
+          "docs_excluded": 0,
+          "source_exact": 4
+        }
+      },
+      "confirmation_audit": {
+        "files": 20,
+        "confirmations": 33,
+        "same_pair": 33,
+        "relocated_in_range": 0,
+        "out_of_range": 0
+      }
+    },
+    "round3_ad_fulltests": {
+      "log_sha256": "f60dc63df0e6918bdb7bc47374b0496fa1dbe08cf980cb1c0074227d987cb2c3",
+      "scores": {
+        "dev": {
+          "files": 9,
+          "TP": 77,
+          "FP": 5,
+          "FN": 6,
+          "precision": 0.9390243902439024,
+          "recall": 0.927710843373494,
+          "f1": 0.9333333333333333,
+          "docs_exact": 78,
+          "docs_total": 92,
+          "docs_excluded": 0,
+          "source_exact": 3
+        },
+        "fresh": {
+          "files": 8,
+          "TP": 202,
+          "FP": 45,
+          "FN": 15,
+          "precision": 0.8178137651821862,
+          "recall": 0.9308755760368663,
+          "f1": 0.8706896551724138,
+          "docs_exact": 161,
+          "docs_total": 225,
+          "docs_excluded": 0,
+          "source_exact": 1
+        },
+        "holdout": {
+          "files": 3,
+          "TP": 11,
+          "FP": 1,
+          "FN": 4,
+          "precision": 0.9166666666666666,
+          "recall": 0.7333333333333333,
+          "f1": 0.8148148148148148,
+          "docs_exact": 10,
+          "docs_total": 18,
+          "docs_excluded": 0,
+          "source_exact": 0
+        },
+        "aggregate": {
+          "files": 20,
+          "TP": 290,
+          "FP": 51,
+          "FN": 25,
+          "precision": 0.8504398826979472,
+          "recall": 0.9206349206349206,
+          "f1": 0.8841463414634146,
+          "docs_exact": 249,
+          "docs_total": 335,
+          "docs_excluded": 0,
+          "source_exact": 4
+        }
+      },
+      "confirmation_audit": {
+        "files": 20,
+        "confirmations": 34,
+        "same_pair": 34,
+        "relocated_in_range": 0,
+        "out_of_range": 0
+      }
+    },
+    "round3_abd_fulltests": {
+      "log_sha256": "c18074ee0e375168807ec50b23ae4c4b52b7c4e745fc0c7cf67565edb03b4394",
+      "scores": {
+        "dev": {
+          "files": 9,
+          "TP": 77,
+          "FP": 5,
+          "FN": 6,
+          "precision": 0.9390243902439024,
+          "recall": 0.927710843373494,
+          "f1": 0.9333333333333333,
+          "docs_exact": 78,
+          "docs_total": 92,
+          "docs_excluded": 0,
+          "source_exact": 3
+        },
+        "fresh": {
+          "files": 8,
+          "TP": 196,
+          "FP": 38,
+          "FN": 21,
+          "precision": 0.8376068376068376,
+          "recall": 0.9032258064516129,
+          "f1": 0.869179600886918,
+          "docs_exact": 158,
+          "docs_total": 225,
+          "docs_excluded": 0,
+          "source_exact": 1
+        },
+        "holdout": {
+          "files": 3,
+          "TP": 10,
+          "FP": 1,
+          "FN": 5,
+          "precision": 0.9090909090909091,
+          "recall": 0.6666666666666666,
+          "f1": 0.7692307692307692,
+          "docs_exact": 9,
+          "docs_total": 18,
+          "docs_excluded": 0,
+          "source_exact": 0
+        },
+        "aggregate": {
+          "files": 20,
+          "TP": 283,
+          "FP": 44,
+          "FN": 32,
+          "precision": 0.8654434250764526,
+          "recall": 0.8984126984126984,
+          "f1": 0.881619937694704,
+          "docs_exact": 245,
+          "docs_total": 335,
+          "docs_excluded": 0,
+          "source_exact": 4
+        }
+      },
+      "confirmation_audit": {
+        "files": 20,
+        "confirmations": 50,
+        "same_pair": 50,
+        "relocated_in_range": 0,
+        "out_of_range": 0
+      }
+    },
+    "round4_aprime_fulltests": {
+      "log_sha256": "76a2e8f611f8ee11eb578e3d5026f21ff07b5557c0640dd90c3e978c58c19e87",
+      "scores": {
+        "dev": {
+          "files": 9,
+          "TP": 76,
+          "FP": 6,
+          "FN": 7,
+          "precision": 0.926829268292683,
+          "recall": 0.9156626506024096,
+          "f1": 0.9212121212121213,
+          "docs_exact": 76,
+          "docs_total": 92,
+          "docs_excluded": 0,
+          "source_exact": 3
+        },
+        "fresh": {
+          "files": 8,
+          "TP": 197,
+          "FP": 33,
+          "FN": 20,
+          "precision": 0.8565217391304348,
+          "recall": 0.9078341013824884,
+          "f1": 0.8814317673378076,
+          "docs_exact": 164,
+          "docs_total": 225,
+          "docs_excluded": 0,
+          "source_exact": 1
+        },
+        "holdout": {
+          "files": 3,
+          "TP": 11,
+          "FP": 1,
+          "FN": 4,
+          "precision": 0.9166666666666666,
+          "recall": 0.7333333333333333,
+          "f1": 0.8148148148148148,
+          "docs_exact": 10,
+          "docs_total": 18,
+          "docs_excluded": 0,
+          "source_exact": 0
+        },
+        "aggregate": {
+          "files": 20,
+          "TP": 284,
+          "FP": 40,
+          "FN": 31,
+          "precision": 0.8765432098765432,
+          "recall": 0.9015873015873016,
+          "f1": 0.8888888888888888,
+          "docs_exact": 250,
+          "docs_total": 335,
+          "docs_excluded": 0,
+          "source_exact": 4
+        }
+      },
+      "confirmation_audit": {
+        "files": 20,
+        "confirmations": 34,
+        "same_pair": 34,
+        "relocated_in_range": 0,
+        "out_of_range": 0
+      }
+    }
+  }
+}

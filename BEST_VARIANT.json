@@ -1,0 +1,14 @@
+{
+  "variant": "V15",
+  "label": "best validated variant",
+  "git_tag": "best-v15",
+  "runtime": "releases/v15/runtime",
+  "manifest": "releases/v15/manifest.json",
+  "validation": "releases/v15/validation-summary.json",
+  "manifest_sha256": "28651143e3ea6a13e971824b2062f9978230fef9509281d022491b0d1d9ba44c",
+  "backend": "qwen38",
+  "boundary_method": "archive-context",
+  "thinking": "off",
+  "deployment": "data/qwen38_deployment_compact_v3.json",
+  "note": "Exact saved V15; later experimental candidates are not included. Root inference Python files match the saved runtime. Compatibility CLI defaults remain unchanged; use explicit options."
+}

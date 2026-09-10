@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "id": "gergana-2026-07-02-reviewed-v1",
+  "label_status": "human_confirmed",
+  "purpose": "separate_validation_not_prompt_tuning",
+  "reviewed_at": "2026-09-05T12:59:28.005564+00:00",
+  "corpus_name": "Gergana-2.07.2026",
+  "review_evidence": {
+    "kind": "explicit_user_message",
+    "message": "2nd doc 1 2 8 9 10 11 3d doc 1 2 3 5 8 9 10 11 15 4th doc 1 2 3 4 6 11 15 16 17 22 5th doc 1 2 3 4  25 first doc is right",
+    "interpretation": "Lists are 1-indexed document start pages in original PDFs, mapped to numbered reviews 02–05; review 01 confirms existing automatic starts."
+  },
+  "files": {
+    "Image_00102102026135512148.pdf": {
+      "review_id": "01",
+      "source": "РС-75-1-2021/9/Image_00102102026135512148.pdf",
+      "source_sha256": "1e7443aa0e513b58057e064dd2db980f58af9d119fb97b2913c48675800ca037",
+      "total_pages": 8,
+      "case_group": "РС-75-1-2021",
+      "starts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "existing_automatic_starts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "automatic_provenance": "User-supplied obraboteni outputs; model/code/runtime identity is not recorded."
+    },
+    "Image_00102102026105903855.pdf": {
+      "review_id": "02",
+      "source": "РС-70-1-2021/6/Image_00102102026105903855.pdf",
+      "source_sha256": "fc48e22fd655437cc5535a333e965086bdf5ddb034f68e53adfff449fd2e5c17",
+      "total_pages": 11,
+      "case_group": "РС-70-1-2021",
+      "starts": [
+        1,
+        2,
+        8,
+        9,
+        10,
+        11
+      ],
+      "existing_automatic_starts": [
+        1,
+        2,
+        7,
+        8,
+        10
+      ],
+      "automatic_provenance": "User-supplied obraboteni outputs; model/code/runtime identity is not recorded."
+    },
+    "Image_00102112026090126620.pdf": {
+      "review_id": "03",
+      "source": "РС-83-2021/4/Image_00102112026090126620.pdf",
+      "source_sha256": "2d83b9637ff033bfeaed074a15f724f18477783b64a302417739a2c9ed6c972c",
+      "total_pages": 16,
+      "case_group": "РС-83-2021",
+      "starts": [
+        1,
+        2,
+        3,
+        5,
+        8,
+        9,
+        10,
+        11,
+        15
+      ],
+      "existing_automatic_starts": [
+        1,
+        2,
+        3,
+        5,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15
+      ],
+      "automatic_provenance": "User-supplied obraboteni outputs; model/code/runtime identity is not recorded."
+    },
+    "Image_00102102026145806506.pdf": {
+      "review_id": "04",
+      "source": "РС-79-2021/5/Image_00102102026145806506.pdf",
+      "source_sha256": "1d869d9de0ab521319914fa56465d05f02b356db22df39e218c87aedba0a1bad",
+      "total_pages": 23,
+      "case_group": "РС-79-2021",
+      "starts": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        11,
+        15,
+        16,
+        17,
+        22
+      ],
+      "existing_automatic_starts": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        22
+      ],
+      "automatic_provenance": "User-supplied obraboteni outputs; model/code/runtime identity is not recorded."
+    },
+    "Image_00102112026095941278.pdf": {
+      "review_id": "05",
+      "source": "РС-84-1-2021/3/Image_00102112026095941278.pdf",
+      "source_sha256": "875d265912bd4608d32f628377b166a0e28ed0604808a36094eb5b3e38e8fd81",
+      "total_pages": 26,
+      "case_group": "РС-84-1-2021",
+      "starts": [
+        1,
+        2,
+        3,
+        4,
+        25
+      ],
+      "existing_automatic_starts": [
+        1,
+        2,
+        3,
+        4,
+        25
+      ],
+      "automatic_provenance": "User-supplied obraboteni outputs; model/code/runtime identity is not recorded."
+    }
+  }
+}

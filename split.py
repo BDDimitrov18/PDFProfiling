@@ -336,7 +336,29 @@ def setup_logging(log_dir: Path) -> logging.Logger:
 # Model
 # ---------------------------------------------------------------------------
 
-def load_model(model_path: str, logger: logging.Logger):
+def load_model(model_path: str, logger: logging.Logger, revision: str | None = None, inference: dict | None = None):
+    if inference is not None and inference.get('backend') == 'qwen38':
+        from model_options import validate_deployment, RESPONSE_VALIDATION_RETRIES, RESPONSE_RECOVERY_POLICY
+        from qwen38_client import Qwen38Client
+        deployment = validate_deployment(inference['deployment'])
+        if revision != deployment['revision'] or model_path != deployment['served_model']:
+            raise ValueError('Requested model/revision differs from the Qwen3.8 deployment')
+        retries = inference.get('response_validation_retries', RESPONSE_VALIDATION_RETRIES)
+        if type(retries) is not int or retries != RESPONSE_VALIDATION_RETRIES:
+            raise ValueError('Qwen3.8 uses exactly one response-format retry')
+        if inference.get('response_recovery', RESPONSE_RECOVERY_POLICY) != RESPONSE_RECOVERY_POLICY:
+            raise ValueError('Qwen3.8 response-recovery policy differs from this client')
+        client = Qwen38Client(inference['endpoint'], model_path, deployment,
+            thinking=inference['thinking'], max_completion_tokens=inference['max_completion_tokens'],
+            timeout_seconds=inference['timeout_seconds'])
+        client.verify()
+        logger.info('Qwen3.8 server ready: %s, thinking=%s, completion cap=%s',
+                    model_path, inference['thinking'], inference['max_completion_tokens'])
+        return client, None, {'backend': 'qwen38'}
+    if inference is not None and inference.get('backend') != 'hf':
+        raise ValueError('Unsupported inference backend')
+    if 'qwen3.8' in model_path.lower():
+        raise ValueError('Qwen3.8 requires the qwen38 server backend; the default loader is Qwen2.5')
     try:
         import torch
         from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor, BitsAndBytesConfig
@@ -353,11 +375,12 @@ def load_model(model_path: str, logger: logging.Logger):
     )
     model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
         model_path,
+        **({"revision": revision} if revision else {}),
         quantization_config=bnb_config,
         device_map="auto",
     )
     model.eval()
-    processor = AutoProcessor.from_pretrained(model_path)
+    processor = AutoProcessor.from_pretrained(model_path, **({"revision": revision} if revision else {}))
     logger.info("Model ready")
     return model, processor, None  # config unused on HF path
 
@@ -381,8 +404,39 @@ def clean_response(text: str) -> str:
     return text.strip()
 
 
-def _infer(prompt_text: str, images: list, model, processor, config, logger: logging.Logger, max_tokens: int = 200) -> str | None:
+def _infer(prompt_text: str, images: list, model, processor, config, logger: logging.Logger,
+           max_tokens: int = 200, response_schema: dict | None = None) -> str:
     """Low-level: format prompt and run generate(). Returns raw output string."""
+    if isinstance(config, dict) and config.get('backend') == 'qwen38':
+        from qwen38_client import Qwen38Client, Qwen38TruncatedError
+        from model_options import (validate_final_json, ResponseValidationError,
+                                   RESPONSE_VALIDATION_RETRIES, response_format_reminder)
+        if not isinstance(model, Qwen38Client):
+            raise TypeError('Qwen3.8 inference needs a verified server client')
+        request_prompt = prompt_text
+        bounded_response = False
+        for attempt in range(RESPONSE_VALIDATION_RETRIES + 1):
+            # One shared recovery budget: format repair OR one bounded-field retry
+            # for an OFF completion ending with length. Other failures propagate.
+            schema_kwargs = {'response_schema': response_schema} if response_schema is not None else {}
+            if bounded_response:
+                schema_kwargs['bounded_response'] = True
+            try:
+                raw = model.infer(request_prompt, images, logger, max_tokens=max_tokens, **schema_kwargs)
+            except Qwen38TruncatedError:
+                if model.thinking != 'off' or attempt == RESPONSE_VALIDATION_RETRIES:
+                    raise
+                bounded_response = response_schema is not None
+                logger.warning('Qwen3.8 OFF completion truncated; retrying once (bounded fields=%s)', bounded_response)
+                continue
+            try:
+                return validate_final_json(raw, response_schema)
+            except ResponseValidationError as error:
+                logger.warning('Qwen3.8 invalid final format (attempt %d/%d): %s; final=%r',
+                               attempt + 1, RESPONSE_VALIDATION_RETRIES + 1, error, raw)
+                if attempt == RESPONSE_VALIDATION_RETRIES:
+                    raise
+                request_prompt = prompt_text + response_format_reminder(response_schema)
     import torch
     from qwen_vl_utils import process_vision_info
     try:
@@ -411,7 +465,7 @@ def _infer(prompt_text: str, images: list, model, processor, config, logger: log
         return processor.batch_decode(trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
     except Exception as e:
         logger.error(f"  Inference failed: {e}")
-        return None
+        raise RuntimeError("Model inference failed; this PDF must be retried") from e
 
 
 def _extract_int(val, default: int = 19999) -> int:
@@ -434,6 +488,14 @@ def _parse_json(text: str, logger: logging.Logger) -> dict:
     except json.JSONDecodeError as e:
         logger.warning(f"  JSON parse error ({e}): {text[:200]}")
         return {}
+
+
+def _parse_query_json(text, logger, config, schema):
+    data = _parse_json(text, logger)
+    if isinstance(config, dict) and config.get('backend') == 'qwen38':
+        from model_options import validate_query_fields
+        validate_query_fields(data, schema)
+    return data
 
 
 # ---------------------------------------------------------------------------
@@ -514,9 +576,11 @@ def _query_document_end(images: list, page_nums: list, current_page: int, model,
         '{"end": true/false, "signal": "<signal_name>", "signal_on_page": <page_number>, '
         '"confidence": <0-100>, "reason": "<one sentence: exactly what you see that triggered this>"}'
     )
-    raw = _infer(prompt, images, model, processor, config, logger, max_tokens=150)
+    response_schema = {
+        'end': bool, 'signal': str, 'signal_on_page': int, 'confidence': 'confidence', 'reason': str}
+    raw = _infer(prompt, images, model, processor, config, logger, max_tokens=150, response_schema=response_schema)
     logger.debug(f"  End-of-doc response p{current_page}: {repr((raw or '')[:300])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     is_end = bool(data.get("end", False))
     signal = str(data.get("signal", "none")).lower().strip()
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
@@ -567,8 +631,9 @@ def _requery_signal_page(images: list, page_nums: list, current_page: int, signa
         f"one do you actually see it? Your answer MUST be one of: {valid}.\n"
         'Respond ONLY with JSON: {"signal_on_page": <page_number>}'
     )
-    raw = _infer(prompt, images, model, processor, config, logger, max_tokens=40)
-    data = _parse_json(raw or "", logger)
+    response_schema = {'signal_on_page': int}
+    raw = _infer(prompt, images, model, processor, config, logger, max_tokens=40, response_schema=response_schema)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     try:
         picked = int(data.get("signal_on_page", current_page))
     except (TypeError, ValueError):
@@ -596,8 +661,9 @@ def _query_transcribe_title(img, page_num: int, model, processor, config, logger
         "(чл. 5), a figure/sheet number, or a bare page-corner numeral is NOT a document identifier.\n\n"
         'Respond ONLY with JSON: {"title": "<verbatim or none>", "identifier": "<verbatim or none>"}'
     )
-    raw = _infer(prompt, [img], model, processor, config, logger, max_tokens=120)
-    data = _parse_json(raw or "", logger)
+    response_schema = {'title': str, 'identifier': str}
+    raw = _infer(prompt, [img], model, processor, config, logger, max_tokens=120, response_schema=response_schema)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     title = str(data.get("title", "none")).strip()
     ident = str(data.get("identifier", "none")).strip()
     return title, ident
@@ -626,9 +692,10 @@ def _query_is_standalone(images: list, page_nums: list, candidate_page: int, mod
         "Respond ONLY with JSON:\n"
         '{"standalone": true/false, "confidence": <0-100>}'
     )
-    raw = _infer(prompt, images, model, processor, config, logger, max_tokens=60)
+    response_schema = {'standalone': bool, 'confidence': 'confidence'}
+    raw = _infer(prompt, images, model, processor, config, logger, max_tokens=60, response_schema=response_schema)
     logger.debug(f"  Standalone check p{candidate_page}: {repr((raw or '')[:200])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     standalone = bool(data.get("standalone", True))
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
     return standalone, conf
@@ -664,9 +731,10 @@ def _query_is_self_contained(img_n1, page_n1, model, processor, config, logger) 
         '{"self_contained": true/false, "confidence": <0-100>, '
         '"reason": "<one sentence: what you see at the very top of the page>"}'
     )
-    raw = _infer(prompt, [img_n1], model, processor, config, logger, max_tokens=300)
+    response_schema = {'self_contained': bool, 'confidence': 'confidence', 'reason': str}
+    raw = _infer(prompt, [img_n1], model, processor, config, logger, max_tokens=300, response_schema=response_schema)
     logger.debug(f"  Self-contained check p{page_n1}: {repr((raw or '')[:300])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     self_contained = bool(data.get("self_contained", False))
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
     reason = str(data.get("reason", "")).strip()
@@ -711,9 +779,10 @@ def _query_starts_new_document(img_prev, img_curr, page_prev, page_curr, model, 
         '{"starts_new": true/false, "confidence": <0-100>, '
         '"reason": "<one sentence naming the relational cue you used>"}'
     )
-    raw = _infer(prompt, [img_prev, img_curr], model, processor, config, logger, max_tokens=300)
+    response_schema = {'starts_new': bool, 'confidence': 'confidence', 'reason': str}
+    raw = _infer(prompt, [img_prev, img_curr], model, processor, config, logger, max_tokens=300, response_schema=response_schema)
     logger.debug(f"  Start-detect p{page_prev}→{page_curr}: {repr((raw or '')[:300])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     starts_new = bool(data.get("starts_new", False))
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
     reason = str(data.get("reason", "")).strip()
@@ -745,9 +814,10 @@ def _query_confirm_boundary(img_n, img_n1, page_n, page_n1, model, processor, co
         "Respond ONLY with JSON:\n"
         '{"different_documents": true/false, "confidence": <0-100>}'
     )
-    raw = _infer(prompt, [img_n, img_n1], model, processor, config, logger, max_tokens=80)
+    response_schema = {'different_documents': bool, 'confidence': 'confidence'}
+    raw = _infer(prompt, [img_n, img_n1], model, processor, config, logger, max_tokens=80, response_schema=response_schema)
     logger.debug(f"  Confirm boundary p{page_n}→{page_n1}: {repr((raw or '')[:200])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     different = bool(data.get("different_documents", True))
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
     return different, conf
@@ -776,9 +846,13 @@ def _query_style_continuity(img_prev, img_curr, page_prev, page_curr, model, pro
         '"layout_type_curr": "narrative" | "form" | "drawing" | "table" | "mixed", '
         '"strongest_difference": "<one sentence or null>", "confidence": <0-100>}'
     )
-    raw = _infer(prompt, [img_prev, img_curr], model, processor, config, logger, max_tokens=120)
+    response_schema = {
+        'style_match': bool, 'letterhead_match': (bool, type(None)),
+        'layout_type_prev': str, 'layout_type_curr': str,
+        'strongest_difference': (str, type(None)), 'confidence': 'confidence'}
+    raw = _infer(prompt, [img_prev, img_curr], model, processor, config, logger, max_tokens=120, response_schema=response_schema)
     logger.debug(f"  Style continuity p{page_prev}→{page_curr}: {repr((raw or '')[:300])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     if not data:
         return {"style_match": True, "letterhead_match": None, "layout_type_prev": "mixed",
                 "layout_type_curr": "mixed", "strongest_difference": None, "confidence": 50}
@@ -821,9 +895,11 @@ def _query_next_page_starts_new(img_curr, img_next, page_curr, page_next, model,
         '{"starts_new": true/false, "confidence": <0-100>, "reason": "<one sentence>", '
         '"next_page_heading": "<verbatim heading/title at the top of the next page, or empty string if none>"}'
     )
-    raw = _infer(prompt, [img_curr, img_next], model, processor, config, logger, max_tokens=250)
+    response_schema = {
+        'starts_new': bool, 'confidence': 'confidence', 'reason': str, 'next_page_heading': str}
+    raw = _infer(prompt, [img_curr, img_next], model, processor, config, logger, max_tokens=250, response_schema=response_schema)
     logger.debug(f"  Next-page-start p{page_next}: {repr((raw or '')[:300])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     starts_new = bool(data.get("starts_new", True))
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
     reason = str(data.get("reason", "")).strip()
@@ -850,8 +926,9 @@ def _query_doc_identifier(img, page_num, model, processor, config, logger):
         "Do NOT copy full sentences. Return empty string if none.\n\n"
         'Respond ONLY with JSON:\n{"identifier": "<short token or empty>"}'
     )
-    raw = _infer(prompt, [img], model, processor, config, logger, max_tokens=300)
-    data = _parse_json(raw or "", logger)
+    response_schema = {'identifier': str}
+    raw = _infer(prompt, [img], model, processor, config, logger, max_tokens=300, response_schema=response_schema)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     ident = str(data.get("identifier", "")).strip()
     norm = re.sub(r"[^0-9a-zа-я]", "", ident.lower())
     table = str.maketrans({"c": "с", "o": "о", "p": "р", "a": "а", "e": "е", "x": "х", "y": "у"})
@@ -875,9 +952,10 @@ def _classify_page(image, page_num: int, model, processor, config, logger: loggi
         "Respond ONLY with JSON:\n"
         '{"code": <number>, "confidence": <0-100>}'
     )
-    raw = _infer(prompt, [image], model, processor, config, logger, max_tokens=100)
+    response_schema = {'code': int, 'confidence': 'confidence'}
+    raw = _infer(prompt, [image], model, processor, config, logger, max_tokens=100, response_schema=response_schema)
     logger.debug(f"  Classify response p{page_num}: {repr((raw or '')[:200])}")
-    data = _parse_json(raw or "", logger)
+    data = _parse_query_json(raw or "", logger, config, response_schema)
     code = resolve_code(_extract_int(data.get("code", 19999)))[0]
     conf = min(100.0, max(0.0, float(data.get("confidence", 50)))) / 100.0
     _, name = resolve_code(code)
@@ -897,16 +975,20 @@ def detect_boundaries(
     dpi: int,
     logger: logging.Logger,
     classify: bool = True,
+    align_confirmation: bool = False,
 ) -> list:
     """
     Phase 1 — for each page n, load [n-1, n, n+1] and ask the model whether
                page n ends a document. If yes → n+1 is a new document start.
-               At most 3 images are held in RAM at any time.
+               Usually 3 images are held in RAM; aligned confirmation can load n+2.
                Includes: style continuity pre-filter, table_end cap, appendix chain
                tracking, next-page-start gate for signatures, one-page disambiguation,
                start-detection fallback for heading-led docs, low-conf confirmation.
 
     Phase 2 — classify each document-start page with the full nomenclature.
+
+    align_confirmation is an evaluation candidate, off by default until GPU validation.
+    It confirms the actual candidate seam after final-page projection has been resolved.
     """
     page_buffer: dict = {}
     doc_starts: list = [1]
@@ -1126,7 +1208,7 @@ def detect_boundaries(
 
         # Low-confidence confirmation pass — skip for strong visual signals that
         # don't need corroboration (fresh letterhead and header resets are visually unambiguous)
-        if is_end and conf < 0.75 and signal not in ("fresh_letterhead", "header_block_reset", "titled_id_header"):
+        if not align_confirmation and is_end and conf < 0.75 and signal not in ("fresh_letterhead", "header_block_reset", "titled_id_header"):
             confirmed, confirm_conf = _query_confirm_boundary(
                 page_buffer[n], page_buffer[n + 1], n, n + 1,
                 model, processor, config, logger,
@@ -1159,16 +1241,34 @@ def detect_boundaries(
                     effective_end = min(effective_end, total_pages)
                     logger.info(f"  [OOB-PROJECTION] p{n+1} is continuation — no boundary recorded, new doc beyond PDF")
 
-            if new_start not in doc_starts and new_start <= total_pages:
+            if (align_confirmation and is_end and 1 <= effective_end < total_pages
+                    and conf < 0.75
+                    and signal not in ("fresh_letterhead", "header_block_reset", "titled_id_header")):
+                left, right = effective_end, effective_end + 1
+                detect_rotation(left)
+                detect_rotation(right)
+                logger.info(f"  [ALIGNED-CONFIRM] iteration={n}, seam={left}->{right}, signal={signal}")
+                confirmed, confirm_conf = _query_confirm_boundary(
+                    page_buffer[left], page_buffer[right], left, right,
+                    model, processor, config, logger,
+                )
+                if confirmed:
+                    conf = (conf + confirm_conf) / 2
+                else:
+                    is_end = False
+                    logger.info(f"  [ALIGNED-CONFIRM] seam={left}->{right} rejected")
+
+            if is_end and new_start not in doc_starts and new_start <= total_pages:
                 doc_starts.append(new_start)
 
             # Change 3: keep max confidence per effective_end (last-write-wins could
             # replace a higher-quality earlier confidence with a lower-quality later one).
             existing = end_confidences.get(effective_end)
-            if existing is None or conf > existing[0]:
+            if is_end and (existing is None or conf > existing[0]):
                 end_confidences[effective_end] = (conf, signal)
 
-            logger.info(f"  End at page {effective_end} → doc starts at page {new_start} (conf={conf:.0%}, signal={signal})")
+            if is_end:
+                logger.info(f"  End at page {effective_end} → doc starts at page {new_start} (conf={conf:.0%}, signal={signal})")
 
         # Start-detection: independent of end-detection. Asks whether page n itself
         # begins a new document relative to n-1, producing a boundary AT n. Runs even
@@ -1360,14 +1460,19 @@ def process_pdf(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    from model_options import add_model_arguments, resolve_model_arguments
     parser = argparse.ArgumentParser(
         description="Split combined scanned PDFs using HuggingFace transformers + CUDA",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("folder", help="Folder containing PDFs to process")
     parser.add_argument("--dpi", type=int, default=DEFAULT_DPI, help="Page render DPI")
-    parser.add_argument("--model", default=MODEL_PATH, help="HuggingFace model path")
+    add_model_arguments(parser)
     args = parser.parse_args()
+    try:
+        selected_model, revision, inference = resolve_model_arguments(args)
+    except (OSError, ValueError) as exc:
+        parser.error(str(exc))
 
     folder = Path(args.folder).resolve()
     if not folder.is_dir():
@@ -1379,12 +1484,12 @@ def main() -> None:
 
     logger.info("PDF Document Splitter (HuggingFace / CUDA)")
     logger.info(f"Folder     : {folder}")
-    logger.info(f"Model      : {args.model}")
+    logger.info(f"Model      : {selected_model}")
     logger.info(f"DPI        : {args.dpi}")
     logger.info(f"Window     : prev+current+next (end-of-doc detection), confidence ≥ {CONFIDENCE_THRESHOLD:.0%}")
     logger.info(f"Output     : {output_dir}")
 
-    model, processor, config = load_model(args.model, logger)
+    model, processor, config = load_model(selected_model, logger, revision=revision, inference=inference)
 
     # transformers/accelerate may call logging.disable() during model load — undo it
     logging.disable(logging.NOTSET)

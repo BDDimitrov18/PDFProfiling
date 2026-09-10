@@ -1,4 +1,8 @@
-mlx-vlm>=0.1.0
-pdf2image>=1.17.0
-pypdf>=4.0.0
-Pillow>=10.0.0
+# CUDA inference stack, anchored to the recorded June environment.
+# Pillow/Tesseract wrapper and torchvision versions were not recorded in that benchmark;
+# these explicit additions require a new baseline on the target GPU.
+--extra-index-url https://download.pytorch.org/whl/cu128
+-r requirements-lock.txt
+Pillow==10.4.0
+pytesseract==0.3.13
+torchvision==0.23.0+cu128

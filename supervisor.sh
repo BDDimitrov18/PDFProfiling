@@ -1,14 +1,21 @@
 #!/bin/bash
-# Self-healing PRODUCTION supervisor (used for the GIS_Pv run, 2026-06-17).
-# Re-runs run_production.py until all PDFs are done; per-PDF resume skips completed ones.
-# Outputs + log live on the PERSISTENT /workspace volume so a pod death loses nothing.
-# Launch detached:  setsid bash /workspace/supervisor.sh >/tmp/sup_wrap.log 2>&1 </dev/null &
-cd /root/PdfCategorization || exit 1
-export HF_HOME=/root/hf_cache HF_HUB_DISABLE_XET=1
-for attempt in $(seq 1 80); do
-  grep -q "PRODUCTION_DONE " /workspace/prod.log 2>/dev/null && break
-  echo "=== supervisor attempt $attempt $(date -u +%H:%M:%S) ===" >> /workspace/prod.log
-  python3 run_production.py /workspace/GIS_Pv >> /workspace/prod.log 2>&1
-  sleep 15
+# Retry using the current process exit status, never text from an old log.
+# Usage: bash supervisor.sh /workspace/GIS_Pv [run_production.py options]
+set -u
+cd "$(dirname "$0")" || exit 1
+root=${1:-/workspace/GIS_Pv}
+if [ "$#" -gt 0 ]; then shift; fi
+export HF_HOME=${HF_HOME:-/root/hf_cache} HF_HUB_DISABLE_XET=1
+attempts=${PRODUCTION_ATTEMPTS:-80}
+delay=${PRODUCTION_RETRY_SECONDS:-15}
+python_bin=${PRODUCTION_PYTHON:-python3}
+for ((attempt=1; attempt<=attempts; attempt++)); do
+  echo "Production attempt $attempt/$attempts $(date -u +%FT%TZ)"
+  "$python_bin" run_production.py "$root" "$@"
+  result=$?
+  if [ "$result" -eq 0 ]; then exit 0; fi
+  if [ "$result" -eq 2 ] || [ "$result" -ge 128 ]; then exit "$result"; fi
+  if [ "$attempt" -lt "$attempts" ]; then sleep "$delay"; fi
 done
-echo "SUPERVISOR_EXIT $(date -u)" >> /workspace/prod.log
+echo "Production failed after $attempts attempts" >&2
+exit 1

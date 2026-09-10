@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "description": "Existing human rulings only. Never infer new corrections from model predictions.",
+  "files": {
+    "Image_00112022025163444215.pdf": {
+      "add": [
+        13
+      ],
+      "remove": [],
+      "unmask_gaps": true,
+      "evidence": "RESULTS.md: GT v3, human attestation 2026-06-13; p10 gap previously attested 2026-06-11.",
+      "source_sha256": "25d02d22a6fb8879d4d836429925f6fe7fc974ea3a46c5dde9864f44b33151d9"
+    },
+    "Image_00112032025084303475.pdf": {
+      "add": [],
+      "remove": [],
+      "unmask_gaps": true,
+      "evidence": "RESULTS.md: authorized gap correction 2026-06-11; p4 is a document start despite bare corner 2.",
+      "source_sha256": "85db2918ef0f74c8fde6d031a09a30560b0a72a90917a5ca342aed885194cf91"
+    },
+    "Image_00112022025143041245.pdf": {
+      "add": [],
+      "remove": [
+        63,
+        66
+      ],
+      "unmask_gaps": true,
+      "evidence": "RESULTS.md: round-2 close-out, human attestation 2026-06-13; pp62-66 are one document.",
+      "source_sha256": "14ea9304682afca42002d6daad9edb5bae756288ec413a9478820e06437f2beb"
+    },
+    "Image_00112022025145428614.pdf": {
+      "add": [],
+      "remove": [],
+      "unmask_gaps": true,
+      "evidence": "RESULTS.md: round-2 close-out, human attestation 2026-06-13; starts 147 and 150 stand.",
+      "source_sha256": "eb019811f1f291ef1a23bff013c1d0ab8c3052ca1bcd6d7ac4c1851a760f132c"
+    }
+  }
+}
