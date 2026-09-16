@@ -25,6 +25,7 @@ def configure(settings, method='archive-context'):
     result['receipt_consistency'] = 'same_page_batch_ocr_v1'
     result['artifact_policy'] = 'single_page_artifacts_v12'
     result['identity_policy'] = 'independent_identity_v13'
+    result['terminal_evidence_policy'] = 'coordinate_override_abstention_v1'
     root = Path(__file__).resolve().parent
     # Every shipped Python module participates in checkpoint identity.
     result['code'].update({p.name: file_hash(p) for p in sorted(root.glob('*.py'))})
@@ -41,6 +42,9 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
     if total<1:raise ValueError('Empty source')
     if settings.get('boundary_method') != 'features_v11':
         raise ValueError('V15 settings required')
+    from evidence_guard import apply as guard_evidence, POLICY_VERSION
+    if settings.get('terminal_evidence_policy') != POLICY_VERSION:
+        raise ValueError('Candidate terminal evidence policy must be explicit in settings')
     base_module = filing_features
     base_variant = 'features_v6'
     initial_usage=usage_snapshot(model)
@@ -153,6 +157,20 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
     decisions=recover_identity(pdf,total,(model,processor,config),dpi,logger,pipeline=pipeline,
                               directory=checkpoint_dir,source=source,settings=settings,
                               decisions=decisions,rotations=rotations)
+    decisions, guard_changes = guard_evidence(decisions)
+    summary_path = checkpoint_dir/'summary.json'
+    summary = json.loads(summary_path.read_text())
+    review = {row['right_page']: dict(row) for row in summary.get('review_candidates', [])}
+    for change in guard_changes:
+        p = change['right_page']; d = decisions[p]
+        row = review.setdefault(p, {'right_page': p, 'reasons': [],
+                                    'left_heading': d['left_heading'], 'right_heading': d['right_heading']})
+        row.update(final_cut=False, evidence_guard=change['rule'])
+        row['reasons'] = list(dict.fromkeys([*row['reasons'], 'coordinate_override_abstention']))
+    summary.update(evidence_guard_changes=guard_changes, review_candidates=list(review.values()))
+    atomic_json(summary_path, summary)
+    atomic_json(checkpoint_dir/'final_decisions.json',
+                {'source': source, 'settings': settings, 'decisions': decisions})
     boundaries=[pipeline.DocumentBoundary(page=1,code=0,name='',confidence=1.0,flagged=False,style_signal='')]
     for page,d in sorted(decisions.items()):
         if d['new_document']:

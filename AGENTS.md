@@ -1,5 +1,30 @@
 # FolioSplit V15 — operating guide and project memory
 
+## Current experimental branch (2026-09-16)
+
+This checkout is `codex/reviewer-evidence`, an UNPROMOTED candidate. The `best-v15`
+tag remains the production baseline. A terminal coordinate guard cancels a forced
+first-coordinate-table cut only when the final underlying model says continuation
+or attachment with confidence >=90 and no later explicit rule owns the decision.
+Upstream prompts, queries and anchors are unchanged. Final decisions and guard
+changes are saved for audit. Research files and reviewer labels live outside this
+checkout in its parent experiment directory. Fresh GPU validation is pending.
+The user accepted reviewer judgments over conflicting original labels on
+2026-09-16; versioned corrections and explicitly allowed alternatives are recorded
+outside the runtime. Preserve original metrics and report label changes separately.
+
+Local evidence: all 176 sources / 4908 pages reproduced the archived V15 starts.
+An offline simulation through the candidate pipeline preserved every upstream
+decision and changed four terminal boundaries: four repairs, no harms under both
+original and reviewer-adjusted boundary labels; original exact documents 1929 to
+1930 out of 2222. Reviewer-adjusted boundary errors 199 to 195 (F1 95.15% to 95.24%).
+These are exposed-data cached simulations, not fresh GPU or holdout results.
+Five guard checks and nine probe-policy/resume checks passed. A separate, frozen
+pilot contains 557 independent fact queries on 545 images (receipt recipients,
+pagination/document identity and drawing fragments). Those probe policies are NOT
+installed in this runtime. Full paired regression and sealed validation are still
+required before promotion. Evidence is in the parent research folder's REPORT.md.
+
 This is the single documentation file for this repository. Read it before changing
 the pipeline, using a GPU, evaluating results, or exporting customer documents.
 The repository contains the production runtime only. Keep experiments, PDFs,
