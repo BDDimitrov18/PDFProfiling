@@ -6,8 +6,13 @@ This checkout is `codex/reviewer-evidence`, an UNPROMOTED candidate. The `best-v
 tag remains the production baseline. A terminal coordinate guard cancels a forced
 first-coordinate-table cut only when the final underlying model says continuation
 or attachment with confidence >=90 and no later explicit rule owns the decision.
-Upstream prompts, queries and anchors are unchanged. Final decisions and guard
-changes are saved for audit. Research files and reviewer labels live outside this
+An additional terminal guard restores an independent cut across a literal quantity
+schedule when the structural-body rule overrides it; both printed spellings of
+КОЛИЧЕСТВЕННА / КОЛИЧЕСТВЕНА СМЕТКА are recognized. It requires model and page-type
+confidence >=90 and protects other explicit rule owners. Upstream prompts, queries
+and anchors are unchanged. Pre-guard V15 decisions, final decisions and guard
+changes are saved for audit. This enables a paired comparison using shared fresh
+upstream inference, not two independent model runs. Research files and reviewer labels live outside this
 checkout in its parent experiment directory. Fresh GPU validation is pending.
 The user accepted reviewer judgments over conflicting original labels on
 2026-09-16; versioned corrections and explicitly allowed alternatives are recorded
@@ -15,14 +20,16 @@ outside the runtime. Preserve original metrics and report label changes separate
 
 Local evidence: all 176 sources / 4908 pages reproduced the archived V15 starts.
 An offline simulation through the candidate pipeline preserved every upstream
-decision and changed four terminal boundaries: four repairs, no harms under both
+decision and changed five terminal boundaries: five repairs, no harms under both
 original and reviewer-adjusted boundary labels; original exact documents 1929 to
-1930 out of 2222. Reviewer-adjusted boundary errors 199 to 195 (F1 95.15% to 95.24%).
+1931 out of 2222. Original errors 226 to 221 (F1 94.49% to 94.61%). Reviewer-adjusted
+boundary errors 199 to 194 (F1 95.15% to 95.27%).
 These are exposed-data cached simulations, not fresh GPU or holdout results.
-Five guard checks and nine probe-policy/resume checks passed. A separate, frozen
-pilot contains 557 independent fact queries on 545 images (receipt recipients,
-pagination/document identity and drawing fragments). Those probe policies are NOT
-installed in this runtime. Full paired regression and sealed validation are still
+Five coordinate checks, three quantity checks and nine probe-policy/resume checks
+passed, alongside the all-source integration simulation. A separate 557-query
+independent-fact pilot completed without additional safe boundary improvements.
+A typed-context follow-up is isolated outside this runtime. These experimental
+probe policies are NOT installed in this runtime. Full paired regression and sealed validation are still
 required before promotion. Evidence is in the parent research folder's REPORT.md.
 
 This is the single documentation file for this repository. Read it before changing

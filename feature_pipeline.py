@@ -25,7 +25,8 @@ def configure(settings, method='archive-context'):
     result['receipt_consistency'] = 'same_page_batch_ocr_v1'
     result['artifact_policy'] = 'single_page_artifacts_v12'
     result['identity_policy'] = 'independent_identity_v13'
-    result['terminal_evidence_policy'] = 'coordinate_override_abstention_v1'
+    from terminal_guard import POLICY_VERSION
+    result['terminal_evidence_policy'] = POLICY_VERSION
     root = Path(__file__).resolve().parent
     # Every shipped Python module participates in checkpoint identity.
     result['code'].update({p.name: file_hash(p) for p in sorted(root.glob('*.py'))})
@@ -42,7 +43,7 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
     if total<1:raise ValueError('Empty source')
     if settings.get('boundary_method') != 'features_v11':
         raise ValueError('V15 settings required')
-    from evidence_guard import apply as guard_evidence, POLICY_VERSION
+    from terminal_guard import apply as guard_evidence, POLICY_VERSION
     if settings.get('terminal_evidence_policy') != POLICY_VERSION:
         raise ValueError('Candidate terminal evidence policy must be explicit in settings')
     base_module = filing_features
@@ -157,6 +158,11 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
     decisions=recover_identity(pdf,total,(model,processor,config),dpi,logger,pipeline=pipeline,
                               directory=checkpoint_dir,source=source,settings=settings,
                               decisions=decisions,rotations=rotations)
+    # Preserve a paired V15 comparison from the identical upstream inference.
+    # This is not an independently rerun baseline or a legacy-cache import.
+    atomic_json(checkpoint_dir/'baseline_decisions.json',
+                {'source': source, 'settings': settings, 'decisions': decisions,
+                 'comparison': 'V15 before terminal guards; shared fresh upstream inference'})
     decisions, guard_changes = guard_evidence(decisions)
     summary_path = checkpoint_dir/'summary.json'
     summary = json.loads(summary_path.read_text())
@@ -165,8 +171,8 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
         p = change['right_page']; d = decisions[p]
         row = review.setdefault(p, {'right_page': p, 'reasons': [],
                                     'left_heading': d['left_heading'], 'right_heading': d['right_heading']})
-        row.update(final_cut=False, evidence_guard=change['rule'])
-        row['reasons'] = list(dict.fromkeys([*row['reasons'], 'coordinate_override_abstention']))
+        row.update(final_cut=d['new_document'], evidence_guard=change['rule'])
+        row['reasons'] = list(dict.fromkeys([*row['reasons'], change['rule']]))
     summary.update(evidence_guard_changes=guard_changes, review_candidates=list(review.values()))
     atomic_json(summary_path, summary)
     atomic_json(checkpoint_dir/'final_decisions.json',
