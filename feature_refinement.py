@@ -38,6 +38,7 @@ def refine(pdf,total,bundle,dpi,logger,*,pipeline,directory,source,settings,base
             images=[ensure(right-1),ensure(right)]
             raw=pipeline._infer(filing_features_v7.prompt('features_v7',right-1,right,next_heading),images,
                                 *bundle,logger,max_tokens=300,response_schema=filing_features_v7.SCHEMA)
+            record['raw_final']=raw
             proposed=filing_features_v7.decision(json.loads(pipeline.clean_response(raw)))
             final=choose(base['decision'],proposed);decisions[right]=final
             record.update(status='complete',raw_final=raw,decision=proposed,final_decision=final)

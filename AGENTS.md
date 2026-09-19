@@ -1,36 +1,38 @@
 # FolioSplit V15 — operating guide and project memory
 
-## Current experimental branch (2026-09-16)
+## Current experimental branch (2026-09-20)
 
-This checkout is `codex/reviewer-evidence`, an UNPROMOTED candidate. The `best-v15`
-tag remains the production baseline. A terminal coordinate guard cancels a forced
-first-coordinate-table cut only when the final underlying model says continuation
-or attachment with confidence >=90 and no later explicit rule owns the decision.
-An additional terminal guard restores an independent cut across a literal quantity
-schedule when the structural-body rule overrides it; both printed spellings of
-КОЛИЧЕСТВЕННА / КОЛИЧЕСТВЕНА СМЕТКА are recognized. It requires model and page-type
-confidence >=90 and protects other explicit rule owners. Upstream prompts, queries
-and anchors are unchanged. Pre-guard V15 decisions, final decisions and guard
-changes are saved for audit. This enables a paired comparison using shared fresh
-upstream inference, not two independent model runs. Research files and reviewer labels live outside this
-checkout in its parent experiment directory. Fresh GPU validation is pending.
-The user accepted reviewer judgments over conflicting original labels on
-2026-09-16; versioned corrections and explicitly allowed alternatives are recorded
-outside the runtime. Preserve original metrics and report label changes separately.
+This checkout is `codex/numbered-appendix`, an UNPROMOTED candidate based on
+283455a26decc5b18e5b73299624f590cbf65987. Preserve the production `best-v15` tag.
+The coordinate and quantity guards completed fresh paired regression on all176
+exposed originals/4908pages: five repairs, no harms under original and adjudicated
+references. Original F1 94.4878% to94.6058%, errors226 to221. Reviewed F1 95.1499%
+to95.2683%, errors199 to194. Exact original documents1929 to1931/2222.
 
-Local evidence: all 176 sources / 4908 pages reproduced the archived V15 starts.
-An offline simulation through the candidate pipeline preserved every upstream
-decision and changed five terminal boundaries: five repairs, no harms under both
-original and reviewer-adjusted boundary labels; original exact documents 1929 to
-1931 out of 2222. Original errors 226 to 221 (F1 94.49% to 94.61%). Reviewer-adjusted
-boundary errors 199 to 194 (F1 95.15% to 95.27%).
-These are exposed-data cached simulations, not fresh GPU or holdout results.
-Five coordinate checks, three quantity checks and nine probe-policy/resume checks
-passed, alongside the all-source integration simulation. A separate 557-query
-independent-fact pilot completed without additional safe boundary improvements.
-A typed-context follow-up is isolated outside this runtime. These experimental
-probe policies are NOT installed in this runtime. Full paired regression and sealed validation are still
-required before promotion. Evidence is in the parent research folder's REPORT.md.
+This branch adds conditional footer OCR AFTER every upstream model/identity stage
+and those two guards. Only an explicit appendix back-reference with no later
+explicit rule owner is eligible. It reads both adjacent pages, full-width bottom
+18%, Tesseract eng layouts6/11. Matching unique consecutive page/total numbers
+are required. Missing/conflicting/failed OCR abstains; failed records remain
+visible. An absent inferred rotation or stale cache/source raises instead of
+silently assuming orientation. No new model queries or reference labels are used.
+Footer checkpoints bind source, settings/all code hashes, rotation, DPI, engine
+version, crop, language and layouts. Engine-layout agreement is NOT independent
+statistical evidence. Settings declare `footer_evidence_policy` explicitly.
+
+Base/refinement responses are saved before parsing so validation failures retain
+the exact received text. Transport failures do not invent a response. These
+logging changes do not alter decision policies, retries, schemas or prompts.
+
+The terminal footer policy matches the frozen local study on all4908 OCR records.
+Full176-source cached integration replay preserved upstream decisions and yielded
+six total changes (six repairs/no harms,1932/2222 original exact documents).
+Only one additional repair comes from footer numbering; its generalization is
+unproven. This replay uses old observations deliberately and is NOT fresh GPU
+inference or a checkpoint compatibility test. Fresh combined validation is pending.
+Research scripts, labels, evidence and frozen job bundles remain outside runtime.
+The sealed54-source/1817page holdout remains untouched. No promotion/push yet.
+See the parent experiment folder's STATE.md for authoritative live job status.
 
 This is the single documentation file for this repository. Read it before changing
 the pipeline, using a GPU, evaluating results, or exporting customer documents.

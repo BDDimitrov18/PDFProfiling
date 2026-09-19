@@ -27,6 +27,8 @@ def configure(settings, method='archive-context'):
     result['identity_policy'] = 'independent_identity_v13'
     from terminal_guard import POLICY_VERSION
     result['terminal_evidence_policy'] = POLICY_VERSION
+    from footer_guard import POLICY_VERSION as FOOTER_POLICY_VERSION
+    result['footer_evidence_policy'] = FOOTER_POLICY_VERSION
     root = Path(__file__).resolve().parent
     # Every shipped Python module participates in checkpoint identity.
     result['code'].update({p.name: file_hash(p) for p in sorted(root.glob('*.py'))})
@@ -82,6 +84,7 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
         try:
             raw=pipeline._infer(base_module.prompt(base_variant,right-1,right),images,
                                 model,processor,config,logger,max_tokens=300,response_schema=filing_features.SCHEMA)
+            record['raw_final']=raw
             decision=filing_features.decision(json.loads(pipeline.clean_response(raw)))
             record.update(status='complete',raw_final=raw,decision=decision)
             decisions[right]=decision
@@ -164,6 +167,13 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
                 {'source': source, 'settings': settings, 'decisions': decisions,
                  'comparison': 'V15 before terminal guards; shared fresh upstream inference'})
     decisions, guard_changes = guard_evidence(decisions)
+    atomic_json(checkpoint_dir/'pre_footer_decisions.json',
+                {'source': source, 'settings': settings, 'decisions': decisions})
+    from footer_recovery import recover as recover_footer
+    decisions, footer_changes, footer_summary = recover_footer(
+        pdf, decisions=decisions, pipeline=pipeline, directory=checkpoint_dir,
+        source=source, settings=settings, rotations=rotations, dpi=dpi)
+    guard_changes = [*guard_changes, *footer_changes]
     summary_path = checkpoint_dir/'summary.json'
     summary = json.loads(summary_path.read_text())
     review = {row['right_page']: dict(row) for row in summary.get('review_candidates', [])}
@@ -173,7 +183,7 @@ def detect(pdf,total,model,processor,config,dpi,logger,*,pipeline,checkpoint_dir
                                     'left_heading': d['left_heading'], 'right_heading': d['right_heading']})
         row.update(final_cut=d['new_document'], evidence_guard=change['rule'])
         row['reasons'] = list(dict.fromkeys([*row['reasons'], change['rule']]))
-    summary.update(evidence_guard_changes=guard_changes, review_candidates=list(review.values()))
+    summary.update(evidence_guard_changes=guard_changes, footer_ocr=footer_summary, review_candidates=list(review.values()))
     atomic_json(summary_path, summary)
     atomic_json(checkpoint_dir/'final_decisions.json',
                 {'source': source, 'settings': settings, 'decisions': decisions})
